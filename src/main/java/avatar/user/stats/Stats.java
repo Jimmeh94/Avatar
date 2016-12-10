@@ -1,4 +1,6 @@
-package avatar.user;
+package avatar.user.stats;
+
+import avatar.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,8 +9,8 @@ public class Stats {
 
     private List<Stat> stats;
 
-    public Stats(IStatsPreset preset){
-        stats = preset.loadStats();
+    public Stats(IStatsPreset preset, User owner){
+        stats = preset.loadStats(owner);
     }
 
     public boolean hasStat(StatType type){
@@ -66,7 +68,7 @@ public class Stats {
 
     //-----------------------------------------------------
 
-    public class Stat {
+    public static class Stat {
 
         private StatType type;
         private double current, max;
@@ -74,14 +76,14 @@ public class Stats {
         private User owner;
 
         public Stat(StatType type, User owner){
-            this(type, owner, 1);
+            this(type, owner, 100);
         }
 
-        public Stat(StatType type, User owner, double current){
-            this(type, owner, current, 1);
+        public Stat(StatType type, User owner, double max){
+            this(type, owner, max, max);
         }
 
-        public Stat(StatType type, User owner, double current, double max){
+        public Stat(StatType type, User owner, double max, double current){
             this.type = type;
             this.owner = owner;
             this.current = current;
@@ -174,7 +176,7 @@ public class Stats {
 
     //--------------------------------------------------------------
 
-    public class StatMemory{
+    public static class StatMemory{
 
         private double returnTo;
         private IStatMemoryCompletion completionAction;
