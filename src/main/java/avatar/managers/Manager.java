@@ -2,6 +2,7 @@ package avatar.managers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class Manager<T> {
 
@@ -12,16 +13,11 @@ public abstract class Manager<T> {
     }
 
     public void addAndReplace(T object){
-        T remove = null;
-        for(T t: objects){
-            if(t.getClass() == object.getClass()){
-                remove = t;
-                break;
-            }
-        }
+        Optional<T> remove = Optional.empty();
+        remove = objects.stream().filter(t -> t.getClass().equals(object.getClass())).findFirst();
 
-        if(remove != null){
-            objects.remove(remove);
+        if(remove.isPresent()){
+            objects.remove(remove.get());
         }
 
         objects.add(object);
