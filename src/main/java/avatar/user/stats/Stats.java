@@ -63,7 +63,22 @@ public class Stats {
         CRITICAL_PERCENTAGE_FIRE,
         CRITICAL_PERCENTAGE_EARTH,
         CRITICAL_PERCENTAGE_WATER,
-        CRITICAL_PERCENTAGE_AIR,
+        CRITICAL_PERCENTAGE_AIR;
+
+        @Override
+        public String toString(){
+            String[] parts = super.toString().split("_");
+            String give = "";
+
+            for(int i = 0; i < parts.length; i++){
+                String temp = parts[i];
+                temp = temp.toLowerCase();
+                temp = temp.substring(0, 1).toUpperCase() + temp.substring(1);
+                give += temp + " ";
+            }
+
+            return give;
+        }
     }
 
     //-----------------------------------------------------
@@ -152,7 +167,7 @@ public class Stats {
             if(memory != null){
                 double memMax = memory.getReturnTo();
                 if(memMax != max)
-                    return max;
+                    return memMax;
             }
             return max;
         }

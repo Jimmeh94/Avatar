@@ -1,5 +1,6 @@
 package avatar;
 
+import avatar.managers.UserManager;
 import com.google.inject.Inject;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
@@ -13,17 +14,24 @@ public class Avatar {
 
     public static Avatar INSTANCE;
 
+    private UserManager userManager;
+
     @Inject
     private Logger logger;
 
     @Listener
     public void onServerStart(GameInitializationEvent event){
         INSTANCE = this;
+        userManager = new UserManager();
     }
 
     @Listener
     public void onServerStopping(GameStoppingEvent event){
 
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
     }
 
     public Logger getLogger() {

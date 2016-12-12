@@ -20,4 +20,7 @@ public class User {
         stats = new Stats(preset, this);
     }
 
+    public UUID getUUID() {
+        return user;
+    }
 }
