@@ -21,7 +21,7 @@ public class LocationUtils {
                 xyz[i] = startXYZ[i] - delta[i]/2;
             } else if(startXYZ[i] < endXYZ[i]){
                 xyz[i] = startXYZ[i] + delta[i]/2;
-            }
+            } else xyz[i] = startXYZ[i];
         }
 
         return new Location(start.getExtent(), xyz[0], xyz[1], xyz[2]);
@@ -134,7 +134,7 @@ public class LocationUtils {
         return list;
     }
 
-    private static int getRandomNegOrPos(){
+    public static int getRandomNegOrPos(){
         int give = (new Random()).nextInt(2) == 0 ? -1 : 1;
         return give;
     }
