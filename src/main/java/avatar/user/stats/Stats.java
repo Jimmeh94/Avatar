@@ -5,6 +5,9 @@ import avatar.user.User;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Stats is a container for a list is Stat
+ */
 public class Stats {
 
     private List<Stat> stats;
@@ -65,6 +68,10 @@ public class Stats {
         CRITICAL_PERCENTAGE_WATER,
         CRITICAL_PERCENTAGE_AIR;
 
+        /**
+         * Returns a nice string for displaying
+         * @return
+         */
         @Override
         public String toString(){
             String[] parts = super.toString().split("_");
@@ -83,6 +90,9 @@ public class Stats {
 
     //-----------------------------------------------------
 
+    /**
+     * The actual stat that is tracked. Holds a current value, max value
+     */
     public static class Stat {
 
         private StatType type;
@@ -114,7 +124,7 @@ public class Stats {
         }
 
         /**
-         * Used to apply
+         * Used to apply buffs, debuffs to this stat
          * @param newMax
          * @param newCurrent
          * @param completionAction
@@ -191,6 +201,9 @@ public class Stats {
 
     //--------------------------------------------------------------
 
+    /**
+     * Used to store the initial max value. This memory allows for the stat to be altered then restored
+     */
     public static class StatMemory{
 
         private double returnTo;
@@ -224,6 +237,9 @@ public class Stats {
 
     //----------------------------------------------------------------
 
+    /**
+     * Allows for an action to happen once the stat's memory is restored
+     */
     public interface IStatMemoryCompletion{
         void doAction(StatMemory memory);
     }

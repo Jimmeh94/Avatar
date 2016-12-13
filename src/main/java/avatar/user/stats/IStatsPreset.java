@@ -4,6 +4,7 @@ import avatar.user.User;
 
 import java.util.List;
 
+
 public interface IStatsPreset {
 
     /**

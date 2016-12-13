@@ -13,8 +13,7 @@ public abstract class Manager<T> {
     }
 
     public void addAndReplace(T object){
-        Optional<T> remove = Optional.empty();
-        remove = objects.stream().filter(t -> t.getClass().equals(object.getClass())).findFirst();
+        Optional<T> remove = objects.stream().filter(t -> t.getClass().equals(object.getClass())).findFirst();
 
         if(remove.isPresent()){
             objects.remove(remove.get());
@@ -25,9 +24,5 @@ public abstract class Manager<T> {
 
     public void remove(T object){
         objects.remove(object);
-    }
-
-    public boolean has(T object){
-        return objects.contains(object);
     }
 }
