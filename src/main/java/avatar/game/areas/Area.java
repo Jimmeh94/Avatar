@@ -1,6 +1,7 @@
 package avatar.game.areas;
 
 import avatar.user.User;
+import avatar.user.UserPlayer;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.world.Location;
 
@@ -65,6 +66,17 @@ public abstract class Area {
 
     public boolean isMember(Player player){
         return members.contains(player);
+    }
+
+    public List<UserPlayer> getPlayersFromMembers() {
+        List<UserPlayer> players = new ArrayList<>();
+        for(User user: members){
+            if(user.isPlayer()){
+                players.add(((UserPlayer)user));
+            }
+        }
+
+        return players;
     }
 
     public static abstract class AreaShape {

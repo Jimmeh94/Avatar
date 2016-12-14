@@ -16,6 +16,9 @@ public class AreaEvents {
     @Listener
     public void onMove(MoveEntityEvent event){
         if(event.getTargetEntity() instanceof Player){
+            if(event.getFromTransform().getPosition().distance(event.getToTransform().getPosition()) < 1)
+                return;
+
             AreaManager am = (AreaManager) Manager.getManager(Manager.ManagerKey.AREA);
 
             Optional<Area> temp = am.find(event.getToTransform().getLocation());
