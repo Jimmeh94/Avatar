@@ -1,8 +1,9 @@
 package avatar;
 
-import avatar.managers.UserManager;
+import avatar.events.AreaEvents;
 import avatar.utilities.database.MongoUtils;
 import com.google.inject.Inject;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
@@ -15,7 +16,6 @@ public class Avatar {
 
     public static Avatar INSTANCE;
 
-    private UserManager userManager;
     private MongoUtils mongoUtils;
 
     @Inject
@@ -24,9 +24,10 @@ public class Avatar {
     @Listener
     public void onServerStart(GameInitializationEvent event){
         INSTANCE = this;
-        userManager = new UserManager();
 
         mongoUtils = new MongoUtils("", "", "");
+
+        registerListeners();
     }
 
     @Listener
@@ -38,11 +39,11 @@ public class Avatar {
         return mongoUtils;
     }
 
-    public UserManager getUserManager() {
-        return userManager;
-    }
-
     public Logger getLogger() {
         return logger;
+    }
+
+    private void registerListeners(){
+        Sponge.getEventManager().registerListeners(this, new AreaEvents());
     }
 }

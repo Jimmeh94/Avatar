@@ -6,7 +6,24 @@ import java.util.Optional;
 
 public abstract class Manager<T> {
 
+    private static List<Manager> managers = new ArrayList<>();
+
+    public static Manager getManager(ManagerKey key){
+        for(Manager manager: managers){
+            if(manager.getKey() == key)
+                return manager;
+        }
+        return null;
+    }
+
+    // ---------------------------------------------------
     protected List<T> objects = new ArrayList<>();
+    private ManagerKey key;
+
+    public Manager(ManagerKey key){
+        this.key = key;
+        managers.add(this);
+    }
 
     public void add(T object){
         objects.add(object);
@@ -24,5 +41,14 @@ public abstract class Manager<T> {
 
     public void remove(T object){
         objects.remove(object);
+    }
+
+    public ManagerKey getKey() {
+        return key;
+    }
+
+    public enum ManagerKey{
+        USER,
+        AREA
     }
 }
