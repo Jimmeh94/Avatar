@@ -7,7 +7,6 @@ import avatar.user.User;
 import avatar.user.UserPlayer;
 import avatar.utilities.misc.LocationUtils;
 import com.flowpowered.math.vector.Vector3d;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOption;
 import org.spongepowered.api.effect.particle.ParticleType;
@@ -15,10 +14,7 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.world.Location;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ParticleUtils {
 
@@ -138,7 +134,28 @@ public class ParticleUtils {
         }
 
         public static void displayParticles(ParticleType particleType, int amount, Location location, double radius, double xOffset, double yOffset, double zOffset, boolean randomizeOffset, List<ParticleOption> particleOptions, Vector3d velocity) {
-            List<Entity> entities;
+            List<Entity> entities = new ArrayList<>();
+            Entity origin = null;
+
+            //find nearest entity
+            for(Entity entity: location.getExtent().getEntities()){
+                if(entity.getLocation().getPosition().distance(location.getPosition()) > radius)
+                    continue;
+                if(origin == null){
+                    origin = entity;
+                } else {
+                    if(origin.getLocation().getPosition().distance(location.getPosition()) > entity.getLocation().getPosition().distance(location.getPosition())){
+                        origin = entity;
+                    }
+                }
+            }
+
+            //get nearby entities
+            if(origin == null){
+                return;
+            } else {
+                entities.addAll(origin.getNearbyEntities(radius));
+            }
 
             for (Entity entity: entities) {
                 if(!(entity instanceof Player)){
