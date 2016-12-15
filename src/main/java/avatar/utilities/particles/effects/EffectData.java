@@ -12,13 +12,13 @@ public class EffectData {
 
     private Location center, playParticleAt;
     private User owner;
-    private int amount;
+    private int amount = 10;
     protected ParticleType particle = ParticleTypes.FLAME;
     private double xOffset = 0, yOffset = 0, zOffset = 0;
     private Scheduler scheduler = Sponge.getScheduler();
     private Task.Builder taskBuilder = scheduler.createTaskBuilder();
     private Task task;
-    private long delay, interval, cancel;
+    private long delay = 0, interval = 5, cancel = 1; //cancel is currently how many ticks, not how many intervals have passed
     private IPlayParticles playParticles;
 
     public EffectData(User owner){this.owner = owner;}

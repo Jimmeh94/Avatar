@@ -1,7 +1,5 @@
 package avatar.utilities.particles.effects;
 
-import org.spongepowered.api.world.Location;
-
 public class AtomEffect extends AbstractEffect {
 
 	private double[][][] coreCoordinates;
@@ -52,12 +50,6 @@ public class AtomEffect extends AbstractEffect {
 			playParticle(effectData.getLocation().add(array[0], array[1], array[2]));
 			effectData.getLocation().sub(array[0], array[1], array[2]);
 		}
-	}
-
-	@Override
-	protected void playParticle(Location loc) {
-		effectData.setPlayParticleAt(loc);
-		effectData.getPlayParticles().playParticles(effectData);
 	}
 
 }
