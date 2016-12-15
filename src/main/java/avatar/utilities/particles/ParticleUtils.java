@@ -1,11 +1,11 @@
 package avatar.utilities.particles;
 
+import avatar.Avatar;
 import avatar.game.areas.Area;
-import avatar.managers.Manager;
-import avatar.managers.UserManager;
 import avatar.user.User;
 import avatar.user.UserPlayer;
 import avatar.utilities.misc.LocationUtils;
+import avatar.utilities.particles.effects.EffectData;
 import com.flowpowered.math.vector.Vector3d;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOption;
@@ -19,30 +19,20 @@ import java.util.*;
 public class ParticleUtils {
 
     public static class PlayerBased {
-        public static void displayParticles(Player player, ParticleType particleType, int amount, Location location) {
-            displayParticles(player, particleType, amount, location, 0, 0, 0, false, null);
+
+        public static void displayParticles(EffectData effectData){
+            displayParticles(effectData, Arrays.asList(((UserPlayer)effectData.getOwner()).getPlayer().get()));
         }
 
-        public static void displayParticles(Player player, ParticleType particleType, int amount, Location location, double xOffset, double yOffset, double zOffset, boolean randomizeOffset, List<ParticleOption> particleOption) {
-            displayParticles(player, particleType, amount, location, xOffset, yOffset, zOffset, randomizeOffset, particleOption, null);
-        }
-
-        public static void displayParticles(Player player, ParticleType particleType, int amount, Location location, double xOffset, double yOffset, double zOffset, boolean randomizeOffset, List<ParticleOption> particleOptions, Vector3d velocity) {
-            displayParticles(Arrays.asList(player), particleType, amount, location, xOffset, yOffset, zOffset, randomizeOffset, particleOptions, velocity);
-        }
-
-        public static void displayParticles(Collection<Player> players, ParticleType particleType, int amount, Location location) {
-            displayParticles(players, particleType, amount, location, 0, 0, 0, false, null);
-        }
-
-        public static void displayParticles(Collection<Player> players, ParticleType particleType, int amount, Location location, double xOffset, double yOffset, double zOffset, boolean randomizeOffset, List<ParticleOption> particleOption) {
-            displayParticles(players, particleType, amount, location, xOffset, yOffset, zOffset, randomizeOffset, particleOption, null);
+        public static void displayParticles(EffectData effectData, Collection<Player> players){
+            displayParticles(players, effectData.getParticle(), effectData.getAmount(), effectData.getDisplayAt(), effectData.getxOffset(), effectData.getyOffset(), effectData.getzOffset(),
+                    effectData.isRandomizeOffsets(), effectData.getParticleOptions(), effectData.getVelocity());
         }
 
         public static void displayParticles(Collection<Player> players, ParticleType particleType, int amount, Location location, double xOffset, double yOffset, double zOffset, boolean randomizeOffset, List<ParticleOption> particleOptions, Vector3d velocity) {
             double factor = 1.0;
             for (Player player : players) {
-                Optional<User> user = ((UserManager)Manager.getManager(Manager.ManagerKey.USER)).find(player.getUniqueId());
+                Optional<User> user = Avatar.INSTANCE.getUserManager().find(player.getUniqueId());
                 if(user.isPresent()){
                     if(user.get().isPlayer()){
                         factor = ((UserPlayer)user.get()).getParticleModifier().factor;
@@ -79,12 +69,10 @@ public class ParticleUtils {
     }
 
     public static class AreaBased{
-        public static void displayParticles(Area area, ParticleType particleType, int amount, Location location) {
-            displayParticles(area, particleType, amount, location, 0, 0, 0, false, null);
-        }
-
-        public static void displayParticles(Area area, ParticleType particleType, int amount, Location location, double xOffset, double yOffset, double zOffset, boolean randomizeOffset, List<ParticleOption> particleOption) {
-            displayParticles(area, particleType, amount, location, xOffset, yOffset, zOffset, randomizeOffset, particleOption, null);
+        public static void displayParticles(EffectData effectData) {
+            displayParticles(effectData.getDisplayArea(), effectData.getParticle(), effectData.getAmount(), effectData.getDisplayAt(),
+                    effectData.getxOffset(), effectData.getyOffset(), effectData.getzOffset(), effectData.isRandomizeOffsets(),
+                    effectData.getParticleOptions(), effectData.getVelocity());
         }
 
         public static void displayParticles(Area area, ParticleType particleType, int amount, Location location, double xOffset, double yOffset, double zOffset, boolean randomizeOffset, List<ParticleOption> particleOptions, Vector3d velocity) {
@@ -125,12 +113,10 @@ public class ParticleUtils {
 
     public static class LocationBased{
 
-        public static void displayParticles(ParticleType particleType, int amount, Location location, double radius) {
-            displayParticles(particleType, amount, location, radius, 0, 0, 0, false, null);
-        }
-
-        public static void displayParticles(ParticleType particleType, int amount, Location location, double radius, double xOffset, double yOffset, double zOffset, boolean randomizeOffset, List<ParticleOption> particleOption) {
-            displayParticles(particleType, amount, location, radius, xOffset, yOffset, zOffset, randomizeOffset, particleOption, null);
+        public static void displayParticles(EffectData effectData) {
+            displayParticles(effectData.getParticle(), effectData.getAmount(), effectData.getDisplayAt(), effectData.getDisplayRadius(),
+                    effectData.getxOffset(), effectData.getyOffset(), effectData.getzOffset(), effectData.isRandomizeOffsets(),
+                    effectData.getParticleOptions(), effectData.getVelocity());
         }
 
         public static void displayParticles(ParticleType particleType, int amount, Location location, double radius, double xOffset, double yOffset, double zOffset, boolean randomizeOffset, List<ParticleOption> particleOptions, Vector3d velocity) {
@@ -162,7 +148,7 @@ public class ParticleUtils {
                     continue;
                 }
 
-                UserPlayer player = (UserPlayer) ((UserManager)Manager.getManager(Manager.ManagerKey.USER)).find(entity.getUniqueId()).get();
+                UserPlayer player = (UserPlayer) Avatar.INSTANCE.getUserManager().find(entity.getUniqueId()).get();
 
                 Optional<Player> p = player.getPlayer();
                 if(!p.isPresent()){
