@@ -141,6 +141,10 @@ public class Stats {
             if(this.current > this.max){
                 this.current = this.max;
             }
+
+            if(this.current < 0){
+                this.current = 0;
+            }
         }
 
         public boolean isAltered(){
@@ -196,6 +200,22 @@ public class Stats {
 
         public double getCurrentAvailablePercent(){
             return (current/getAvailableMax()) * 100;
+        }
+
+        public boolean canAfford(int cost) {
+            return current >= cost;
+        }
+
+        public void subtract(int cost) {
+            current -= cost;
+
+            valueCheck();
+        }
+
+        public void add(int amount){
+            current += amount;
+
+            valueCheck();
         }
     }
 

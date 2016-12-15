@@ -1,7 +1,7 @@
 package avatar.user;
 
+import avatar.Avatar;
 import avatar.game.areas.Area;
-import avatar.managers.Manager;
 import avatar.user.stats.IStatsPreset;
 import avatar.user.stats.Stats;
 import avatar.user.stats.presets.DefaultBenderPreset;
@@ -28,7 +28,7 @@ public class User {
         this.user = user;
         stats = new Stats(preset, this);
 
-        Manager.getManager(Manager.ManagerKey.USER).add(this);
+        Avatar.INSTANCE.getUserManager().add(this);
     }
 
     /**
@@ -40,6 +40,10 @@ public class User {
             return;
 
         leaveArea();
+    }
+
+    public Stats getStats() {
+        return stats;
     }
 
     public Area getPresentArea(){return presentArea;}

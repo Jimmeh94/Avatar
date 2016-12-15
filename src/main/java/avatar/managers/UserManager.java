@@ -7,10 +7,6 @@ import java.util.UUID;
 
 public class UserManager extends Manager<User>{
 
-    public UserManager() {
-        super(ManagerKey.USER);
-    }
-
     public Optional<User> find(UUID uuid){
         Optional<User> give = Optional.empty();
 

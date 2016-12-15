@@ -1,6 +1,8 @@
 package avatar;
 
 import avatar.events.AreaEvents;
+import avatar.managers.AreaManager;
+import avatar.managers.UserManager;
 import avatar.utilities.database.MongoUtils;
 import com.google.inject.Inject;
 import org.spongepowered.api.Sponge;
@@ -18,6 +20,10 @@ public class Avatar {
 
     private MongoUtils mongoUtils;
 
+    //--- managers ---
+    private UserManager userManager;
+    private AreaManager areaManager;
+
     @Inject
     private Logger logger;
 
@@ -28,6 +34,9 @@ public class Avatar {
         mongoUtils = new MongoUtils("", "", "");
 
         registerListeners();
+
+        userManager = new UserManager();
+        areaManager = new AreaManager();
     }
 
     @Listener
@@ -45,5 +54,13 @@ public class Avatar {
 
     private void registerListeners(){
         Sponge.getEventManager().registerListeners(this, new AreaEvents());
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    public AreaManager getAreaManager() {
+        return areaManager;
     }
 }

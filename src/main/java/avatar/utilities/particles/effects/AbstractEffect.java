@@ -69,8 +69,7 @@ public abstract class AbstractEffect {
 	 *            The location to spawn the particle at.
 	 */
 	protected void playParticle(Location loc){
-		effectData.setPlayParticleAt(loc);
-		effectData.getPlayParticles().playParticles(effectData);
+		effectData.getPlayParticles().playParticles(effectData, loc);
 	}
 
 	public EffectData getEffectData() {
