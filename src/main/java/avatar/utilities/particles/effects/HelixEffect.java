@@ -1,8 +1,5 @@
 package avatar.utilities.particles.effects;
 
-import kingdomcrashers.utilities.particles.ParticleEffect;
-import org.bukkit.Location;
-
 public class HelixEffect extends AbstractEffect {
 
 	private double[][][] coordinates;
@@ -10,13 +7,9 @@ public class HelixEffect extends AbstractEffect {
 	private int spinner;
 	private int circleCoordinates;
 
-	public HelixEffect(Location loc, double top, double heightStep, double radius) {
-		super(loc);
-		init(top, heightStep, radius);
-	}
+	public HelixEffect(EffectData effectData, double top, double heightStep, double radius) {
+		super(effectData);
 
-	public HelixEffect(Location loc, double top, double heightStep, double radius, ParticleEffect particle) {
-		super(loc, particle);
 		init(top, heightStep, radius);
 	}
 
@@ -46,8 +39,8 @@ public class HelixEffect extends AbstractEffect {
 				int stepPerLine = circleCoordinates / lines;
 				double[] array = array2d[(((stepPerLine * line) % circleCoordinates) + (i * 2 % circleCoordinates)
 						+ (circleCoordinates - 1 - ((spinner) % circleCoordinates))) % circleCoordinates];
-				playParticle(getLocation().add(array[0], array[1], array[2]));
-				getLocation().subtract(array[0], array[1], array[2]);
+				playParticle(effectData.getLocation().add(array[0], array[1], array[2]));
+				effectData.getLocation().sub(array[0], array[1], array[2]);
 			}
 			i++;
 		}

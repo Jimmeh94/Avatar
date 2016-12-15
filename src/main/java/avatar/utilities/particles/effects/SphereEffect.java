@@ -1,19 +1,12 @@
 package avatar.utilities.particles.effects;
 
-import kingdomcrashers.utilities.particles.ParticleEffect;
-import org.bukkit.Location;
-
 public class SphereEffect extends AbstractEffect {
 
 	private double[][][] sphereCoordinates;
 
-	public SphereEffect(Location loc, double radius) {
-		super(loc);
-		init(radius);
-	}
+	public SphereEffect(EffectData effectData, double radius) {
+		super(effectData);
 
-	public SphereEffect(Location loc, double radius, ParticleEffect particle) {
-		super(loc, particle);
 		init(radius);
 	}
 
@@ -37,8 +30,8 @@ public class SphereEffect extends AbstractEffect {
 	public void play() {
 		for (int i = 0; i < sphereCoordinates.length; i++)
 			for (int i2 = 0; i2 < sphereCoordinates[i].length; i2++) {
-				playParticle(getLocation().add(sphereCoordinates[i][i2][0], sphereCoordinates[i][i2][1], sphereCoordinates[i][i2][2]));
-				getLocation().subtract(sphereCoordinates[i][i2][0], sphereCoordinates[i][i2][1], sphereCoordinates[i][i2][2]);
+				playParticle(effectData.getLocation().add(sphereCoordinates[i][i2][0], sphereCoordinates[i][i2][1], sphereCoordinates[i][i2][2]));
+				effectData.getLocation().sub(sphereCoordinates[i][i2][0], sphereCoordinates[i][i2][1], sphereCoordinates[i][i2][2]);
 			}
 	}
 

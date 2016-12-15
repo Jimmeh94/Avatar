@@ -1,22 +1,14 @@
 package avatar.utilities.particles.effects;
 
-import kingdomcrashers.utilities.particles.ParticleEffect;
-import org.bukkit.Location;
-
 public class TornadoEffect extends AbstractEffect {
 
 	private double[][][] coordinates;
 	private int spinner;
 	private int lines;
 
-	public TornadoEffect(Location loc, double height, double heightStep, double maxRadius) {
-		super(loc);
-		spinner = 0;
-		init(height, heightStep, maxRadius);
-	}
+	public TornadoEffect(EffectData effectData, double height, double heightStep, double maxRadius) {
+		super(effectData);
 
-	public TornadoEffect(Location loc, double height, double heightStep, double maxRadius, ParticleEffect effect) {
-		super(loc, effect);
 		spinner = 0;
 		init(height, heightStep, maxRadius);
 	}
@@ -51,8 +43,8 @@ public class TornadoEffect extends AbstractEffect {
 					continue;
 				double[] coordinateArray = coordinates[i][(((stepPerLine * line) % 60) + (i * 2 % 60)
 						+ (59 - ((spinner) % 60))) % 60];
-				playParticle(getLocation().add(coordinateArray[0], coordinateArray[1], coordinateArray[2]));
-				getLocation().subtract(coordinateArray[0], coordinateArray[1], coordinateArray[2]);
+				playParticle(effectData.getLocation().add(coordinateArray[0], coordinateArray[1], coordinateArray[2]));
+				effectData.getLocation().sub(coordinateArray[0], coordinateArray[1], coordinateArray[2]);
 			}
 		}
 	}

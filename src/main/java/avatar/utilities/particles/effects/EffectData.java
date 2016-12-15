@@ -10,7 +10,7 @@ import org.spongepowered.api.world.Location;
 
 public class EffectData {
 
-    private Location center, playParticleAt;
+    private Location center;
     private User owner;
     private int amount = 10;
     protected ParticleType particle = ParticleTypes.FLAME;
@@ -25,11 +25,6 @@ public class EffectData {
 
     public EffectData setTask(Task task) {
         this.task = task;
-        return this;
-    }
-
-    public EffectData setPlayParticleAt(Location playParticleAt) {
-        this.playParticleAt = playParticleAt;
         return this;
     }
 
@@ -90,10 +85,6 @@ public class EffectData {
 
     public Location getLocation() {
         return center;
-    }
-
-    public Location getPlayParticleAt() {
-        return playParticleAt;
     }
 
     public User getOwner() {
