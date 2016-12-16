@@ -2,9 +2,7 @@ package avatar.commands.test;
 
 import avatar.Avatar;
 import avatar.utilities.particles.ParticleUtils;
-import avatar.utilities.particles.effects.AbstractEffect;
-import avatar.utilities.particles.effects.AtomEffect;
-import avatar.utilities.particles.effects.EffectData;
+import avatar.utilities.particles.effects.*;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -39,14 +37,22 @@ public class ParticleEffectCommands implements CommandExecutor {
                 .center(player.getLocation().copy().add(0, 1, 0))
                 .taskInfo(0L, 5L, 1200L)
                 .amount(50)
-                .offsets(1.0, 1.0, 1.0)
+                .offsets(0, 0, 0)
                 .particle(ParticleTypes.REDSTONE_DUST)
                 .playParticles((data, target) -> ParticleUtils.PlayerBased.displayParticles(data.setDisplayAt(target)))
                 .randomizeOffsets(true)
                 .build();
 
         switch (effect){
-            case "atom": abstractEffect = new AtomEffect(effectData, 3.5, 1.5, 0.0);
+            case "atom": abstractEffect = new AtomEffect(effectData, 1, 0.5, 0.0);
+                break;
+            case "helix": abstractEffect = new HelixEffect(effectData, 7.5, .75, 3.5);
+                break;
+            case "line": abstractEffect = new LineEffect(effectData, player.getLocation().copy().add(5, 3, 5));
+                break;
+            case "sphere": abstractEffect = new SphereEffect(effectData, 5.0);
+                break;
+            case "tornado": abstractEffect = new TornadoEffect(effectData, 10, 1, 6.5);
         }
 
         abstractEffect.start();

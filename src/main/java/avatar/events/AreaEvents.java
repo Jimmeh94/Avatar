@@ -1,9 +1,8 @@
 package avatar.events;
 
+import avatar.Avatar;
 import avatar.game.areas.Area;
 import avatar.managers.AreaManager;
-import avatar.managers.Manager;
-import avatar.managers.UserManager;
 import avatar.user.User;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -19,10 +18,10 @@ public class AreaEvents {
             if(event.getFromTransform().getPosition().distance(event.getToTransform().getPosition()) < 1)
                 return;
 
-            AreaManager am = (AreaManager) Manager.getManager(Manager.ManagerKey.AREA);
+            AreaManager am = Avatar.INSTANCE.getAreaManager();
 
             Optional<Area> temp = am.find(event.getToTransform().getLocation());
-            Optional<User> user = ((UserManager)Manager.getManager(Manager.ManagerKey.USER)).find(event.getTargetEntity().getUniqueId());
+            Optional<User> user = Avatar.INSTANCE.getUserManager().find(event.getTargetEntity().getUniqueId());
 
             if(user.isPresent()) {
                 if (temp.isPresent()) {

@@ -1,6 +1,8 @@
 package avatar;
 
+import avatar.commands.test.ParticleEffectCommands;
 import avatar.events.AreaEvents;
+import avatar.events.PlayerConnection;
 import avatar.managers.AreaManager;
 import avatar.managers.UserManager;
 import avatar.utilities.database.MongoUtils;
@@ -34,6 +36,7 @@ public class Avatar {
         mongoUtils = new MongoUtils("", "", "");
 
         registerListeners();
+        registerCommands();
 
         userManager = new UserManager();
         areaManager = new AreaManager();
@@ -44,16 +47,21 @@ public class Avatar {
 
     }
 
+    private void registerCommands() {
+        new ParticleEffectCommands();
+    }
+
+    private void registerListeners(){
+        Sponge.getEventManager().registerListeners(this, new AreaEvents());
+        Sponge.getEventManager().registerListeners(this, new PlayerConnection());
+    }
+
     public MongoUtils getMongoUtils() {
         return mongoUtils;
     }
 
     public Logger getLogger() {
         return logger;
-    }
-
-    private void registerListeners(){
-        Sponge.getEventManager().registerListeners(this, new AreaEvents());
     }
 
     public UserManager getUserManager() {
