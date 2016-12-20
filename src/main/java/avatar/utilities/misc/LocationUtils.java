@@ -8,6 +8,74 @@ import java.util.Random;
 
 public class LocationUtils {
 
+    //Should be a 1 block thick ring around the outside of the circle
+    /*
+    Given a radius length r and an angle t in radians and a circle's center (h,k),
+    you can calculate the coordinates of a point on the circumference as follows
+     */
+    public static List<Location> getCircleOutline(Location center, double radius, boolean includeDuplicates){
+        List<Location> threshold = new ArrayList<>();
+        Location copy = center.copy();
+
+        for(int i = 0; i < 360; i++){
+            //2 radians = 360 degrees
+            double t = i * (Math.PI / 180);
+            double x = radius * Math.cos(t) + copy.getX();
+            double z = radius * Math.sin(t) + copy.getZ();
+            Location add = new Location(copy.getExtent(),
+                    x,
+                    copy.getBlockY(),
+                    z);
+            if(!includeDuplicates && check(add, threshold)){
+                threshold.add(add);
+            }
+        }
+        return threshold;
+    }
+
+    private static boolean check(Location add, List<Location> threshold) {
+        for(Location location: threshold){
+            if(location.getBlockX() == add.getBlockX() && location.getBlockZ() == add.getBlockZ())
+                return false;
+        }
+        return true;
+    }
+
+    public static List<Location> getSquareOutline(Location first, Location second){
+        List<Location> threshold = new ArrayList<>();
+
+        int xCoefficient = first.getBlockX() > second.getBlockX() ? -1 : 1, zCoefficient = first.getBlockZ() > second.getBlockZ() ? -1 : 1;
+        int deltaX = Math.max(first.getBlockX(), second.getBlockX()) - Math.min(first.getBlockX(), second.getBlockX());
+        int deltaZ = Math.max(first.getBlockZ(), second.getBlockZ()) - Math.min(first.getBlockZ(), second.getBlockZ());
+
+        Location current = first.copy();
+        threshold.add(current);
+
+        for(int i = 0; i < deltaX; i++){
+            current = current.add(xCoefficient, 0, 0);
+            threshold.add(current);
+        }
+        for(int i = 0; i < deltaZ; i++){
+            current = current.add(0, 0, zCoefficient);
+            threshold.add(current);
+        }
+
+        xCoefficient *= -1;
+        zCoefficient *= -1;
+        for(int i = 0; i < deltaX; i++){
+            current = current.add(xCoefficient, 0, 0);
+            threshold.add(current);
+        }
+        for(int i = 0; i < deltaZ; i++){
+            current = current.add(0, 0, zCoefficient);
+            threshold.add(current);
+        }
+
+        threshold.add(second);
+
+        return threshold;
+    }
+
     public static Location getMidPointLocation(Location start, Location end){
         Double[] delta = new Double[]{Math.abs(start.getX() - end.getX()),
                 Math.abs(start.getY() - end.getY()),
@@ -16,6 +84,7 @@ public class LocationUtils {
         Double[] startXYZ = new Double[]{start.getX(), start.getY(), start.getZ()};
         Double[] endXYZ = new Double[]{end.getX(), end.getY(), end.getZ()};
 
+        //3 just to cycle through the x, y and z coord
         for(int i = 0; i < 3; i++){
             if(startXYZ[i] > endXYZ[i]){
                 xyz[i] = startXYZ[i] - delta[i]/2;

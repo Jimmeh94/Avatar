@@ -2,7 +2,10 @@ package avatar.game.areas;
 
 import avatar.user.User;
 import avatar.user.UserPlayer;
+import avatar.utilities.misc.LocationUtils;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 
 import java.util.ArrayList;
@@ -18,18 +21,24 @@ public abstract class Area {
     private AreaShape shape;
     private String displayName;
     private List<User> members = new ArrayList<>();
+    private AreaReferences reference;
 
-    public Area(AreaShape shape, String displayName){
+    public Area(AreaShape shape, String displayName, AreaReferences reference){
         this.shape = shape;
         this.displayName = displayName;
+        this.reference = reference;
     }
+
+    public boolean is(int ID){return this.reference.getIntID() == ID;}
+
+    public boolean is(String ID){return this.reference.getStringID().toLowerCase() == ID.toLowerCase();}
 
     public boolean has(Location location) {
         for(Location l: shape.threshold){
             if(l.getBlockX() == location.getBlockX() &&
-                    l.getBlockY() == location.getBlockY() &&
                     l.getBlockZ() == location.getBlockZ()){
-                return true;
+                if(location.getBlockY() <= l.getBlockY() + shape.height)
+                    return true;
             }
         }
         return false;
@@ -44,8 +53,9 @@ public abstract class Area {
         if(!members.contains(targetEntity)){
             members.add(targetEntity);
 
-            if(targetEntity instanceof Player);
-            //show display name somewhere
+            if(targetEntity instanceof UserPlayer){
+                ((UserPlayer)targetEntity).getPlayer().get().sendMessage(Text.of("Entering " + displayName));
+            }
         }
     }
 
@@ -57,6 +67,10 @@ public abstract class Area {
     public void leaving(User targetEntity) {
         if(members.contains(targetEntity)){
             members.remove(targetEntity);
+
+            if(targetEntity instanceof UserPlayer){
+                ((UserPlayer)targetEntity).getPlayer().get().sendMessage(Text.of("Leaving " + displayName));
+            }
         }
     }
 
@@ -64,8 +78,8 @@ public abstract class Area {
         return displayName;
     }
 
-    public boolean isMember(Player player){
-        return members.contains(player);
+    public boolean isMember(Entity entity){
+        return members.contains(entity);
     }
 
     public List<UserPlayer> getPlayersFromMembers() {
@@ -79,12 +93,20 @@ public abstract class Area {
         return players;
     }
 
+    public boolean inside(UserPlayer player){
+        double thresholdDistance = shape.center.getPosition().distance(player.getLastBlockLocation().get().getPosition());
+        double playerDistance = shape.center.getPosition().distance(player.getPlayer().get().getLocation().getPosition());
+
+        return thresholdDistance >= playerDistance;
+    }
+
     public static abstract class AreaShape {
         private Location center;
         protected List<Location> threshold = new ArrayList<>();
         private double height;
 
         protected abstract void calculateThreshold();
+        protected abstract double getRadius();
 
         public AreaShape(Location center, double height){
             this.center = center;
@@ -103,11 +125,15 @@ public abstract class Area {
             for(Location location: threshold){
                 if(Math.max(player.getLocation().getX(), location.getX()) - Math.min(player.getLocation().getX(), location.getX()) <= 1.5
                         && Math.max(player.getLocation().getZ(), location.getZ()) - Math.min(player.getLocation().getZ(), location.getZ()) <= 1.5
-                        && player.getLocation().getY() < location.getY() + height){
+                        && player.getLocation().getY() <= location.getY() + height){
                     return true;
                 }
             }
             return false;
+        }
+
+        protected void setCenter(Location location) {
+            this.center = location;
         }
     }
 
@@ -123,20 +149,11 @@ public abstract class Area {
         }
 
         @Override
-        protected void calculateThreshold() {
-            //Should be a 1 block thick ring around the outside of the circle
-            /*
-            Given a radius length r and an angle t in radians and a circle's center (h,k),
-            you can calculate the coordinates of a point on the circumference as follows
-             */
+        protected double getRadius(){return radius;}
 
-            for(int i = 0; i < 360; i++){
-                //2 radians = 360 degrees
-                double t = i * (Math.PI / 180);
-                double x = radius * Math.cos(t) + getCenter().getX();
-                double z = radius * Math.sin(t) + getCenter().getY();
-                threshold.add(new Location(getCenter().getExtent(), x, getHeight(), z));
-            }
+        @Override
+        protected void calculateThreshold() {
+            threshold = LocationUtils.getCircleOutline(getCenter(), getRadius(), false);
         }
     }
 
@@ -147,36 +164,18 @@ public abstract class Area {
         public AreaRectangle(Location firstCorner, Location secondCorner, double height) {
             super(null, height);
 
+            this.setCenter(LocationUtils.getMidPointLocation(firstCorner, secondCorner));
             this.first = firstCorner;
             this.second = secondCorner;
+            calculateThreshold();
         }
 
         @Override
+        protected double getRadius(){return (first.getPosition().distance(second.getPosition())) / 2;}
+
+        @Override
         protected void calculateThreshold() {
-            int xCoefficient = first.getX() > second.getX() ? -1 : 1, zCoefficient = first.getZ() > second.getZ() ? -1 : 1;
-
-            Location current = first.copy();
-            threshold.add(current);
-            while(current.getBlockX() != second.getBlockX()){
-                current.add(xCoefficient * 1, 0, 0);
-                threshold.add(current);
-            }
-            while(current.getBlockZ() != second.getBlockZ()){
-                current.add(0, 0, zCoefficient * 1);
-                threshold.add(current);
-            }
-
-            xCoefficient *= -1;
-            zCoefficient *= -1;
-            while(current.getBlockX() != first.getBlockX()){
-                current.add(xCoefficient * 1, 0, 0);
-                threshold.add(current);
-            }
-            while(current.getBlockZ() != first.getBlockZ()){
-                current.add(0, 0, zCoefficient * 1);
-                threshold.add(current);
-            }
-            threshold.add(second);
+            threshold = LocationUtils.getSquareOutline(first, second);
         }
     }
 

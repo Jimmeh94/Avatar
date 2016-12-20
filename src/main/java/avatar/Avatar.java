@@ -1,5 +1,6 @@
 package avatar;
 
+import avatar.commands.test.AreaCommands;
 import avatar.commands.test.ParticleEffectCommands;
 import avatar.events.AreaEvents;
 import avatar.events.PlayerConnection;
@@ -10,8 +11,10 @@ import com.google.inject.Inject;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
 
 import java.util.logging.Logger;
 
@@ -30,16 +33,19 @@ public class Avatar {
     private Logger logger;
 
     @Listener
-    public void onServerStart(GameInitializationEvent event){
+    public void onGameInit(GameInitializationEvent event){
         INSTANCE = this;
 
         mongoUtils = new MongoUtils("", "", "");
+    }
+
+    @Listener
+    public void onServerStarting(GameStartingServerEvent event){
+        userManager = new UserManager();
+        areaManager = new AreaManager();
 
         registerListeners();
         registerCommands();
-
-        userManager = new UserManager();
-        areaManager = new AreaManager();
     }
 
     @Listener
@@ -49,12 +55,15 @@ public class Avatar {
 
     private void registerCommands() {
         new ParticleEffectCommands();
+        new AreaCommands();
     }
 
     private void registerListeners(){
         Sponge.getEventManager().registerListeners(this, new AreaEvents());
         Sponge.getEventManager().registerListeners(this, new PlayerConnection());
     }
+
+    public PluginContainer getPluginContainer(){return Sponge.getPluginManager().fromInstance(this).get();}
 
     public MongoUtils getMongoUtils() {
         return mongoUtils;

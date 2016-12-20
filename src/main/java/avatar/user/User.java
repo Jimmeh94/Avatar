@@ -63,6 +63,9 @@ public class User {
      * @param area
      */
     public void enterArea(Area area){
+        if(area == presentArea)
+            return;
+
         if(presentArea != null){
             leaveArea();
         }
@@ -75,6 +78,9 @@ public class User {
      * Use this to have this User leave the current area, rather than Area#leaveArea()
      */
     public void leaveArea() {
+        if(presentArea == null)
+            return;
+
         presentArea.leaving(this);
         presentArea = null;
     }
