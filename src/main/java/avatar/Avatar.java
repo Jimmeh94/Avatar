@@ -6,6 +6,7 @@ import avatar.events.AreaEvents;
 import avatar.events.PlayerConnection;
 import avatar.managers.AreaManager;
 import avatar.managers.UserManager;
+import avatar.runnables.GameTimer;
 import avatar.utilities.database.MongoUtils;
 import com.google.inject.Inject;
 import org.spongepowered.api.Sponge;
@@ -29,6 +30,9 @@ public class Avatar {
     private UserManager userManager;
     private AreaManager areaManager;
 
+    //--- Runnables ---
+    private GameTimer gameTimer;
+
     @Inject
     private Logger logger;
 
@@ -46,12 +50,15 @@ public class Avatar {
 
         registerListeners();
         registerCommands();
+        registerRunnables();
     }
 
     @Listener
     public void onServerStopping(GameStoppingEvent event){
 
     }
+
+    private void registerRunnables(){gameTimer = new GameTimer(10L);}
 
     private void registerCommands() {
         new ParticleEffectCommands();

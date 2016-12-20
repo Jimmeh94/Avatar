@@ -8,6 +8,48 @@ import java.util.Random;
 
 public class LocationUtils {
 
+    public static List<Location> getConnectingLine(Location start, Location end){
+        List<Location> give = new ArrayList<>();
+        give.add(start);
+
+        int deltaX = Math.max(start.getBlockX(), end.getBlockX()) - Math.min(start.getBlockX(), end.getBlockX());
+        int deltaY = Math.max(start.getBlockY(), end.getBlockY()) - Math.min(start.getBlockY(), end.getBlockY());
+        int deltaZ = Math.max(start.getBlockZ(), end.getBlockZ()) - Math.min(start.getBlockZ(), end.getBlockZ());
+
+        int xCoefficient = start.getBlockX() > end.getBlockX() ? -1 : 1;
+        if(start.getBlockX() == end.getBlockX())
+            xCoefficient = 0;
+
+        int zCoefficient = start.getBlockZ() > end.getBlockZ() ? -1 : 1;
+        if(start.getBlockZ() == end.getBlockZ())
+            zCoefficient = 0;
+
+        int yCoefficient = start.getBlockY() > end.getBlockY() ? -1 : 1;
+        if(start.getBlockY() == end.getBlockY())
+            yCoefficient = 0;
+
+        Location temp = start.copy();
+        do{
+            if(deltaX == 0)
+                xCoefficient = 0;
+            if(deltaY == 0)
+                yCoefficient = 0;
+            if(deltaZ == 0)
+                zCoefficient = 0;
+
+            temp = temp.add(xCoefficient, yCoefficient, zCoefficient);
+            give.add(temp);
+
+            deltaX--;
+            deltaY--;
+            deltaZ--;
+        } while(deltaX > 0 && deltaY > 0&& deltaZ> 0);
+
+        give.add(end);
+
+        return give;
+    }
+
     //Should be a 1 block thick ring around the outside of the circle
     /*
     Given a radius length r and an angle t in radians and a circle's center (h,k),
