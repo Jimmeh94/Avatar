@@ -5,8 +5,10 @@ import avatar.game.areas.Area;
 import avatar.user.User;
 import avatar.user.UserPlayer;
 import avatar.utilities.misc.LocationUtils;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.world.Location;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -57,5 +59,27 @@ public class UserManager extends Manager<User>{
                 player.setLastBlockLocation(player.getPlayer().get().getLocation());
             }
         }
+    }
+
+    public List<UserPlayer> getPlayers() {
+        List<UserPlayer> players = new ArrayList<>();
+        for(User user: objects){
+            if(user instanceof UserPlayer)
+                players.add(((UserPlayer)user));
+        }
+        return players;
+    }
+
+    public Optional<UserPlayer> findUserPlayer(Entity entity) {
+        Optional<UserPlayer> give = Optional.empty();
+
+        for(User user: objects){
+            if(user instanceof UserPlayer && user.getUUID().equals(entity.getUniqueId())){
+                give = Optional.of((UserPlayer)user);
+                return give;
+            }
+        }
+
+        return give;
     }
 }

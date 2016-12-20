@@ -15,8 +15,10 @@ public class GameTimer extends CoreTimer {
 
     @Override
     protected void runTask() {
-
         //Update necessary player information
         Avatar.INSTANCE.getUserManager().tick();
+
+        //Update Quest trackers
+        Avatar.INSTANCE.getQuestManager().tick();
     }
 }

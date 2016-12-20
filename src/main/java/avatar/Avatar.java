@@ -4,7 +4,11 @@ import avatar.commands.test.AreaCommands;
 import avatar.commands.test.ParticleEffectCommands;
 import avatar.events.AreaEvents;
 import avatar.events.PlayerConnection;
+import avatar.game.dialogue.core.builders.DialogueBuilder;
+import avatar.game.quests.quests.builders.QuestBuilder;
 import avatar.managers.AreaManager;
+import avatar.managers.DialogueManager;
+import avatar.managers.QuestManager;
 import avatar.managers.UserManager;
 import avatar.runnables.GameTimer;
 import avatar.utilities.database.MongoUtils;
@@ -29,9 +33,15 @@ public class Avatar {
     //--- managers ---
     private UserManager userManager;
     private AreaManager areaManager;
+    private QuestManager questManager;
+    private DialogueManager dialogueManager;
 
     //--- Runnables ---
     private GameTimer gameTimer;
+
+    //--- misc ---
+    private final QuestBuilder questBuilder = new QuestBuilder();
+    private final DialogueBuilder dialogueBuilder = new DialogueBuilder();
 
     @Inject
     private Logger logger;
@@ -47,10 +57,15 @@ public class Avatar {
     public void onServerStarting(GameStartingServerEvent event){
         userManager = new UserManager();
         areaManager = new AreaManager();
+        questManager = new QuestManager();
+        dialogueManager = new DialogueManager();
 
         registerListeners();
         registerCommands();
         registerRunnables();
+
+        questManager.loadQuests();
+        dialogueManager.loadDialogue();
     }
 
     @Listener
@@ -87,4 +102,14 @@ public class Avatar {
     public AreaManager getAreaManager() {
         return areaManager;
     }
+
+    public QuestBuilder getQuestBuilder(){return questBuilder;}
+
+    public QuestManager getQuestManager() {
+        return questManager;
+    }
+
+    public DialogueManager getDialogueManager(){return dialogueManager;}
+
+    public DialogueBuilder getDialogueBuilder(){return dialogueBuilder;}
 }
