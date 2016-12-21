@@ -15,6 +15,8 @@ import java.util.UUID;
 
 public class UserManager extends Manager<User>{
 
+    private long lastRun = System.currentTimeMillis();
+
     public Optional<User> find(UUID uuid){
         Optional<User> give = Optional.empty();
 
@@ -29,6 +31,45 @@ public class UserManager extends Manager<User>{
 
     public void tick() {
         //Checking if they have entered or left an area
+        areaTick();
+
+        //Check combat status
+        combatTick();
+    }
+
+    public List<UserPlayer> getPlayers() {
+        List<UserPlayer> players = new ArrayList<>();
+        for(User user: objects){
+            if(user instanceof UserPlayer)
+                players.add(((UserPlayer)user));
+        }
+        return players;
+    }
+
+    public Optional<UserPlayer> findUserPlayer(Entity entity) {
+        Optional<UserPlayer> give = Optional.empty();
+
+        for(User user: objects){
+            if(user instanceof UserPlayer && user.getUUID().equals(entity.getUniqueId())){
+                give = Optional.of((UserPlayer)user);
+                return give;
+            }
+        }
+
+        return give;
+    }
+
+    private void combatTick(){
+        //only need to check this every second
+        if((System.currentTimeMillis() - lastRun)/1000 < 1)
+            return;
+
+        for(User user: objects){
+            user.getCombatLogger().tickInCombat();
+        }
+    }
+
+    private void areaTick(){
         for(User user: objects){
             if(user.isPlayer()){
                 UserPlayer player = (UserPlayer)user;
@@ -59,27 +100,5 @@ public class UserManager extends Manager<User>{
                 player.setLastBlockLocation(player.getPlayer().get().getLocation());
             }
         }
-    }
-
-    public List<UserPlayer> getPlayers() {
-        List<UserPlayer> players = new ArrayList<>();
-        for(User user: objects){
-            if(user instanceof UserPlayer)
-                players.add(((UserPlayer)user));
-        }
-        return players;
-    }
-
-    public Optional<UserPlayer> findUserPlayer(Entity entity) {
-        Optional<UserPlayer> give = Optional.empty();
-
-        for(User user: objects){
-            if(user instanceof UserPlayer && user.getUUID().equals(entity.getUniqueId())){
-                give = Optional.of((UserPlayer)user);
-                return give;
-            }
-        }
-
-        return give;
     }
 }

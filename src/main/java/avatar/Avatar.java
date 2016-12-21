@@ -28,8 +28,6 @@ public class Avatar {
 
     public static Avatar INSTANCE;
 
-    private MongoUtils mongoUtils;
-
     //--- managers ---
     private UserManager userManager;
     private AreaManager areaManager;
@@ -40,6 +38,8 @@ public class Avatar {
     private GameTimer gameTimer;
 
     //--- misc ---
+    private final int combatInterval = 5; //how many seconds out of combat needed to be switched to out of combat
+    private MongoUtils mongoUtils;
     private final QuestBuilder questBuilder = new QuestBuilder();
     private final DialogueBuilder dialogueBuilder = new DialogueBuilder();
 
@@ -112,4 +112,8 @@ public class Avatar {
     public DialogueManager getDialogueManager(){return dialogueManager;}
 
     public DialogueBuilder getDialogueBuilder(){return dialogueBuilder;}
+
+    public int getCombatInterval() {
+        return combatInterval;
+    }
 }

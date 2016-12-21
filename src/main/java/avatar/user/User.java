@@ -2,6 +2,7 @@ package avatar.user;
 
 import avatar.Avatar;
 import avatar.game.areas.Area;
+import avatar.game.combatlog.EntityCombatLogger;
 import avatar.user.stats.IStatsPreset;
 import avatar.user.stats.Stats;
 import avatar.user.stats.presets.DefaultBenderPreset;
@@ -19,6 +20,7 @@ public class User {
     private UUID user;
     private Stats stats;
     private Area presentArea;
+    private EntityCombatLogger combatLogger;
 
     public User(UUID user){
         this(user, new DefaultBenderPreset());
@@ -27,9 +29,12 @@ public class User {
     public User(UUID user, IStatsPreset preset){
         this.user = user;
         stats = new Stats(preset, this);
+        combatLogger = new EntityCombatLogger(user);
 
         Avatar.INSTANCE.getUserManager().add(this);
     }
+
+    public boolean canBeAttacked(){return combatLogger.canReceiveDamage();}
 
     /**
      * Cleans up all loose ends this might have, if the user was just directly removed
@@ -40,20 +45,6 @@ public class User {
             return;
 
         leaveArea();
-    }
-
-    public Stats getStats() {
-        return stats;
-    }
-
-    public Area getPresentArea(){return presentArea;}
-
-    public UUID getUUID() {
-        return user;
-    }
-
-    public Optional<Entity> getEntity(){
-        return Sponge.getGame().getServer().getWorld(user).get().getEntity(user);
     }
 
     public boolean isPlayer(){return Sponge.getServer().getPlayer(user) != null;}
@@ -83,5 +74,24 @@ public class User {
 
         presentArea.leaving(this);
         presentArea = null;
+    }
+
+    //--- Getters ---
+    public Stats getStats() {
+        return stats;
+    }
+
+    public Area getPresentArea(){return presentArea;}
+
+    public UUID getUUID() {
+        return user;
+    }
+
+    public Optional<Entity> getEntity(){
+        return Sponge.getGame().getServer().getWorld(user).get().getEntity(user);
+    }
+
+    public EntityCombatLogger getCombatLogger() {
+        return combatLogger;
     }
 }
