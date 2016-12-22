@@ -1,18 +1,35 @@
 package avatar.game.abilities.properties;
 
-import avatar.user.User;
+import avatar.game.abilities.Ability;
+import avatar.game.abilities.AbilityEvent;
+import avatar.user.UserPlayer;
+import org.spongepowered.api.event.EventListener;
 
 /**
  * How far the ability can travel
  */
-public class AbilityPropertyRange extends AbilityProperty {
+public class AbilityPropertyRange extends AbilityProperty implements EventListener<AbilityEvent.UpdateTick>{
 
-    public AbilityPropertyRange(String displayName, User owner) {
-        super(displayName, AbilityPropertyCheck.ON_ABILITY_UPDATE, owner);
+    private double range;
+
+    public AbilityPropertyRange(String displayName, Ability ability, double range) {
+        super(displayName, ability);
     }
 
     @Override
-    public boolean check(User user) {
-        return true;
+    public void printFailMessage(UserPlayer user) {
+
+    }
+
+    @Override
+    protected void register() {
+
+    }
+
+    @Override
+    public void handle(AbilityEvent.UpdateTick updateTick) throws Exception {
+        if(!updateTick.isCancelled()){
+            //if user's current location .distance from ability.firedFrom > range cancel
+        }
     }
 }

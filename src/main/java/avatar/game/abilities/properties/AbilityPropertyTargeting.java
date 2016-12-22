@@ -1,22 +1,32 @@
 package avatar.game.abilities.properties;
 
-import avatar.user.User;
+import avatar.Avatar;
+import avatar.game.abilities.Ability;
+import avatar.game.abilities.AbilityEvent;
+import avatar.user.UserPlayer;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.event.EventListener;
 
 /**
  * The auto/manual targeting of the ability
  */
-public abstract class AbilityPropertyTargeting extends AbilityProperty {
+public abstract class AbilityPropertyTargeting extends AbilityProperty implements EventListener<AbilityEvent.PreFire> {
 
     private TargetingFilter filter;
 
-    public AbilityPropertyTargeting(String displayName, AbilityPropertyCheck checkWhen, User owner) {
-        super(displayName, checkWhen, owner);
+    public AbilityPropertyTargeting(String displayName, Ability ability) {
+        super(displayName, ability);
     }
 
-    public AbilityPropertyTargeting(String displayName, AbilityPropertyCheck checkWhen, User owner, TargetingFilter filter){
-        super(displayName, checkWhen, owner);
+    public AbilityPropertyTargeting(String displayName, Ability ability, TargetingFilter filter){
+        super(displayName, ability);
 
         this.filter = filter;
+    }
+
+    @Override
+    protected void register(){
+        Sponge.getEventManager().registerListener(Avatar.INSTANCE, AbilityEvent.PreFire.class, this);
     }
 
     public TargetingFilter getFilter() {
@@ -25,37 +35,60 @@ public abstract class AbilityPropertyTargeting extends AbilityProperty {
 
     public static class Self extends AbilityPropertyTargeting{
 
-        public Self(String displayName, User owner) {
-            super(displayName, AbilityPropertyCheck.PRE_FIRING, owner);
+        public Self(String displayName, Ability ability) {
+            super(displayName, ability);
+        }
+
+
+        @Override
+        public void printFailMessage(UserPlayer user) {
+
         }
 
         @Override
-        public boolean check(User user) {
-            return true;
+        public void handle(AbilityEvent.PreFire preFire) throws Exception {
+            if(!preFire.isCancelled()){
+
+            }
         }
     }
 
     public static class Entity extends AbilityPropertyTargeting{
 
-        public Entity(String displayName, User owner, TargetingFilter filter) {
-            super(displayName, AbilityPropertyCheck.PRE_FIRING, owner, filter);
+        public Entity(String displayName, Ability ability, TargetingFilter filter) {
+            super(displayName, ability, filter);
         }
 
         @Override
-        public boolean check(User user) {
-            return true;
+        public void printFailMessage(UserPlayer user) {
+
+        }
+
+        @Override
+        public void handle(AbilityEvent.PreFire preFire) throws Exception {
+            if(!preFire.isCancelled()){
+
+            }
         }
     }
 
     public static class Group extends AbilityPropertyTargeting{
 
-        public Group(String displayName, User owner, TargetingFilter filter) {
-            super(displayName, AbilityPropertyCheck.PRE_FIRING, owner, filter);
+        public Group(String displayName, Ability ability, TargetingFilter filter) {
+            super(displayName, ability, filter);
+        }
+
+
+        @Override
+        public void printFailMessage(UserPlayer user) {
+
         }
 
         @Override
-        public boolean check(User user) {
-            return true;
+        public void handle(AbilityEvent.PreFire preFire) throws Exception {
+            if(!preFire.isCancelled()){
+
+            }
         }
     }
 

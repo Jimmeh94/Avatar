@@ -7,12 +7,8 @@ import avatar.user.UserPlayer;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.EventListener;
 
-/**
- * How long the ability lasts
- */
-public class AbilityPropertyDuration extends AbilityProperty implements EventListener<AbilityEvent.UpdateTick>{
-
-    public AbilityPropertyDuration(String displayName, Ability ability) {
+public class AbilityPropertyHeal extends AbilityProperty implements EventListener<AbilityEvent.PostFire>{
+    public AbilityPropertyHeal(String displayName, Ability ability) {
         super(displayName, ability);
     }
 
@@ -23,13 +19,13 @@ public class AbilityPropertyDuration extends AbilityProperty implements EventLis
 
     @Override
     protected void register() {
-        Sponge.getEventManager().registerListener(Avatar.INSTANCE, AbilityEvent.UpdateTick.class, this);
+        Sponge.getEventManager().registerListener(Avatar.INSTANCE, AbilityEvent.PostFire.class, this);
     }
 
     @Override
-    public void handle(AbilityEvent.UpdateTick updateTick) throws Exception {
-        if(!updateTick.isCancelled()){
-
+    public void handle(AbilityEvent.PostFire postFire) throws Exception {
+        if(!postFire.isCancelled()){
+            //heal target
         }
     }
 }

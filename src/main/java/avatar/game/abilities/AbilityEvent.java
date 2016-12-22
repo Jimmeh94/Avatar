@@ -51,6 +51,12 @@ public class AbilityEvent implements Event, Cancellable {
         }
     }
 
+    public static class Hit extends AbilityEvent{
+        public Hit(Ability ability, Cause cause) {
+            super(ability, cause);
+        }
+    }
+
     public static class PostHit extends AbilityEvent{
         public PostHit(Ability ability, Cause cause) {
             super(ability, cause);
@@ -62,6 +68,12 @@ public class AbilityEvent implements Event, Cancellable {
 
     public static class UpdateTick extends AbilityEvent{
         public UpdateTick(Ability ability, Cause cause) {
+            super(ability, cause);
+        }
+    }
+
+    public static class RequirementCheck extends AbilityEvent{
+        public RequirementCheck(Ability ability, Cause cause) {
             super(ability, cause);
         }
     }

@@ -1,44 +1,56 @@
 package avatar.game.abilities.properties;
 
+import avatar.game.abilities.Ability;
 import avatar.user.User;
+import avatar.user.UserPlayer;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.event.EventListener;
 
 /**
  * For things like energy/chi cost,
  */
-public abstract class AbilityProperty {
+public abstract class AbilityProperty{
 
     private String displayName;
-    private AbilityPropertyCheck checkWhen;
     private User owner;
+    protected Ability ability;
 
-    public AbilityProperty(String displayName, AbilityPropertyCheck checkWhen, User owner){
+    public AbilityProperty(String displayName, Ability ability){
         this.displayName = displayName;
-        this.checkWhen = checkWhen;
-        this.owner = owner;
+        this.ability = ability;
+        this.owner = ability.getOwner();
+
+        register();
     }
 
     public String getDisplayName() {
         return displayName;
     }
 
-    public AbilityPropertyCheck getCheckWhen() {
-        return checkWhen;
-    }
-
     public User getOwner() {
         return owner;
     }
 
-    /**
-     * For things like energy cost, cast times, etc
-     * @param user
-     */
-    public abstract boolean check(User user); //will probably need to take an Ability, too
+    public Ability getAbility() {
+        return ability;
+    }
 
-    public enum AbilityPropertyCheck{
-        PRE_FIRING,
-        POST_FIRING,
-        ON_ABILITY_UPDATE,
+    /**
+     * Prints to the user why the action was unsuccessful, i.e. didn't have enough energy
+     */
+    public abstract void printFailMessage(UserPlayer user);
+
+    /**
+     * Registers the class as a listener
+     */
+    protected abstract void register();
+
+    /**
+     * Unregisters the class as a listener
+     */
+    public void unregister(){
+        if(this instanceof EventListener)
+            Sponge.getEventManager().unregisterListeners(this);
     }
 
 }

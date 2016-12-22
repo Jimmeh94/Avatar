@@ -2,6 +2,7 @@ package avatar.game.abilities;
 
 import avatar.Avatar;
 import avatar.game.abilities.properties.AbilityProperty;
+import avatar.game.abilities.properties.AbilityPropertyCost;
 import avatar.user.User;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.cause.Cause;
@@ -14,15 +15,14 @@ import java.util.List;
 
 public abstract class Ability {
 
-    private double baseDamage;
     private User owner;
-    private Location center;
+    private Location center, firedFrom;
     private AABB hitbox;
     private Element element;
     private Text displayName;
     private int id;
     private List<AbilityProperty> properties;
-    private Chunk locationChunk;
+    private Chunk locationChunk; //current chunk location
 
     protected abstract void initiateAbility();
 
@@ -30,19 +30,31 @@ public abstract class Ability {
 
     }
 
-    protected Cause getDefaultCause(){return Cause.source(Avatar.INSTANCE.getPluginContainer()).build();}
-
-    protected boolean canFire(){
+    public boolean hasProperty(AbilityPropertyReference reference){
         for(AbilityProperty property: properties){
-            if(property.check(owner) == false){
-                return false;
+            if(property.getClass() == reference.getClassType()){
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
+    public AbilityProperty getProperty(AbilityPropertyReference reference){
+        for(AbilityProperty property: properties){
+            if(property.getClass() == reference.getClassType()){
+                return property;
+            }
+        }
+        return null;
+    }
+
+    protected Cause getDefaultCause(){return Cause.source(Avatar.INSTANCE.getPluginContainer()).build();}
+
     public void fire(){
-        if(canFire()){
+        AbilityEvent.RequirementCheck check = new AbilityEvent.RequirementCheck(this, getDefaultCause());
+        Sponge.getEventManager().post(check);
+
+        if(!check.isCancelled()){
             AbilityEvent.PreFire event = new AbilityEvent.PreFire(this, getDefaultCause());
             Sponge.getEventManager().post(event);
 
@@ -52,25 +64,24 @@ public abstract class Ability {
 
                 AbilityEvent.PostFire post = new AbilityEvent.PostFire(this, getDefaultCause());
                 Sponge.getEventManager().post(post);
+
+                if(!post.isCancelled()){}
             } else {
-                //print some message or something
+                if(hasProperty(AbilityPropertyReference.COST)){
+                    ((AbilityPropertyCost)getProperty(AbilityPropertyReference.COST)).refund();
+                }
+                //event was cancelled, print why?
             }
         }
+
+        //update the player's HUD
     }
 
     public void updateTick(){
         AbilityEvent.UpdateTick event = new AbilityEvent.UpdateTick(this, getDefaultCause());
         Sponge.getEventManager().post(event);
 
-        if(!event.isCancelled()){
-            //update
-            List<Ability> nearby = Avatar.INSTANCE.getAbilityManager().getNearbyAbilitiesInChunk(this);
-            for(Ability ability: nearby){
-                if(this.hitbox.intersects(ability.getHitbox())){
-                    //made contact with another ability
-                }
-            }
-
+        if(!event.isCancelled()){ //update
         }
     }
 
@@ -102,7 +113,7 @@ public abstract class Ability {
         return locationChunk;
     }
 
-    public double getBaseDamage() {
-        return baseDamage;
+    public Location getFiredFrom() {
+        return firedFrom;
     }
 }
