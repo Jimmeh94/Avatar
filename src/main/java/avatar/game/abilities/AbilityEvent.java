@@ -40,6 +40,9 @@ public class AbilityEvent implements Event, Cancellable {
         public PostFire(Ability ability, Cause cause) {
             super(ability, cause);
         }
+
+        @Override
+        public boolean isCancelled(){return false;}
     }
 
     public static class PreHit extends AbilityEvent{
@@ -52,6 +55,9 @@ public class AbilityEvent implements Event, Cancellable {
         public PostHit(Ability ability, Cause cause) {
             super(ability, cause);
         }
+
+        @Override
+        public boolean isCancelled(){return false;}
     }
 
     public static class UpdateTick extends AbilityEvent{

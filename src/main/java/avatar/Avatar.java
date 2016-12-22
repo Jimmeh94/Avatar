@@ -8,10 +8,7 @@ import avatar.events.AreaEvents;
 import avatar.events.PlayerConnection;
 import avatar.game.dialogue.core.builders.DialogueBuilder;
 import avatar.game.quests.quests.builders.QuestBuilder;
-import avatar.managers.AreaManager;
-import avatar.managers.DialogueManager;
-import avatar.managers.QuestManager;
-import avatar.managers.UserManager;
+import avatar.managers.*;
 import avatar.runnables.GameTimer;
 import avatar.utilities.database.MongoUtils;
 import com.google.inject.Inject;
@@ -35,6 +32,7 @@ public class Avatar {
     private AreaManager areaManager;
     private QuestManager questManager;
     private DialogueManager dialogueManager;
+    private AbilityManager abilityManager;
 
     //--- Runnables ---
     private GameTimer gameTimer;
@@ -61,6 +59,7 @@ public class Avatar {
         areaManager = new AreaManager();
         questManager = new QuestManager();
         dialogueManager = new DialogueManager();
+        abilityManager = new AbilityManager();
 
         registerListeners();
         registerCommands();
@@ -116,6 +115,10 @@ public class Avatar {
     public DialogueManager getDialogueManager(){return dialogueManager;}
 
     public DialogueBuilder getDialogueBuilder(){return dialogueBuilder;}
+
+    public AbilityManager getAbilityManager() {
+        return abilityManager;
+    }
 
     public int getCombatInterval() {
         return combatInterval;
