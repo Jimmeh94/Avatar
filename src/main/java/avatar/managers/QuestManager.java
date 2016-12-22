@@ -16,8 +16,9 @@ public class QuestManager extends Manager<Quest> {
     public void giveQuest(UserPlayer playerInfo, String id){
         Quest quest = null;
         for(Quest q: objects){
-            if(q.getID() == id)
+            if(q.getID().equals(id)) {
                 quest = q;
+            }
         }
         if(quest != null){
             playerInfo.getQuests().add(new Quest(quest, playerInfo));
@@ -27,13 +28,14 @@ public class QuestManager extends Manager<Quest> {
     public void setActiveQuest(UserPlayer playerInfo, String id){
         Quest quest = null;
         for(Quest q: playerInfo.getQuests()){
-            if(q.getID() == id)
+            if(q.getID().equals(id)) {
                 quest = q;
+            }
         }
+        System.out.println("" + quest.isActive());
         if(quest != null && !quest.isActive()){
             Optional<Quest> temp = getActiveQuest(playerInfo);
             if(temp.isPresent()){
-                temp.get().setLore(false);
                 temp.get().toggleActive();
             }
             quest.toggleActive();

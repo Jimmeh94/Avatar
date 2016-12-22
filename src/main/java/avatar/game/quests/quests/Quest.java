@@ -141,6 +141,7 @@ public class Quest {
     public void toggleActive() {
         if(active){
             active = false;
+            setLore(false);
         } else {
             active = true;
             checkpoints.get(0).start();

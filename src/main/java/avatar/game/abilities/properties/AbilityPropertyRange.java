@@ -13,6 +13,6 @@ public class AbilityPropertyRange extends AbilityProperty {
 
     @Override
     public boolean check(User user) {
-        return false;
+        return true;
     }
 }

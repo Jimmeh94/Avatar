@@ -94,7 +94,9 @@ public abstract class Area {
     }
 
     public boolean inside(UserPlayer player){
-        double thresholdDistance = shape.center.getPosition().distance(player.getLastBlockLocation().get().getPosition());
+        Location nearest = shape.findNearestThreshold(player.getPlayer().get());
+
+        double thresholdDistance = shape.center.getPosition().distance(nearest.getPosition());
         double playerDistance = shape.center.getPosition().distance(player.getPlayer().get().getLocation().getPosition());
 
         return thresholdDistance >= playerDistance;
@@ -111,6 +113,16 @@ public abstract class Area {
         public AreaShape(Location center, double height){
             this.center = center;
             this.height = height;
+        }
+
+        protected Location findNearestThreshold(Entity entity){
+            Location give = null;
+            for(Location location: threshold){
+                if(give == null || location.getPosition().distance(entity.getLocation().getPosition()) < give.getPosition().distance(entity.getLocation().getPosition())){
+                    give = location.copy();
+                }
+            }
+            return give;
         }
 
         public Location getCenter() {

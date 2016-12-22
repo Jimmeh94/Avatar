@@ -1,5 +1,7 @@
 package avatar;
 
+import avatar.commands.DialogueCommands;
+import avatar.commands.QuestCommands;
 import avatar.commands.test.AreaCommands;
 import avatar.commands.test.ParticleEffectCommands;
 import avatar.events.AreaEvents;
@@ -78,6 +80,8 @@ public class Avatar {
     private void registerCommands() {
         new ParticleEffectCommands();
         new AreaCommands();
+        new DialogueCommands();
+        new QuestCommands();
     }
 
     private void registerListeners(){

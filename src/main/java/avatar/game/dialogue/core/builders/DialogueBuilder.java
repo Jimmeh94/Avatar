@@ -21,7 +21,7 @@ public class DialogueBuilder {
 
     public DialogueBuilder stringID(String stringID){this.stringID = stringID; return this;}
 
-    public DialogueBuilder loadDialogue(DisplayableBuilder displayableBuilder){
+    public DialogueBuilder addDialogue(DisplayableBuilder displayableBuilder){
         dialogue.add(displayableBuilder.load());
         return this;
     }

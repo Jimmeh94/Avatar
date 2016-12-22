@@ -1,5 +1,7 @@
 package avatar.utilities.misc;
 
+import com.flowpowered.math.vector.Vector3d;
+import com.flowpowered.math.vector.Vector3i;
 import org.spongepowered.api.world.Location;
 
 import java.util.ArrayList;
@@ -7,6 +9,14 @@ import java.util.List;
 import java.util.Random;
 
 public class LocationUtils {
+
+    public static long chunkPositionToLong(Vector3i position){
+        return (0xFFFFFFFFL & position.getX()) << 32 + (0xFFFFFFFFL & position.getZ());
+    }
+
+    public static Vector3i chunkPositionFromWorldPosition(Vector3d position){
+        return Vector3i.from((int)position.getX() >> 4, 0, (int)position.getZ() >> 4);
+    }
 
     public static List<Location> getConnectingLine(Location start, Location end){
         List<Location> give = new ArrayList<>();

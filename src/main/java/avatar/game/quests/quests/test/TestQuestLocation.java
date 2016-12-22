@@ -25,7 +25,7 @@ public class TestQuestLocation {
         checkpointBuilder.description("Go to a location")
                 .targetLocation(use)
                 .condition(new ReachLocation(false, use, 1.5))
-                .condition(new TimeLimit(true, 15))
+                .condition(new TimeLimit(true, 60))
                 .buildCheckpoint();
         checkpointBuilder.description("Stay within quest region and reach target location")
                 .targetLocation(use2)

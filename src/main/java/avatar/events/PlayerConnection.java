@@ -11,16 +11,14 @@ public class PlayerConnection {
     public void onJoin(ClientConnectionEvent.Join event){
         event.setMessageCancelled(true);
 
-        Avatar a = Avatar.INSTANCE;
+        Avatar.INSTANCE.getUserManager().add(new UserPlayer(event.getTargetEntity().getUniqueId()));
 
-        a.getUserManager().add(new UserPlayer(event.getTargetEntity().getUniqueId()));
-
-        a.getQuestManager().giveQuest(a.getUserManager().findUserPlayer(event.getTargetEntity()).get(), "test");
+        /*a.getQuestManager().giveQuest(a.getUserManager().findUserPlayer(event.getTargetEntity()).get(), "test");
         a.getQuestManager().setActiveQuest(a.getUserManager().findUserPlayer(event.getTargetEntity()).get(), "test");
-        a.getUserManager().findUserPlayer(event.getTargetEntity()).get().generateQuestMenu();
+        a.getUserManager().findUserPlayer(event.getTargetEntity()).get().generateQuestMenu();*/
 
-        a.getDialogueManager().giveDialogue(event.getTargetEntity(), "test");
-        a.getUserManager().findUserPlayer(event.getTargetEntity()).get().startDialogue();
+        /*a.getDialogueManager().giveDialogue(event.getTargetEntity(), "test");
+        a.getUserManager().findUserPlayer(event.getTargetEntity()).get().startDialogue();*/
     }
 
     @Listener

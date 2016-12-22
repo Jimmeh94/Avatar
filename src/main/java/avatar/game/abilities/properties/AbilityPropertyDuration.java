@@ -13,6 +13,6 @@ public class AbilityPropertyDuration extends AbilityProperty {
 
     @Override
     public boolean check(User user) {
-        return false;
+        return true;
     }
 }

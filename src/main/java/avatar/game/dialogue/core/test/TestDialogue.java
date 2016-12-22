@@ -17,34 +17,34 @@ public class TestDialogue {
         DisplayableBuilder displayableBuilder = dialogueBuilder.displayableBuilder();
 
         dialogueBuilder.stringID("test")
-                .loadDialogue(displayableBuilder
+                .addDialogue(displayableBuilder
                         .setChoiceWheel(false)
                         .addSentence(Text.of("[Old Man] Will you help me?")))
-                .loadDialogue(displayableBuilder
+                .addDialogue(displayableBuilder
                         .setChoiceWheel(true)//56,72,53
-                        .addCondition(new RangeBound(new Location(Sponge.getServer().getWorld("world").get(), new Vector3d(56f, 72f, 53f))))
+                        .addCondition(new RangeBound(new Location(Sponge.getServer().getWorld("world").get(), new Vector3d(100f, 100f, 100f)), 100))
                         .addChoice(Text.of("Yes I will"), Text.of("Get quest"), new DisplayDialogue("testYes"))
                         .addChoice(Text.of("No I won't"), Text.of("Deny quest"), new DisplayDialogue("testNo"))
                         .addChoice(Text.of("With what?"), Text.of("Get more info"), new DisplayDialogue("testWith")))
                 .build();
 
         dialogueBuilder.stringID("testYes")
-                .loadDialogue(displayableBuilder
+                .addDialogue(displayableBuilder
                         .setChoiceWheel(false)
                         .addSentence(Text.of("Oh thank you!")))
                 .build();
 
         dialogueBuilder.stringID("testNo")
-                .loadDialogue(displayableBuilder
+                .addDialogue(displayableBuilder
                         .setChoiceWheel(false)
                         .addSentence(Text.of("Well up yours buddy!")))
                 .build();
 
         dialogueBuilder.stringID("testWith")
-                .loadDialogue(displayableBuilder
+                .addDialogue(displayableBuilder
                         .setChoiceWheel(false)
                         .addSentence(Text.of("I lost some candy in my van... ;)")))
-                .loadDialogue(displayableBuilder
+                .addDialogue(displayableBuilder
                         .setChoiceWheel(true)
                         .addChoice(Text.of("Sure, I loooooove candy"), Text.of("Get quest"), new DisplayDialogue("testYes"))
                         .addChoice(Text.of("Stranger danger!"), null, new DisplayDialogue("testNo")))
