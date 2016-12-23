@@ -1,10 +1,12 @@
 package avatar.game.areas;
 
+import avatar.Avatar;
 import avatar.user.User;
 import avatar.user.UserPlayer;
 import avatar.utilities.misc.LocationUtils;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 
@@ -33,15 +35,13 @@ public abstract class Area {
 
     public boolean is(String ID){return this.reference.getStringID().toLowerCase() == ID.toLowerCase();}
 
-    public boolean has(Location location) {
-        for(Location l: shape.threshold){
-            if(l.getBlockX() == location.getBlockX() &&
-                    l.getBlockZ() == location.getBlockZ()){
-                if(location.getBlockY() <= l.getBlockY() + shape.height)
-                    return true;
-            }
-        }
-        return false;
+    public boolean contains(Location location){
+        double x1 = location.getX(), x2 = shape.center.getX();
+        double z1 = location.getZ(), z2 = shape.center.getZ();
+        double y = location.getY();
+
+        return LocationUtils.getDistance(x1, x2) <= shape.radius && LocationUtils.getDistance(z1, z2) <= shape.radius
+                && y >= shape.center.getY() && y <= shape.center.getY() + shape.getHeight();
     }
 
     /**
@@ -93,36 +93,14 @@ public abstract class Area {
         return players;
     }
 
-    public boolean inside(UserPlayer player){
-        Location nearest = shape.findNearestThreshold(player.getPlayer().get());
-
-        double thresholdDistance = shape.center.getPosition().distance(nearest.getPosition());
-        double playerDistance = shape.center.getPosition().distance(player.getPlayer().get().getLocation().getPosition());
-
-        return thresholdDistance >= playerDistance;
-    }
-
     public static abstract class AreaShape {
         private Location center;
-        protected List<Location> threshold = new ArrayList<>();
-        private double height;
+        protected double height, radius;
 
-        protected abstract void calculateThreshold();
-        protected abstract double getRadius();
-
-        public AreaShape(Location center, double height){
+        public AreaShape(Location center, double height, double radius){
             this.center = center;
             this.height = height;
-        }
-
-        protected Location findNearestThreshold(Entity entity){
-            Location give = null;
-            for(Location location: threshold){
-                if(give == null || location.getPosition().distance(entity.getLocation().getPosition()) < give.getPosition().distance(entity.getLocation().getPosition())){
-                    give = location.copy();
-                }
-            }
-            return give;
+            this.radius = radius;
         }
 
         public Location getCenter() {
@@ -133,61 +111,39 @@ public abstract class Area {
             return height;
         }
 
-        public boolean crossedThreshold(Player player) {
-            for(Location location: threshold){
-                if(Math.max(player.getLocation().getX(), location.getX()) - Math.min(player.getLocation().getX(), location.getX()) <= 1.5
-                        && Math.max(player.getLocation().getZ(), location.getZ()) - Math.min(player.getLocation().getZ(), location.getZ()) <= 1.5
-                        && player.getLocation().getY() <= location.getY() + height){
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        protected void setCenter(Location location) {
-            this.center = location;
+        public double getRadius() {
+            return radius;
         }
     }
 
     public static class AreaCircle extends AreaShape{
 
-        private double radius;
-
         public AreaCircle(Location center, double radius, double height) {
-            super(center, height);
-
-            this.radius = radius;
-            calculateThreshold();
-        }
-
-        @Override
-        protected double getRadius(){return radius;}
-
-        @Override
-        protected void calculateThreshold() {
-            threshold = LocationUtils.getCircleOutline(getCenter(), getRadius(), false);
+            super(center, height, radius);
         }
     }
 
     public static class AreaRectangle extends AreaShape{
 
         private Location first, second;
-
         public AreaRectangle(Location firstCorner, Location secondCorner, double height) {
-            super(null, height);
+            super(LocationUtils.getMidPointLocation(firstCorner, secondCorner), height, (firstCorner.getPosition().distance(secondCorner.getPosition())) / 2);
 
-            this.setCenter(LocationUtils.getMidPointLocation(firstCorner, secondCorner));
             this.first = firstCorner;
             this.second = secondCorner;
-            calculateThreshold();
+
+            List<Location> locs = LocationUtils.getSquareOutline(first, secondCorner);
+            for(Location location: locs){
+                location.setBlockType(BlockTypes.REDSTONE_BLOCK, Cause.source(Avatar.INSTANCE.getPluginContainer()).build());
+            }
         }
 
-        @Override
-        protected double getRadius(){return (first.getPosition().distance(second.getPosition())) / 2;}
+        public Location getFirst() {
+            return first;
+        }
 
-        @Override
-        protected void calculateThreshold() {
-            threshold = LocationUtils.getSquareOutline(first, second);
+        public Location getSecond() {
+            return second;
         }
     }
 

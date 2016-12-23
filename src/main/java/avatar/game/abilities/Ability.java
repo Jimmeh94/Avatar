@@ -1,6 +1,7 @@
 package avatar.game.abilities;
 
 import avatar.Avatar;
+import avatar.events.custom.AbilityEvent;
 import avatar.game.abilities.properties.AbilityProperty;
 import avatar.game.abilities.properties.AbilityPropertyCost;
 import avatar.user.User;

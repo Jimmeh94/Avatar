@@ -2,7 +2,7 @@ package avatar.game.abilities.properties;
 
 import avatar.Avatar;
 import avatar.game.abilities.Ability;
-import avatar.game.abilities.AbilityEvent;
+import avatar.events.custom.AbilityEvent;
 import avatar.user.UserPlayer;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.EventListener;

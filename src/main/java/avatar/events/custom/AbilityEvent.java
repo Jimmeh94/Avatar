@@ -1,5 +1,6 @@
-package avatar.game.abilities;
+package avatar.events.custom;
 
+import avatar.game.abilities.Ability;
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.Cause;

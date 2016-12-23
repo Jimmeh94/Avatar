@@ -13,11 +13,11 @@ public class AreaManager extends Manager<Area> {
         //add(new PassiveArea(new Area.AreaCircle(new Location(Sponge.getServer().getWorlds().toArray(new World[]{})[0], 50, 50, 50), 10, 256), "Test Area"));
     }
 
-    public Optional<Area> find(Location location){
+    public Optional<Area> getAreaByContainedLocation(Location location){
         Optional<Area> give = Optional.empty();
 
         for(Area area: this.objects){
-            if(area.has(location)){
+            if(area.contains(location)){
                 give = Optional.of(area);
             }
         }

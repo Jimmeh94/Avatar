@@ -4,7 +4,6 @@ import avatar.commands.DialogueCommands;
 import avatar.commands.QuestCommands;
 import avatar.commands.test.AreaCommands;
 import avatar.commands.test.ParticleEffectCommands;
-import avatar.events.AreaEvents;
 import avatar.events.PlayerConnection;
 import avatar.game.dialogue.core.builders.DialogueBuilder;
 import avatar.game.quests.quests.builders.QuestBuilder;
@@ -74,7 +73,7 @@ public class Avatar {
 
     }
 
-    private void registerRunnables(){gameTimer = new GameTimer(10L);}
+    private void registerRunnables(){gameTimer = new GameTimer(5L);}
 
     private void registerCommands() {
         new ParticleEffectCommands();
@@ -84,7 +83,6 @@ public class Avatar {
     }
 
     private void registerListeners(){
-        Sponge.getEventManager().registerListeners(this, new AreaEvents());
         Sponge.getEventManager().registerListeners(this, new PlayerConnection());
     }
 

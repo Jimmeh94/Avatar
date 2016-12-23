@@ -10,12 +10,41 @@ import java.util.Random;
 
 public class LocationUtils {
 
-    public static long chunkPositionToLong(Vector3i position){
+    public static double getDistance(double a, double b){
+        return Math.abs(a - b);
+    }
+
+    public static List<Vector3i> getChunksBetween(Vector3i start, Vector3i end) {
+        List<Vector3i> give = new ArrayList<>();
+
+        for (int x = start.getX(); x <= end.getX(); x++) {
+            for (int z = start.getZ(); z <= end.getZ(); z++) {
+                Vector3i result = chunkPositionFromWorldPosition(x, z);
+
+                if (!give.contains(result)) {
+                    give.add(result);
+                }
+            }
+        }
+
+        return give;
+    }
+
+    public static long chunkPositionToLong(Vector3i position) {
         return (0xFFFFFFFFL & position.getX()) << 32 + (0xFFFFFFFFL & position.getZ());
     }
 
-    public static Vector3i chunkPositionFromWorldPosition(Vector3d position){
-        return Vector3i.from((int)position.getX() >> 4, 0, (int)position.getZ() >> 4);
+    public static Vector3i chunkPositionFromWorldPosition(Vector3d position) {
+        //return Vector3i.from((int) position.getX() >> 4, 0, (int) position.getZ() >> 4);
+        return chunkPositionFromWorldPosition((int)position.getX(), (int)position.getZ());
+    }
+
+    public static Vector3i chunkPositionFromWorldPosition(Vector3i position){
+        return chunkPositionFromWorldPosition(position.getX(), position.getZ());
+    }
+
+    public static Vector3i chunkPositionFromWorldPosition(int x, int z){
+        return Vector3i.from(x >> 4, 0, z >> 4);
     }
 
     public static List<Location> getConnectingLine(Location start, Location end){
