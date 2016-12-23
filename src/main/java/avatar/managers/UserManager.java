@@ -97,7 +97,7 @@ public class UserManager extends Manager<User>{
                         //the player started inside the area
                         if(!temp2.isPresent()){
                             //the player ended outside the area
-                            event = new AreaEvent(null, user.getPresentArea());
+                            event = new AreaEvent(user, null, user.getPresentArea());
                             Sponge.getEventManager().post(event);
 
                             user.leaveArea();
@@ -107,7 +107,7 @@ public class UserManager extends Manager<User>{
                         //started outside the area
                         if(temp2.isPresent()){
                             //ended inside the area
-                            event = new AreaEvent(temp2.get(), user.getPresentArea());
+                            event = new AreaEvent(user, temp2.get(), user.getPresentArea());
                             Sponge.getEventManager().post(event);
 
                             user.enterArea(temp2.get());
