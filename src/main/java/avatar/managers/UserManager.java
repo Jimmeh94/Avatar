@@ -1,12 +1,10 @@
 package avatar.managers;
 
 import avatar.Avatar;
-import avatar.events.custom.AreaEvent;
 import avatar.game.areas.Area;
 import avatar.user.User;
 import avatar.user.UserPlayer;
 import avatar.utilities.misc.LocationUtils;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.world.Location;
 
@@ -92,14 +90,10 @@ public class UserManager extends Manager<User>{
                 if(traveled.size() > 1){
                     Optional<Area> temp = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(traveled.get(0));
                     Optional<Area> temp2 = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(traveled.get(traveled.size() - 1));
-                    AreaEvent event;
                     if(temp.isPresent()){
                         //the player started inside the area
                         if(!temp2.isPresent()){
                             //the player ended outside the area
-                            event = new AreaEvent(user, null, user.getPresentArea());
-                            Sponge.getEventManager().post(event);
-
                             user.leaveArea();
                         }
                         //else they're still inside and nothing to do
@@ -107,9 +101,6 @@ public class UserManager extends Manager<User>{
                         //started outside the area
                         if(temp2.isPresent()){
                             //ended inside the area
-                            event = new AreaEvent(user, temp2.get(), user.getPresentArea());
-                            Sponge.getEventManager().post(event);
-
                             user.enterArea(temp2.get());
                         }
                         //else they're still outside the area

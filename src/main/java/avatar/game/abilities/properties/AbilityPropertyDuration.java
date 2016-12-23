@@ -1,10 +1,9 @@
 package avatar.game.abilities.properties;
 
-import avatar.Avatar;
-import avatar.game.abilities.Ability;
 import avatar.events.custom.AbilityEvent;
+import avatar.game.abilities.Ability;
+import avatar.managers.ListenerManager;
 import avatar.user.UserPlayer;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.EventListener;
 
 /**
@@ -23,7 +22,7 @@ public class AbilityPropertyDuration extends AbilityProperty implements EventLis
 
     @Override
     protected void register() {
-        Sponge.getEventManager().registerListener(Avatar.INSTANCE, AbilityEvent.UpdateTick.class, this);
+        ListenerManager.register(AbilityEvent.UpdateTick.class, this);
     }
 
     @Override

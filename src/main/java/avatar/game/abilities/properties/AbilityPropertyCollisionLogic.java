@@ -1,11 +1,11 @@
 package avatar.game.abilities.properties;
 
 import avatar.Avatar;
-import avatar.game.abilities.Ability;
 import avatar.events.custom.AbilityEvent;
+import avatar.game.abilities.Ability;
+import avatar.managers.ListenerManager;
 import avatar.user.User;
 import avatar.user.UserPlayer;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.Order;
 
@@ -38,7 +38,7 @@ public class AbilityPropertyCollisionLogic extends AbilityProperty implements Ev
 
     @Override
     protected void register() {
-        Sponge.getEventManager().registerListener(Avatar.INSTANCE, AbilityEvent.UpdateTick.class, Order.FIRST, this);
+        ListenerManager.register(AbilityEvent.UpdateTick.class, Order.FIRST, this);
     }
 
     @Override

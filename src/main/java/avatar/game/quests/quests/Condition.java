@@ -1,6 +1,8 @@
 package avatar.game.quests.quests;
 
+import avatar.managers.ListenerManager;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.world.Location;
 
 public abstract class Condition {
@@ -11,19 +13,18 @@ public abstract class Condition {
      * These are essentially the goals of each checkpoint
      */
 
-    public enum Check{
-        BEFORE_ACTION_FIRE,
-        AFTER_ACTION_FIRE,
-        ON_TIMER_TICK
-    }
-
     private boolean resetCheckpointProgress;
-    private Check checkWhen;
     private Player player;
     private Long lastWarningMessage;
     private Location startLocation;
+    protected boolean valid;
 
-    public abstract boolean isValid();
+    /**
+     * Called every game timer iteration
+     * Do logic here if needed to
+     * @return
+     */
+    public boolean isValid(){return valid;}
 
     /*
      * In case there's any additional info the condition will need once it becomes active
@@ -34,7 +35,7 @@ public abstract class Condition {
      * Reset the current condition
      * If boolean is true, can/should teleport player back to where they started the checkpoint at
      */
-    public abstract void reset();
+    public void reset(){valid = false;}
 
     /*
      * Warning message should be sent to the player if they are being reset
@@ -45,21 +46,17 @@ public abstract class Condition {
         this.player = player;
     }
 
-    public Condition(boolean reset, Check check){
+    public Condition(boolean reset){
         resetCheckpointProgress = reset;
-        checkWhen = check;
 
     }
 
     public void setStartingInfo() {
         startLocation = getPlayer().getLocation().copy();
+        setAdditionalStartInfo();
     }
 
     protected Location getStartLocation(){return startLocation;}
-
-    public Check getCheck() {
-        return checkWhen;
-    }
 
     public boolean shouldResetProgress(){return resetCheckpointProgress;}
 
@@ -76,5 +73,10 @@ public abstract class Condition {
         if(lastWarningMessage == null)
             return true;
         return ((System.currentTimeMillis() - lastWarningMessage)/1000 >= 10);
+    }
+
+    protected void unregisterListener() {
+        if(this instanceof EventListener)
+            ListenerManager.unregister((EventListener)this);
     }
 }

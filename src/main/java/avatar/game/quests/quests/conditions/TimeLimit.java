@@ -5,7 +5,7 @@ import avatar.utilities.text.Messager;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-public class TimeLimit extends Condition {
+public class TimeLimit extends Condition{
 
     /*
      * Checkpoint must be completed within the time limit
@@ -15,7 +15,7 @@ public class TimeLimit extends Condition {
     private int seconds;
 
     public TimeLimit(boolean reset, int seconds) {
-        super(reset, Check.ON_TIMER_TICK);
+        super(reset);
         this.seconds = seconds;
     }
 
@@ -38,6 +38,8 @@ public class TimeLimit extends Condition {
 
     @Override
     public void reset() {
+        super.reset();
+
         getPlayer().setLocation(getStartLocation());
         whenStarted = null;
     }

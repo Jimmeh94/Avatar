@@ -1,30 +1,30 @@
 package avatar.game.quests.quests.conditions;
 
+import avatar.Avatar;
+import avatar.game.areas.Area;
 import avatar.game.quests.quests.Condition;
 import avatar.utilities.text.Messager;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.Location;
 
-public class BoundRadius extends Condition{
+public class BoundArea extends Condition{
 
     /*
      * Quest checkpoint condition in which the checkpoint can only be complete if
      * the desired entity or location is within the radius to the center location
      */
 
-    private double radius;
-    private Location center;
+    private Area bound;
 
-    public BoundRadius(boolean reset, double radius, Location center){
+    public BoundArea(boolean reset, Area bound){
         super(reset);
-        this.radius = radius;
-        this.center = center;
+
+        this.bound = bound;
     }
 
     @Override
     public boolean isValid() {
-        return center.getPosition().distance(getPlayer().getLocation().getPosition()) <= radius;
+        return Avatar.INSTANCE.getUserManager().find(getPlayer().getUniqueId()).get().getPresentArea() == bound;
     }
 
     @Override
@@ -45,5 +45,4 @@ public class BoundRadius extends Condition{
             Messager.sendMessage(getPlayer(), Text.of(TextColors.RED, "You're outside of the quest region! Go back to continue the quest!"));
         }
     }
-
 }

@@ -66,6 +66,10 @@ public class Quest {
         this.reward = quest.getReward();
     }
 
+    /**
+     * This is for the item representation
+     * @param active
+     */
     public void setLore(boolean active){
         List<Text> temp = new ArrayList<>();
         temp.add(Text.of(description));
@@ -87,7 +91,7 @@ public class Quest {
      */
     public boolean tick(){
         if(checkpoints.size() > 0){
-            if(checkpoints.get(0).isComplete(Condition.Check.ON_TIMER_TICK)){
+            if(checkpoints.get(0).isComplete()){
                 if(checkpoints.size() > 1)
                     checkpoints.get(0).printCompletionMsg();
                 checkpoints.remove(0);
@@ -142,6 +146,10 @@ public class Quest {
         if(active){
             active = false;
             setLore(false);
+
+            for(Checkpoint checkpoint: checkpoints){
+                checkpoint.deactivate();
+            }
         } else {
             active = true;
             checkpoints.get(0).start();

@@ -1,9 +1,11 @@
 package avatar.game.areas;
 
 import avatar.Avatar;
+import avatar.events.custom.AreaEvent;
 import avatar.user.User;
 import avatar.user.UserPlayer;
 import avatar.utilities.misc.LocationUtils;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.event.cause.Cause;
@@ -56,6 +58,9 @@ public abstract class Area {
             if(targetEntity instanceof UserPlayer){
                 ((UserPlayer)targetEntity).getPlayer().get().sendMessage(Text.of("Entering " + displayName));
             }
+
+            AreaEvent event = new AreaEvent.Enter(targetEntity, this);
+            Sponge.getEventManager().post(event);
         }
     }
 
@@ -71,6 +76,9 @@ public abstract class Area {
             if(targetEntity instanceof UserPlayer){
                 ((UserPlayer)targetEntity).getPlayer().get().sendMessage(Text.of("Leaving " + displayName));
             }
+
+            AreaEvent event = new AreaEvent.Exit(targetEntity, targetEntity.getPresentArea());
+            Sponge.getEventManager().post(event);
         }
     }
 

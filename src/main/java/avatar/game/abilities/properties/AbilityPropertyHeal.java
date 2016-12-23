@@ -1,10 +1,9 @@
 package avatar.game.abilities.properties;
 
-import avatar.Avatar;
-import avatar.game.abilities.Ability;
 import avatar.events.custom.AbilityEvent;
+import avatar.game.abilities.Ability;
+import avatar.managers.ListenerManager;
 import avatar.user.UserPlayer;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.EventListener;
 
 public class AbilityPropertyHeal extends AbilityProperty implements EventListener<AbilityEvent.PostFire>{
@@ -19,7 +18,7 @@ public class AbilityPropertyHeal extends AbilityProperty implements EventListene
 
     @Override
     protected void register() {
-        Sponge.getEventManager().registerListener(Avatar.INSTANCE, AbilityEvent.PostFire.class, this);
+        ListenerManager.register(AbilityEvent.PostFire.class, this);
     }
 
     @Override

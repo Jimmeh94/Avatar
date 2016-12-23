@@ -31,6 +31,10 @@ public class AbilityEvent implements Event, Cancellable {
         this.cancelled = b;
     }
 
+    public Ability getAbility() {
+        return ability;
+    }
+
     public static class PreFire extends AbilityEvent{
         public PreFire(Ability ability, Cause cause) {
             super(ability, cause);

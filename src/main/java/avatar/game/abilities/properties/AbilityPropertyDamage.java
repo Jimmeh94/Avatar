@@ -1,10 +1,9 @@
 package avatar.game.abilities.properties;
 
-import avatar.Avatar;
-import avatar.game.abilities.Ability;
 import avatar.events.custom.AbilityEvent;
+import avatar.game.abilities.Ability;
+import avatar.managers.ListenerManager;
 import avatar.user.UserPlayer;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.EventListener;
 
 public class AbilityPropertyDamage extends AbilityProperty implements EventListener<AbilityEvent.Hit> {
@@ -15,7 +14,7 @@ public class AbilityPropertyDamage extends AbilityProperty implements EventListe
 
     @Override
     protected void register() {
-        Sponge.getEventManager().registerListener(Avatar.INSTANCE, AbilityEvent.Hit.class, this);
+        ListenerManager.register(AbilityEvent.Hit.class, this);
     }
 
     @Override

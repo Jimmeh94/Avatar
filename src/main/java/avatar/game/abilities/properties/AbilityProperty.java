@@ -1,9 +1,9 @@
 package avatar.game.abilities.properties;
 
 import avatar.game.abilities.Ability;
+import avatar.managers.ListenerManager;
 import avatar.user.User;
 import avatar.user.UserPlayer;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.EventListener;
 
 /**
@@ -50,7 +50,7 @@ public abstract class AbilityProperty{
      */
     public void unregister(){
         if(this instanceof EventListener)
-            Sponge.getEventManager().unregisterListeners(this);
+            ListenerManager.unregister((EventListener) this);
     }
 
 }

@@ -1,10 +1,9 @@
 package avatar.game.abilities.properties;
 
-import avatar.Avatar;
-import avatar.game.abilities.Ability;
 import avatar.events.custom.AbilityEvent;
+import avatar.game.abilities.Ability;
+import avatar.managers.ListenerManager;
 import avatar.user.UserPlayer;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.EventListener;
 
 /**
@@ -26,7 +25,7 @@ public abstract class AbilityPropertyTargeting extends AbilityProperty implement
 
     @Override
     protected void register(){
-        Sponge.getEventManager().registerListener(Avatar.INSTANCE, AbilityEvent.PreFire.class, this);
+        ListenerManager.register(AbilityEvent.PreFire.class, this);
     }
 
     public TargetingFilter getFilter() {

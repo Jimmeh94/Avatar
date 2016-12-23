@@ -1,12 +1,11 @@
 package avatar.game.abilities.properties;
 
-import avatar.Avatar;
-import avatar.game.abilities.Ability;
 import avatar.events.custom.AbilityEvent;
+import avatar.game.abilities.Ability;
+import avatar.managers.ListenerManager;
 import avatar.user.User;
 import avatar.user.UserPlayer;
 import avatar.user.stats.Stats;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.Order;
 
@@ -27,7 +26,7 @@ public class AbilityPropertyCost extends AbilityProperty implements EventListene
 
     @Override
     protected void register() {
-        Sponge.getEventManager().registerListener(Avatar.INSTANCE, AbilityEvent.RequirementCheck.class, Order.FIRST, this);
+        ListenerManager.register(AbilityEvent.RequirementCheck.class, Order.FIRST, this);
     }
 
     public void refund(){
