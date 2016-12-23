@@ -1,5 +1,7 @@
 package avatar.user;
 
+import avatar.Avatar;
+import avatar.events.custom.DialogueEvent;
 import avatar.game.dialogue.core.containers.Dialogue;
 import avatar.game.quests.menus.QuestMenu;
 import avatar.game.quests.quests.Quest;
@@ -57,6 +59,8 @@ public class UserPlayer extends User {
 
     public void startDialogue() {
         currentDialogue.displayNext();
+
+        Sponge.getEventManager().post(new DialogueEvent.Displayed(Cause.source(Avatar.INSTANCE.getPluginContainer()).build(), this));
     }
 
     //--- Getters ---
