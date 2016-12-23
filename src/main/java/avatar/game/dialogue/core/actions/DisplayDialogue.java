@@ -9,8 +9,9 @@ import java.util.Optional;
 
 public class DisplayDialogue extends DialogueAction {
 
-    /*
+    /**
      * Starts another dialogue sequence
+     * The ID is of the next desired dialogue
      */
 
     private String id;

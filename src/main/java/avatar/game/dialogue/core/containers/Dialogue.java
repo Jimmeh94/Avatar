@@ -54,7 +54,7 @@ public class Dialogue {
         return give;
     }
 
-    public boolean hasChoiceID(int id){
+    public boolean hasChoiceID(String id){
         for(Displayable displayable: dialogue){
             if(displayable instanceof ChoiceWheel && ((ChoiceWheel) displayable).hasID(id)){
                 return true;

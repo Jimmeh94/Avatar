@@ -1,14 +1,11 @@
 package avatar.game.areas;
 
-import avatar.Avatar;
 import avatar.events.custom.AreaEvent;
 import avatar.user.User;
 import avatar.user.UserPlayer;
 import avatar.utilities.misc.LocationUtils;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 
@@ -139,11 +136,6 @@ public abstract class Area {
 
             this.first = firstCorner;
             this.second = secondCorner;
-
-            List<Location> locs = LocationUtils.getSquareOutline(first, secondCorner);
-            for(Location location: locs){
-                location.setBlockType(BlockTypes.REDSTONE_BLOCK, Cause.source(Avatar.INSTANCE.getPluginContainer()).build());
-            }
         }
 
         public Location getFirst() {

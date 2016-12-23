@@ -14,8 +14,7 @@ public class TimeLimit extends Condition{
     private Long whenStarted;
     private int seconds;
 
-    public TimeLimit(boolean reset, int seconds) {
-        super(reset);
+    public TimeLimit(int seconds) {
         this.seconds = seconds;
     }
 
@@ -29,11 +28,6 @@ public class TimeLimit extends Condition{
             whenStarted = System.currentTimeMillis();
             return true;
         }
-    }
-
-    @Override
-    public void setAdditionalStartInfo() {
-
     }
 
     @Override

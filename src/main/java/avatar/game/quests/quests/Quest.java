@@ -94,6 +94,7 @@ public class Quest {
             if(checkpoints.get(0).isComplete()){
                 if(checkpoints.size() > 1)
                     checkpoints.get(0).printCompletionMsg();
+                checkpoints.get(0).deactivate();
                 checkpoints.remove(0);
 
                 if(checkpoints.size() > 0){

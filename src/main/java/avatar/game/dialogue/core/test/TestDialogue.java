@@ -23,9 +23,9 @@ public class TestDialogue {
                 .addDialogue(displayableBuilder
                         .setChoiceWheel(true)//56,72,53
                         .addCondition(new RangeBound(new Location(Sponge.getServer().getWorld("world").get(), new Vector3d(100f, 100f, 100f)), 100))
-                        .addChoice(Text.of("Yes I will"), Text.of("Get quest"), new DisplayDialogue("testYes"))
-                        .addChoice(Text.of("No I won't"), Text.of("Deny quest"), new DisplayDialogue("testNo"))
-                        .addChoice(Text.of("With what?"), Text.of("Get more info"), new DisplayDialogue("testWith")))
+                        .addChoice(Text.of("Yes I will"), Text.of("Get quest"), "yes", dialogueBuilder.getStringID(), new DisplayDialogue("testYes"))
+                        .addChoice(Text.of("No I won't"), Text.of("Deny quest"), "no", dialogueBuilder.getStringID(), new DisplayDialogue("testNo"))
+                        .addChoice(Text.of("With what?"), Text.of("Get more info"), "with", dialogueBuilder.getStringID(), new DisplayDialogue("testWith")))
                 .build();
 
         dialogueBuilder.stringID("testYes")
@@ -46,8 +46,8 @@ public class TestDialogue {
                         .addSentence(Text.of("I lost some candy in my van... ;)")))
                 .addDialogue(displayableBuilder
                         .setChoiceWheel(true)
-                        .addChoice(Text.of("Sure, I loooooove candy"), Text.of("Get quest"), new DisplayDialogue("testYes"))
-                        .addChoice(Text.of("Stranger danger!"), null, new DisplayDialogue("testNo")))
+                        .addChoice(Text.of("Sure, I loooooove candy"), Text.of("Get quest"), "sure", dialogueBuilder.getStringID(), new DisplayDialogue("testYes"))
+                        .addChoice(Text.of("Stranger danger!"), null, "danger", dialogueBuilder.getStringID(), new DisplayDialogue("testNo")))
                 .build();
     }
 

@@ -1,11 +1,14 @@
 package avatar.game.dialogue.core;
 
 import avatar.Avatar;
+import avatar.events.custom.DialogueEvent;
 import avatar.user.UserPlayer;
 import avatar.utilities.text.AltCodes;
 import avatar.utilities.text.Messager;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -23,30 +26,27 @@ public class Choice implements Consumer<CommandSource>{
      */
 
     private List<DialogueAction> actions;
-    private Condition condition;
+    private List<Condition> conditions;
     private Text sentence;
     private Player player;
-    private int id;
+    private String id;
     private Optional<Text> hover = Optional.empty();
 
-    public Choice(Text text, Text hover, List<DialogueAction> action){
+    public Choice(Text text, Text hover, List<DialogueAction> action, String id){
         this.sentence = text;
         this.actions = action;
         if(hover != null){
             this.hover = Optional.of(hover);
         }
+        this.id = id;
     }
 
-    public Choice(Choice choice, Player player, Condition condition){
+    public Choice(Choice choice, Player player, List<Condition> condition){
         this.actions = choice.getAction();
         this.sentence = Text.of(choice.getSentence());
         this.player = player;
-        this.condition = condition;
-        setID();
-    }
+        this.conditions = condition;
 
-    private void setID(){
-        id = Avatar.INSTANCE.getDialogueManager().getChoiceID();
         if(hover.isPresent()){
             sentence = Text.builder().append(Text.of(TextColors.GREEN, TextStyles.BOLD, AltCodes.ARROW_RIGHT.getSign() + " "), sentence)
                     .onClick(TextActions.executeCallback(this)).onHover(TextActions.showText(hover.get())).build();
@@ -72,21 +72,24 @@ public class Choice implements Consumer<CommandSource>{
     public void accept(CommandSource commandSource) {
         Optional<UserPlayer> temp = Avatar.INSTANCE.getUserManager().findUserPlayer(this.player);
         if(temp.isPresent() && temp.get().getCurrentDialogue() != null && temp.get().getCurrentDialogue().hasChoiceID(this.id)) {
-            Avatar.INSTANCE.getDialogueManager().removeDialogue(this.player);
-            if(condition != null){
+            for(Condition condition: conditions){
                 if(!condition.isValid(player)){
                     condition.sendErrorMessage(player);
                     return;
                 }
             }
+            Avatar.INSTANCE.getDialogueManager().removeDialogue(this.player);
+
             //if all conditions are valid, continue with action
             for (DialogueAction action : this.actions)
                 action.doWork(player);
+
+            Sponge.getEventManager().post(new DialogueEvent.ChoiceClicked(Cause.source(Avatar.INSTANCE.getPluginContainer()).build(), this.getId(), temp.get()));
         }
 
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 }

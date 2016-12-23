@@ -12,8 +12,7 @@ public class ReachLocation extends Condition{
     private Location targetLocation;
     private double completionRadius = 1.5;
 
-    public ReachLocation(boolean reset, Location location, double radius) {
-        super(reset);
+    public ReachLocation(Location location, double radius) {
         targetLocation = location;
         completionRadius = radius;
     }
@@ -21,15 +20,5 @@ public class ReachLocation extends Condition{
     @Override
     public boolean isValid() {
         return getPlayer().getLocation().getPosition().distance(targetLocation.getPosition()) <= completionRadius;
-    }
-
-    @Override
-    public void setAdditionalStartInfo() {
-
-    }
-
-    @Override
-    public void displayWarningMessage() {
-
     }
 }

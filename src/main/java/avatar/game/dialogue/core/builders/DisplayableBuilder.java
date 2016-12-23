@@ -19,20 +19,20 @@ public class DisplayableBuilder {
     private List<Text> sentences = new ArrayList<>();
     private boolean choiceWheel = false;
     private List<Choice> choices = new ArrayList<>();
-    private Condition condition;
+    private List<Condition> conditions = new ArrayList<>();
 
     public DisplayableBuilder addSentence(Text text){
         sentences.add(text);
         return this;
     }
 
-    public DisplayableBuilder addChoice(Text name, Text hover, DialogueAction... action){
-        choices.add(new Choice(name, hover, Arrays.asList(action)));
+    public DisplayableBuilder addChoice(Text name, Text hover, String id, String dialogueID, DialogueAction... action){
+        choices.add(new Choice(name, hover, Arrays.asList(action), new String(dialogueID) + "." + id));
         return this;
     }
 
     public DisplayableBuilder addCondition(Condition condition){
-        this.condition = condition;
+        this.conditions.add(condition);
         return this;
     }
 
@@ -44,7 +44,7 @@ public class DisplayableBuilder {
     public Displayable load(){
         Displayable give;
         if(choiceWheel){
-            give = new ChoiceWheel(new ArrayList<>(choices), condition);
+            give = new ChoiceWheel(new ArrayList<>(choices), conditions);
         } else {
             give = new Sentence((new ArrayList<>(sentences)).toArray(new Text[]{}));
         }

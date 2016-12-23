@@ -13,7 +13,6 @@ public abstract class Condition {
      * These are essentially the goals of each checkpoint
      */
 
-    private boolean resetCheckpointProgress;
     private Player player;
     private Long lastWarningMessage;
     private Location startLocation;
@@ -29,27 +28,27 @@ public abstract class Condition {
     /*
      * In case there's any additional info the condition will need once it becomes active
      */
-    public abstract void setAdditionalStartInfo();
+    public void setAdditionalStartInfo(){};
 
     /*
      * Reset the current condition
      * If boolean is true, can/should teleport player back to where they started the checkpoint at
      */
-    public void reset(){valid = false;}
+    public void reset(){
+        valid = false;
+        unregisterListener();
+    }
 
     /*
      * Warning message should be sent to the player if they are being reset
      */
-    public abstract void displayWarningMessage();
+    public void displayWarningMessage(){};
 
     public void setPlayer(Player player) {
         this.player = player;
     }
 
-    public Condition(boolean reset){
-        resetCheckpointProgress = reset;
-
-    }
+    public Condition(){}
 
     public void setStartingInfo() {
         startLocation = getPlayer().getLocation().copy();
@@ -57,8 +56,6 @@ public abstract class Condition {
     }
 
     protected Location getStartLocation(){return startLocation;}
-
-    public boolean shouldResetProgress(){return resetCheckpointProgress;}
 
     public Player getPlayer() {
         return player;

@@ -15,8 +15,7 @@ public class ReachArea extends Condition implements EventListener<AreaEvent.Ente
     private Area targetArea;
     private double completionRadius = 1.5;
 
-    public ReachArea(boolean reset, Area area) {
-        super(reset);
+    public ReachArea(Area area) {
         this.targetArea = area;
     }
 
@@ -24,17 +23,13 @@ public class ReachArea extends Condition implements EventListener<AreaEvent.Ente
     public void reset(){
         super.reset();
 
-        ListenerManager.register(AreaEvent.Enter.class, this);
+        unregisterListener();
+        setAdditionalStartInfo();
     }
 
     @Override
     public void setAdditionalStartInfo() {
         ListenerManager.register(AreaEvent.Enter.class, this);
-    }
-
-    @Override
-    public void displayWarningMessage() {
-
     }
 
     @Override

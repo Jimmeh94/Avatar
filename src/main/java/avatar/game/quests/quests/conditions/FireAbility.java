@@ -10,9 +10,7 @@ public class FireAbility extends Condition implements EventListener<AbilityEvent
 
     private Ability ability;
 
-    public FireAbility(boolean reset, Ability ability) {
-        super(reset);
-
+    public FireAbility(Ability ability) {
         this.ability = ability;
     }
 
@@ -20,17 +18,13 @@ public class FireAbility extends Condition implements EventListener<AbilityEvent
     public void reset(){
         super.reset();
 
-        ListenerManager.register(AbilityEvent.PostFire.class, this);
+        unregisterListener();
+        setAdditionalStartInfo();
     }
 
     @Override
     public void setAdditionalStartInfo() {
         ListenerManager.register(AbilityEvent.PostFire.class, this);
-    }
-
-    @Override
-    public void displayWarningMessage() {
-
     }
 
     @Override

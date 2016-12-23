@@ -15,11 +15,11 @@ public class ChoiceWheel implements Displayable {
      */
 
     private List<Choice> choices = new ArrayList<>();
-    private Condition condition;
+    private List<Condition> conditions;
 
-    public ChoiceWheel(List<Choice> choices, Condition condition){
+    public ChoiceWheel(List<Choice> choices, List<Condition> condition){
         this.choices = choices;
-        this.condition = condition;
+        this.conditions = condition;
     }
 
     public ChoiceWheel(ChoiceWheel wheel, Player player){
@@ -28,8 +28,8 @@ public class ChoiceWheel implements Displayable {
         }
     }
 
-    public Condition getCondition() {
-        return condition;
+    public List<Condition> getCondition() {
+        return conditions;
     }
 
     private List<Choice> getChoices(){return choices;}
@@ -41,7 +41,7 @@ public class ChoiceWheel implements Displayable {
         }
     }
 
-    public boolean hasID(int id) {
+    public boolean hasID(String id) {
         for(Choice choice: choices){
             if(choice.getId() == id)
                 return true;

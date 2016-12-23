@@ -16,8 +16,7 @@ public class BoundRadius extends Condition{
     private double radius;
     private Location center;
 
-    public BoundRadius(boolean reset, double radius, Location center){
-        super(reset);
+    public BoundRadius(double radius, Location center){
         this.radius = radius;
         this.center = center;
     }
@@ -25,11 +24,6 @@ public class BoundRadius extends Condition{
     @Override
     public boolean isValid() {
         return center.getPosition().distance(getPlayer().getLocation().getPosition()) <= radius;
-    }
-
-    @Override
-    public void setAdditionalStartInfo() {
-
     }
 
     @Override

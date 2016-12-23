@@ -41,4 +41,8 @@ public class DialogueBuilder {
         dialogue.clear();
         stringID = null;
     }
+
+    public String getStringID() {
+        return stringID;
+    }
 }

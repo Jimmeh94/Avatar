@@ -2,23 +2,18 @@ package avatar.events.custom;
 
 import avatar.game.abilities.Ability;
 import org.spongepowered.api.event.Cancellable;
-import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.Cause;
 
-public class AbilityEvent implements Event, Cancellable {
+public class AbilityEvent extends CustomEvent implements Cancellable {
 
     private final Ability ability;
-    private final Cause cause;
     private boolean cancelled = false;
 
     public AbilityEvent(Ability ability, Cause cause){
+        super(cause);
+
         this.ability = ability;
         this.cause = cause;
-    }
-
-    @Override
-    public Cause getCause() {
-        return cause;
     }
 
     @Override
