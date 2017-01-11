@@ -71,12 +71,12 @@ public class Dialogue {
             boolean shouldContinue = true;
             Messager.sendMessage(player, Text.of(TextColors.GRAY, "=================================== "));
             while(shouldContinue) {
-                Messager.sendMessage(player, Text.of(" "));
+                //Messager.sendMessage(player, Text.of(" "));
                 dialogue.get(0).display(this.player);
-                Messager.sendMessage(player, Text.of(" "));
+                //Messager.sendMessage(player, Text.of(" "));
                 if(dialogue.get(0) instanceof ChoiceWheel) {
                     shouldContinue = false;
-                    Messager.sendMessage(player, Text.of(" "));
+                    //Messager.sendMessage(player, Text.of(" "));
                     Messager.sendMessage(player, Text.of(TextColors.GRAY, "=================================== "));
                 } else {
                     dialogue.remove(0);
