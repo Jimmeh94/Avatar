@@ -6,7 +6,6 @@ import avatar.game.abilities.properties.AbilityProperty;
 import avatar.game.abilities.properties.AbilityPropertyCost;
 import avatar.user.User;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.AABB;
 import org.spongepowered.api.world.Chunk;
@@ -49,21 +48,19 @@ public abstract class Ability {
         return null;
     }
 
-    protected Cause getDefaultCause(){return Cause.source(Avatar.INSTANCE.getPluginContainer()).build();}
-
     public void fire(){
-        AbilityEvent.RequirementCheck check = new AbilityEvent.RequirementCheck(this, getDefaultCause());
+        AbilityEvent.RequirementCheck check = new AbilityEvent.RequirementCheck(this, Avatar.INSTANCE.getDefaultCause());
         Sponge.getEventManager().post(check);
 
         if(!check.isCancelled()){
-            AbilityEvent.PreFire event = new AbilityEvent.PreFire(this, getDefaultCause());
+            AbilityEvent.PreFire event = new AbilityEvent.PreFire(this, Avatar.INSTANCE.getDefaultCause());
             Sponge.getEventManager().post(event);
 
             if(!event.isCancelled()){
                 //initiate ability
                 initiateAbility();
 
-                AbilityEvent.PostFire post = new AbilityEvent.PostFire(this, getDefaultCause());
+                AbilityEvent.PostFire post = new AbilityEvent.PostFire(this, Avatar.INSTANCE.getDefaultCause());
                 Sponge.getEventManager().post(post);
 
                 if(!post.isCancelled()){}
@@ -79,7 +76,7 @@ public abstract class Ability {
     }
 
     public void updateTick(){
-        AbilityEvent.UpdateTick event = new AbilityEvent.UpdateTick(this, getDefaultCause());
+        AbilityEvent.UpdateTick event = new AbilityEvent.UpdateTick(this, Avatar.INSTANCE.getDefaultCause());
         Sponge.getEventManager().post(event);
 
         if(!event.isCancelled()){ //update

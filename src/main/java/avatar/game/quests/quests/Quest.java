@@ -1,8 +1,11 @@
 package avatar.game.quests.quests;
 
+import avatar.Avatar;
+import avatar.events.custom.QuestEvent;
 import avatar.user.UserPlayer;
 import avatar.utilities.directional.PlayerDirection;
 import avatar.utilities.text.Messager;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -94,6 +97,9 @@ public class Quest {
             if(checkpoints.get(0).isComplete()){
                 if(checkpoints.size() > 1)
                     checkpoints.get(0).printCompletionMsg();
+
+                Sponge.getEventManager().post(new QuestEvent.CheckpointComplete(Avatar.INSTANCE.getDefaultCause(), owner.get(), this, checkpoints.get(0)));
+
                 checkpoints.get(0).deactivate();
                 checkpoints.remove(0);
 
@@ -123,6 +129,8 @@ public class Quest {
         Messager.sendTitleAndSubTitle(owner.get().getPlayer().get(), Text.of(TextColors.GOLD, getTitle()), Text.of(TextColors.GREEN, "Completed"));
         if(reward != null)
             reward.giveAward(owner.get().getPlayer().get());
+
+        Sponge.getEventManager().post(new QuestEvent.Complete(Avatar.INSTANCE.getDefaultCause(), owner.get(), this));
     }
 
     public String getID(){return id;}
@@ -154,6 +162,8 @@ public class Quest {
         } else {
             active = true;
             checkpoints.get(0).start();
+
+            Sponge.getEventManager().post(new QuestEvent.Start(Avatar.INSTANCE.getDefaultCause(), owner.get(), this));
         }
         setLore(true);
     }

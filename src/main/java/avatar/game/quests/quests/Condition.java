@@ -35,6 +35,7 @@ public abstract class Condition {
      * If boolean is true, can/should teleport player back to where they started the checkpoint at
      */
     public void reset(){
+        System.out.println(this.getClass().getCanonicalName().toString());
         valid = false;
         unregisterListener();
     }

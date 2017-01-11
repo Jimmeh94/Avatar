@@ -63,6 +63,9 @@ public class Dialogue {
         return false;
     }
 
+    /**
+     * Don't directly call this to display a player's dialogue. Use UserPlayer#startDialogue
+     */
     public void displayNext(){
         if(dialogue.size() > 0){
             boolean shouldContinue = true;

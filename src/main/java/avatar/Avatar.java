@@ -13,6 +13,7 @@ import avatar.utilities.database.MongoUtils;
 import com.google.inject.Inject;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
@@ -23,6 +24,8 @@ import java.util.logging.Logger;
 
 @Plugin(id = "avatar", name="Avatar", version="1.0.0")
 public class Avatar {
+
+    //TODO fix how the quest checkpoints reset
 
     public static Avatar INSTANCE;
 
@@ -121,4 +124,6 @@ public class Avatar {
     public int getCombatInterval() {
         return combatInterval;
     }
+
+    public Cause getDefaultCause(){return Cause.source(Avatar.INSTANCE.getPluginContainer()).build();}
 }

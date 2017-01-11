@@ -84,7 +84,7 @@ public class Checkpoint {
         }
 
         if(!valid){
-            resetProgress();
+            //resetProgress();
         }
         return valid;
     }

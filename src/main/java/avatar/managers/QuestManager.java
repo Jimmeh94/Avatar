@@ -4,6 +4,7 @@ import avatar.Avatar;
 import avatar.game.quests.quests.Quest;
 import avatar.game.quests.quests.test.TestQuestLocation;
 import avatar.user.UserPlayer;
+import avatar.utilities.text.Messager;
 
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public class QuestManager extends Manager<Quest> {
         }
         if(quest != null){
             playerInfo.getQuests().add(new Quest(quest, playerInfo));
+            Messager.sendTitleAndSubTitle(playerInfo.getPlayer().get(), quest.getTitle(), quest.getDescription());
         }
     }
 
@@ -32,7 +34,7 @@ public class QuestManager extends Manager<Quest> {
                 quest = q;
             }
         }
-        System.out.println("" + quest.isActive());
+
         if(quest != null && !quest.isActive()){
             Optional<Quest> temp = getActiveQuest(playerInfo);
             if(temp.isPresent()){

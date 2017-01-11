@@ -32,7 +32,6 @@ public class QuestCommands implements CommandExecutor {
         Avatar a = Avatar.INSTANCE;
 
         if(action.equalsIgnoreCase("start")){
-            System.out.println("Inside start");
             a.getQuestManager().giveQuest(a.getUserManager().findUserPlayer(player).get(), id);
             a.getQuestManager().setActiveQuest(a.getUserManager().findUserPlayer(player).get(), id);
             a.getUserManager().findUserPlayer(player).get().generateQuestMenu();

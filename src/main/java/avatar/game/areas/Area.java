@@ -1,6 +1,7 @@
 package avatar.game.areas;
 
 import avatar.events.custom.AreaEvent;
+import avatar.managers.ListenerManager;
 import avatar.user.User;
 import avatar.user.UserPlayer;
 import avatar.utilities.misc.LocationUtils;
@@ -56,7 +57,7 @@ public abstract class Area {
                 ((UserPlayer)targetEntity).getPlayer().get().sendMessage(Text.of("Entering " + displayName));
             }
 
-            AreaEvent event = new AreaEvent.Enter(targetEntity, this);
+            AreaEvent event = new AreaEvent.Enter(targetEntity, this, ListenerManager.getDefaultCause());
             Sponge.getEventManager().post(event);
         }
     }
@@ -74,7 +75,7 @@ public abstract class Area {
                 ((UserPlayer)targetEntity).getPlayer().get().sendMessage(Text.of("Leaving " + displayName));
             }
 
-            AreaEvent event = new AreaEvent.Exit(targetEntity, targetEntity.getPresentArea());
+            AreaEvent event = new AreaEvent.Exit(targetEntity, targetEntity.getPresentArea(), ListenerManager.getDefaultCause());
             Sponge.getEventManager().post(event);
         }
     }

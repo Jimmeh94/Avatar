@@ -24,13 +24,13 @@ public class TestQuestLocation {
 
         checkpointBuilder.description("Go to a location")
                 .targetLocation(use)
-                .condition(new ReachLocation(false, use, 1.5))
-                .condition(new TimeLimit(true, 60))
+                .condition(new ReachLocation(use, 1.5))
+                .condition(new TimeLimit(60))
                 .buildCheckpoint();
         checkpointBuilder.description("Stay within quest region and reach target location")
                 .targetLocation(use2)
-                .condition(new BoundRadius(true, 10.0, use))
-                .condition(new ReachLocation(false, use2, 1.5))
+                .condition(new BoundRadius(10.0, use))
+                .condition(new ReachLocation(use2, 1.5))
                 .buildCheckpoint();
 
         Quest quest = questBuilder.name("Test").description("This is a test quest").level(1).setID("test").checkpoints().itemType(ItemTypes.PAPER).reward(new TestReward()).build();
