@@ -1,6 +1,6 @@
 package avatar.managers;
 
-import avatar.game.economy.Account;
+import avatar.user.Account;
 import avatar.user.UserPlayer;
 
 import java.util.Optional;

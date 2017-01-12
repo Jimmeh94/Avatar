@@ -3,9 +3,9 @@ package avatar.user;
 import avatar.Avatar;
 import avatar.events.custom.DialogueEvent;
 import avatar.game.dialogue.core.containers.Dialogue;
-import avatar.game.economy.Account;
 import avatar.game.quests.menus.QuestMenu;
 import avatar.game.quests.quests.Quest;
+import avatar.game.scoreboard.Scoreboard;
 import avatar.user.stats.IStatsPreset;
 import avatar.utilities.particles.ParticleUtils;
 import org.spongepowered.api.Sponge;
@@ -29,6 +29,7 @@ public class UserPlayer extends User {
 
     private Dialogue currentDialogue;
     private Account account;
+    private Scoreboard scoreboard;
 
     public UserPlayer(UUID user) {
         super(user);
@@ -43,6 +44,7 @@ public class UserPlayer extends User {
         //questMenu = new QuestMenu(this);
 
         account = new Account(this);
+        scoreboard = new Scoreboard(this);
     }
 
     @Override

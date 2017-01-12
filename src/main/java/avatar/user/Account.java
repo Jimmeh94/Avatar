@@ -1,6 +1,5 @@
-package avatar.game.economy;
+package avatar.user;
 
-import avatar.user.UserPlayer;
 import avatar.utilities.text.AltCodes;
 import org.spongepowered.api.service.economy.transaction.ResultType;
 import org.spongepowered.api.text.Text;

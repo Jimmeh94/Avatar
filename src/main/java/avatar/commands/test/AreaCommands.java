@@ -34,10 +34,10 @@ public class AreaCommands implements CommandExecutor {
 
         switch (type){
             case "circle": Avatar.INSTANCE.getAreaManager().add(new PassiveArea(
-                    new Area.AreaCircle(player.getLocation().copy().add(0, -1, 0), size, 256), "Test Circle"));
+                    new Area.AreaCircle(player.getLocation().copy().add(0, -1, 0), size, 256), Text.of("Test Circle")));
                 break;
             case "square": Avatar.INSTANCE.getAreaManager().add(new PassiveArea(
-                    new Area.AreaRectangle(player.getLocation().sub(0, 1, 0), player.getLocation().copy().add(size, -1, size), 256), "Test Rectangle"));
+                    new Area.AreaRectangle(player.getLocation().sub(0, 1, 0), player.getLocation().copy().add(size, -1, size), 256), Text.of("Test Rectangle")));
         }
         return CommandResult.success();
     }

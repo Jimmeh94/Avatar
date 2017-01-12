@@ -21,11 +21,11 @@ import java.util.List;
 public abstract class Area {
 
     private AreaShape shape;
-    private String displayName;
+    private Text displayName;
     private List<User> members = new ArrayList<>();
     private AreaReferences reference;
 
-    public Area(AreaShape shape, String displayName, AreaReferences reference){
+    public Area(AreaShape shape, Text displayName, AreaReferences reference){
         this.shape = shape;
         this.displayName = displayName;
         this.reference = reference;
@@ -80,7 +80,7 @@ public abstract class Area {
         }
     }
 
-    public String getDisplayName() {
+    public Text getDisplayName() {
         return displayName;
     }
 
