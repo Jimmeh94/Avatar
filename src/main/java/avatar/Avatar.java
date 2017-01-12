@@ -35,6 +35,8 @@ public class Avatar {
     private QuestManager questManager;
     private DialogueManager dialogueManager;
     private AbilityManager abilityManager;
+    private ChatChannelManager chatChannelManager;
+    private EconomyManager economyManager;
 
     //--- Runnables ---
     private GameTimer gameTimer;
@@ -62,6 +64,8 @@ public class Avatar {
         questManager = new QuestManager();
         dialogueManager = new DialogueManager();
         abilityManager = new AbilityManager();
+        chatChannelManager = new ChatChannelManager();
+        economyManager = new EconomyManager();
 
         registerListeners();
         registerCommands();
@@ -126,4 +130,12 @@ public class Avatar {
     }
 
     public Cause getDefaultCause(){return Cause.source(Avatar.INSTANCE.getPluginContainer()).build();}
+
+    public ChatChannelManager getChatChannelManager() {
+        return chatChannelManager;
+    }
+
+    public EconomyManager getEconomyManager() {
+        return economyManager;
+    }
 }

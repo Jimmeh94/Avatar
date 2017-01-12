@@ -3,6 +3,7 @@ package avatar.user;
 import avatar.Avatar;
 import avatar.events.custom.DialogueEvent;
 import avatar.game.dialogue.core.containers.Dialogue;
+import avatar.game.economy.Account;
 import avatar.game.quests.menus.QuestMenu;
 import avatar.game.quests.quests.Quest;
 import avatar.user.stats.IStatsPreset;
@@ -27,9 +28,12 @@ public class UserPlayer extends User {
     private QuestMenu questMenu;
 
     private Dialogue currentDialogue;
+    private Account account;
 
     public UserPlayer(UUID user) {
         super(user);
+
+        account = new Account(this);
     }
 
     public UserPlayer(UUID user, IStatsPreset preset){
@@ -37,6 +41,8 @@ public class UserPlayer extends User {
 
         //TODO populate quests
         //questMenu = new QuestMenu(this);
+
+        account = new Account(this);
     }
 
     @Override
@@ -81,6 +87,10 @@ public class UserPlayer extends User {
 
     public Dialogue getCurrentDialogue() {
         return currentDialogue;
+    }
+
+    public Account getAccount() {
+        return account;
     }
 
     //--- Setters ---
