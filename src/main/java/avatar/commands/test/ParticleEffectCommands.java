@@ -37,10 +37,10 @@ public class ParticleEffectCommands implements CommandExecutor {
                 .center(player.getLocation().copy().add(0, 1, 0))
                 .taskInfo(0L, 5L, 1200L)
                 .amount(100)
-                .offsets(0.2, 0.2, 0.2)
+                .offsets(0, 0, 0)
                 .particle(ParticleTypes.FLAME)
-                .playParticles((data, target) -> ParticleUtils.PlayerBased.displayParticles(data.setDisplayAt(target)))
-                .randomizeOffsets(true)
+                .playParticles((data, target) -> ParticleUtils.PlayerBased.displayParticles(data))
+                .randomizeOffsets(false)
                 .build();
 
         switch (effect){
@@ -53,6 +53,8 @@ public class ParticleEffectCommands implements CommandExecutor {
             case "sphere": abstractEffect = new SphereEffect(effectData, 5.0);
                 break;
             case "tornado": abstractEffect = new TornadoEffect(effectData, 10, 1, 6.5);
+                break;
+            case "test": abstractEffect = new TestEffect(effectData);
         }
 
         abstractEffect.start();

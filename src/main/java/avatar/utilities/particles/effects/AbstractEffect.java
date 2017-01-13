@@ -4,7 +4,6 @@ package avatar.utilities.particles.effects;
 import avatar.Avatar;
 import com.flowpowered.math.vector.Vector3d;
 import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.world.Location;
 
 public abstract class AbstractEffect {
 
@@ -64,12 +63,9 @@ public abstract class AbstractEffect {
 
 	/**
 	 * Spawns a particle using the set particle effect.
-	 * 
-	 * @param loc
-	 *            The location to spawn the particle at.
 	 */
-	protected void playParticle(Location loc){
-		effectData.getPlayParticles().playParticles(effectData, loc);
+	protected void playParticle(){
+		effectData.getPlayParticles().playParticles(effectData, effectData.getDisplayAt());
 	}
 
 	public EffectData getEffectData() {

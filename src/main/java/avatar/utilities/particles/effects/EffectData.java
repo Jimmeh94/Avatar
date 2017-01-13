@@ -127,7 +127,7 @@ public class EffectData {
         return this;
     }
 
-    public Location getLocation() {
+    public Location getCenter() {
         return center;
     }
 

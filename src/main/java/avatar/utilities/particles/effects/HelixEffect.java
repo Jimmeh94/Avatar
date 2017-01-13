@@ -39,8 +39,9 @@ public class HelixEffect extends AbstractEffect {
 				int stepPerLine = circleCoordinates / lines;
 				double[] array = array2d[(((stepPerLine * line) % circleCoordinates) + (i * 2 % circleCoordinates)
 						+ (circleCoordinates - 1 - ((spinner) % circleCoordinates))) % circleCoordinates];
-				playParticle(effectData.getLocation().add(array[0], array[1], array[2]));
-				effectData.getLocation().sub(array[0], array[1], array[2]);
+				effectData.setDisplayAt(effectData.getCenter().add(array[0], array[1], array[2]));
+				playParticle();
+				effectData.getCenter().sub(array[0], array[1], array[2]);
 			}
 			i++;
 		}

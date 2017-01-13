@@ -43,8 +43,9 @@ public class TornadoEffect extends AbstractEffect {
 					continue;
 				double[] coordinateArray = coordinates[i][(((stepPerLine * line) % 60) + (i * 2 % 60)
 						+ (59 - ((spinner) % 60))) % 60];
-				playParticle(effectData.getLocation().add(coordinateArray[0], coordinateArray[1], coordinateArray[2]));
-				effectData.getLocation().sub(coordinateArray[0], coordinateArray[1], coordinateArray[2]);
+				effectData.setDisplayAt(effectData.getCenter().add(coordinateArray[0], coordinateArray[1], coordinateArray[2]));
+				playParticle();
+				effectData.getCenter().sub(coordinateArray[0], coordinateArray[1], coordinateArray[2]);
 			}
 		}
 	}

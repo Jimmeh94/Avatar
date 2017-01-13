@@ -18,13 +18,14 @@ public class LineEffect extends AbstractEffect {
 	public LineEffect(EffectData effectData, Location target) {
 		super(effectData);
 		this.target = target;
-		draw = LocationUtils.getConnectingLine(effectData.getLocation(), target);
+		draw = LocationUtils.getConnectingLine(effectData.getCenter(), target);
 	}
 	
 	@Override
 	public void play() {
 		for(int i = 0; i <= display; i++){
-			playParticle(draw.get(i));
+			effectData.setDisplayAt(draw.get(i));
+			playParticle();
 		}
 		if(display < draw.size() - 1)
 			display++;
