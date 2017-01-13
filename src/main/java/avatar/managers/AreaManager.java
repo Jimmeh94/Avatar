@@ -1,20 +1,17 @@
 package avatar.managers;
 
 import avatar.game.areas.Area;
-import avatar.game.areas.PassiveArea;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.text.Text;
+import avatar.game.areas.AreaReferences;
 import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 import java.util.Optional;
 
 public class AreaManager extends Manager<Area> {
 
     public AreaManager(){
-        //load all areas
+        //load all parent areas
 
-        add(new PassiveArea(new Area.AreaCircle(new Location(Sponge.getServer().getWorlds().toArray(new World[]{})[0], 50, 50, 50), 10, 256), Text.of("Test Area")));
+        add(new Area(AreaReferences.GLOBAL));
     }
 
     public Optional<Area> getAreaByContainedLocation(Location location){
@@ -22,10 +19,22 @@ public class AreaManager extends Manager<Area> {
 
         for(Area area: this.objects){
             if(area.contains(location)){
-                give = Optional.of(area);
+                give = Optional.of(area.getAreaThatContains(location));
             }
         }
 
         return give;
+    }
+
+    public Optional<Area> getAreaByReference(AreaReferences reference) {
+        for(Area area: objects){
+            if(area.is(reference)){
+                return Optional.of(area);
+            } else if(area.hasChild(reference)){
+                return area.getChild(reference);
+            }
+        }
+
+        return Optional.empty();
     }
 }

@@ -3,6 +3,7 @@ package avatar.user;
 import avatar.Avatar;
 import avatar.events.custom.DialogueEvent;
 import avatar.game.areas.Area;
+import avatar.game.areas.AreaReferences;
 import avatar.game.dialogue.core.containers.Dialogue;
 import avatar.game.quests.menus.QuestMenu;
 import avatar.game.quests.quests.Quest;
@@ -62,11 +63,6 @@ public class UserPlayer extends User {
 
         scoreboard.updateScoreboard();
     }
-
-    @Override
-    public void leaveArea(){
-        super.leaveArea();
-    }
     
     @Override
     public void tick(){
@@ -75,8 +71,18 @@ public class UserPlayer extends User {
         //area checks
         Player player = getPlayer().get();
         boolean doWork = true;
+
+        //If they left an area and where they went to isn't a defined area, put them into a "global" area
+        if(getPresentArea() == null){
+            Optional<Area> area = Avatar.INSTANCE.getAreaManager().getAreaByReference(AreaReferences.GLOBAL);
+            if(area.isPresent()){
+                enterArea(area.get());
+            }
+        }
+
         if(getLastBlockLocation().isPresent()){
             if(getLastBlockLocation().get().getPosition().distance(player.getLocation().getPosition()) < 1) {
+                //traveled less than 1 block
                 doWork = false;
             }
         } else {
@@ -89,9 +95,18 @@ public class UserPlayer extends User {
             List<Location> traveled = LocationUtils.getConnectingLine(getLastBlockLocation().get(), player.getLocation());
 
             if (traveled.size() > 1) {
+                //Where they started
                 Optional<Area> temp = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(traveled.get(0));
+                //Where they are
                 Optional<Area> temp2 = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(traveled.get(traveled.size() - 1));
-                if (temp.isPresent()) {
+
+                if(temp.isPresent() && temp2.isPresent()){
+                    if(temp.get() != temp2.get()){
+                        enterArea(temp2.get());
+                    }
+                }
+
+                /*if (temp.isPresent()) {
                     //the player started inside the area
                     if (!temp2.isPresent()) {
                         //the player ended outside the area
@@ -105,13 +120,13 @@ public class UserPlayer extends User {
                         enterArea(temp2.get());
                     }
                     //else they're still outside the area
-                }
+                }*/
             }
             setLastBlockLocation(player.getLocation());
         }
 
         //scoreboard update
-        //scoreboard.updateScoreboard();
+        scoreboard.updateScoreboard();
     }
 
     @Override

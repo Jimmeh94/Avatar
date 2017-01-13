@@ -11,38 +11,77 @@ import org.spongepowered.api.world.Location;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * General "area" of the map.
  * Could be used in quests too, such as reach the city of _____
  */
 
-public abstract class Area {
+public class Area {
 
     private AreaShape shape;
     private Text displayName;
     private List<User> members = new ArrayList<>();
     private AreaReferences reference;
+    private List<Area> children = new ArrayList<>();
 
-    public Area(AreaShape shape, Text displayName, AreaReferences reference){
-        this.shape = shape;
-        this.displayName = displayName;
+    public Area(AreaReferences reference){
+        this.shape = reference.getShape();
+        this.displayName = reference.getDisplayName();
         this.reference = reference;
+
+        for(AreaReferences r: reference.getChildren()){
+            children.add(new Area(r));
+        }
+    }
+
+    public boolean hasChild(AreaReferences reference){
+        for(Area area: children){
+            if(area.is(reference))
+                return true;
+        }
+        return false;
+    }
+
+    public Optional<Area> getChild(AreaReferences reference){
+        for(Area area: children){
+            if(area.is(reference))
+                return Optional.of(area);
+        }
+        return Optional.empty();
+    }
+
+    public List<Area> getChildren() {
+        return children;
     }
 
     public Location getCenter(){return shape.getCenter();}
 
-    public boolean is(int ID){return this.reference.getIntID() == ID;}
-
-    public boolean is(String ID){return this.reference.getStringID().toLowerCase() == ID.toLowerCase();}
+    public boolean is(AreaReferences reference){return this.reference == reference;}
 
     public boolean contains(Location location){
-        double x1 = location.getX(), x2 = shape.center.getX();
-        double z1 = location.getZ(), z2 = shape.center.getZ();
-        double y = location.getY();
+        boolean has;
 
-        return LocationUtils.getDistance(x1, x2) <= shape.radius && LocationUtils.getDistance(z1, z2) <= shape.radius
-                && y >= shape.center.getY() && y <= shape.center.getY() + shape.getHeight();
+        if(shape != null && getCenter() != null){
+            double x1 = location.getX(), x2 = shape.center.getX();
+            double z1 = location.getZ(), z2 = shape.center.getZ();
+            double y = location.getY();
+
+            has = LocationUtils.getDistance(x1, x2) <= shape.radius && LocationUtils.getDistance(z1, z2) <= shape.radius
+                    && y >= shape.center.getY() && y <= shape.center.getY() + shape.getHeight();
+
+            if(!has) //parent doesn't contain this location, no need searching children
+                return false;
+        } else has = true; //This means it's a global area
+
+        if(!has) {
+            for (Area area : children) {
+                has = area.contains(location);
+            }
+        }
+
+        return has;
     }
 
     /**
@@ -72,9 +111,9 @@ public abstract class Area {
         if(members.contains(targetEntity)){
             members.remove(targetEntity);
 
-            if(targetEntity instanceof UserPlayer){
+            /*if(targetEntity instanceof UserPlayer){
                 ((UserPlayer)targetEntity).getPlayer().get().sendMessage(Text.builder().append(Text.of("Leaving ")).append(displayName).build());
-            }
+            }*/
 
             AreaEvent event = new AreaEvent.Exit(targetEntity, targetEntity.getPresentArea(), ListenerManager.getDefaultCause());
             Sponge.getEventManager().post(event);
@@ -98,6 +137,22 @@ public abstract class Area {
         }
 
         return players;
+    }
+
+    /**
+     * We assume you've checked Area#contains(location) and that it returned true
+     * @param location
+     * @return
+     */
+    public Area getAreaThatContains(Location location) {
+        Area give = this;
+
+        for(Area area: children){
+            if(area.contains(location))
+                give = area.getAreaThatContains(location);
+        }
+
+        return give;
     }
 
     public static abstract class AreaShape {

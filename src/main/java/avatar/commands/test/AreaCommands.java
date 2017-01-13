@@ -2,7 +2,7 @@ package avatar.commands.test;
 
 import avatar.Avatar;
 import avatar.game.areas.Area;
-import avatar.game.areas.PassiveArea;
+import avatar.game.areas.AreaReferences;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -33,11 +33,9 @@ public class AreaCommands implements CommandExecutor {
         int size = args.<Integer>getOne("size").get();
 
         switch (type){
-            case "circle": Avatar.INSTANCE.getAreaManager().add(new PassiveArea(
-                    new Area.AreaCircle(player.getLocation().copy().add(0, -1, 0), size, 256), Text.of("Test Circle")));
+            case "circle": Avatar.INSTANCE.getAreaManager().add(new Area(AreaReferences.TEST));
                 break;
-            case "square": Avatar.INSTANCE.getAreaManager().add(new PassiveArea(
-                    new Area.AreaRectangle(player.getLocation().sub(0, 1, 0), player.getLocation().copy().add(size, -1, size), 256), Text.of("Test Rectangle")));
+            case "square": Avatar.INSTANCE.getAreaManager().add(new Area(AreaReferences.TEST));
         }
         return CommandResult.success();
     }
