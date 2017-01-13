@@ -4,6 +4,7 @@ import avatar.commands.DialogueCommands;
 import avatar.commands.QuestCommands;
 import avatar.commands.test.AreaCommands;
 import avatar.commands.test.ParticleEffectCommands;
+import avatar.events.InventoryClick;
 import avatar.events.PlayerConnection;
 import avatar.game.dialogue.core.builders.DialogueBuilder;
 import avatar.game.quests.quests.builders.QuestBuilder;
@@ -26,6 +27,7 @@ import java.util.logging.Logger;
 public class Avatar {
 
     //TODO fix how the quest checkpoints reset
+    //TODO fix particles
 
     public static Avatar INSTANCE;
 
@@ -91,6 +93,7 @@ public class Avatar {
 
     private void registerListeners(){
         Sponge.getEventManager().registerListeners(this, new PlayerConnection());
+        Sponge.getEventManager().registerListeners(this, new InventoryClick());
     }
 
     public PluginContainer getPluginContainer(){return Sponge.getPluginManager().fromInstance(this).get();}

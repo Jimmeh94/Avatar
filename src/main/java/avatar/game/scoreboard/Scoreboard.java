@@ -9,6 +9,8 @@ import org.spongepowered.api.scoreboard.displayslot.DisplaySlots;
 import org.spongepowered.api.scoreboard.objective.Objective;
 import org.spongepowered.api.text.Text;
 
+import java.util.Arrays;
+
 public class Scoreboard {
 
     private UserPlayer owner;
@@ -17,8 +19,9 @@ public class Scoreboard {
     public Scoreboard(UserPlayer player){
         owner = player;
 
-        org.spongepowered.api.scoreboard.Scoreboard scoreboard = org.spongepowered.api.scoreboard.Scoreboard.builder().build();
-        scoreboard.updateDisplaySlot(Objective.builder().name("Side").criterion(Criteria.DUMMY).displayName(Text.EMPTY).build(), DisplaySlots.SIDEBAR);
+        org.spongepowered.api.scoreboard.Scoreboard scoreboard = org.spongepowered.api.scoreboard.Scoreboard.builder()
+                .objectives(Arrays.asList(Objective.builder().name("Side").criterion(Criteria.DUMMY).displayName(Text.EMPTY).build())).build();
+        scoreboard.updateDisplaySlot(scoreboard.getObjective("Side").get(), DisplaySlots.SIDEBAR);
 
         //scoreboard.registerNewObjective("prefix", "dummy").setDisplaySlots(DisplaySlots.PLAYER_LIST);
         //May have to loop through every online player and add this team to their scoreboard
@@ -29,7 +32,7 @@ public class Scoreboard {
         //setPrefix();
 
         preset = new DefaultPreset(owner);
-        updateScoreboard();
+        //updateScoreboard();
     }
 
    /* public void setPrefix(){

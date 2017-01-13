@@ -36,9 +36,9 @@ public class ParticleEffectCommands implements CommandExecutor {
                 .user(Avatar.INSTANCE.getUserManager().find(player.getUniqueId()).get())
                 .center(player.getLocation().copy().add(0, 1, 0))
                 .taskInfo(0L, 5L, 1200L)
-                .amount(50)
-                .offsets(0, 0, 0)
-                .particle(ParticleTypes.REDSTONE_DUST)
+                .amount(100)
+                .offsets(0.2, 0.2, 0.2)
+                .particle(ParticleTypes.FLAME)
                 .playParticles((data, target) -> ParticleUtils.PlayerBased.displayParticles(data.setDisplayAt(target)))
                 .randomizeOffsets(true)
                 .build();
@@ -48,7 +48,7 @@ public class ParticleEffectCommands implements CommandExecutor {
                 break;
             case "helix": abstractEffect = new HelixEffect(effectData, 7.5, .75, 3.5);
                 break;
-            case "line": abstractEffect = new LineEffect(effectData, player.getLocation().copy().add(5, 3, 5));
+            case "line": abstractEffect = new LineEffect(effectData, player.getLocation().copy().add(5, 0, 5));
                 break;
             case "sphere": abstractEffect = new SphereEffect(effectData, 5.0);
                 break;

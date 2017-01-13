@@ -6,7 +6,6 @@ import avatar.user.User;
 import avatar.user.UserPlayer;
 import avatar.utilities.misc.LocationUtils;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 
@@ -31,6 +30,8 @@ public abstract class Area {
         this.reference = reference;
     }
 
+    public Location getCenter(){return shape.getCenter();}
+
     public boolean is(int ID){return this.reference.getIntID() == ID;}
 
     public boolean is(String ID){return this.reference.getStringID().toLowerCase() == ID.toLowerCase();}
@@ -54,7 +55,7 @@ public abstract class Area {
             members.add(targetEntity);
 
             if(targetEntity instanceof UserPlayer){
-                ((UserPlayer)targetEntity).getPlayer().get().sendMessage(Text.of("Entering " + displayName));
+                ((UserPlayer)targetEntity).getPlayer().get().sendMessage(Text.builder().append(Text.of("Entering ")).append(displayName).build());
             }
 
             AreaEvent event = new AreaEvent.Enter(targetEntity, this, ListenerManager.getDefaultCause());
@@ -72,7 +73,7 @@ public abstract class Area {
             members.remove(targetEntity);
 
             if(targetEntity instanceof UserPlayer){
-                ((UserPlayer)targetEntity).getPlayer().get().sendMessage(Text.of("Leaving " + displayName));
+                ((UserPlayer)targetEntity).getPlayer().get().sendMessage(Text.builder().append(Text.of("Leaving ")).append(displayName).build());
             }
 
             AreaEvent event = new AreaEvent.Exit(targetEntity, targetEntity.getPresentArea(), ListenerManager.getDefaultCause());
@@ -84,7 +85,7 @@ public abstract class Area {
         return displayName;
     }
 
-    public boolean isMember(Entity entity){
+    public boolean isMember(User entity){
         return members.contains(entity);
     }
 

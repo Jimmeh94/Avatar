@@ -1,12 +1,8 @@
 package avatar.managers;
 
-import avatar.Avatar;
-import avatar.game.areas.Area;
 import avatar.user.User;
 import avatar.user.UserPlayer;
-import avatar.utilities.misc.LocationUtils;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.world.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +26,9 @@ public class UserManager extends Manager<User>{
     }
 
     public void tick() {
-        //Checking if they have entered or left an area
-        areaTick();
-
-        //Check combat status
-        combatTick();
+        for(User user: objects) {
+            user.tick();
+        }
     }
 
     public List<UserPlayer> getPlayers() {
@@ -44,6 +38,10 @@ public class UserManager extends Manager<User>{
                 players.add(((UserPlayer)user));
         }
         return players;
+    }
+
+    public Optional<User> findUser(Entity entity){
+        return find(entity.getUniqueId());
     }
 
     public Optional<UserPlayer> findUserPlayer(Entity entity) {
@@ -57,57 +55,5 @@ public class UserManager extends Manager<User>{
         }
 
         return give;
-    }
-
-    private void combatTick(){
-        //only need to check this every second
-        if((System.currentTimeMillis() - lastRun)/1000 < 1)
-            return;
-
-        for(User user: objects){
-            user.getCombatLogger().tickInCombat();
-        }
-        lastRun = System.currentTimeMillis();
-    }
-
-    private void areaTick(){
-        for(User user: objects){
-            if(user.isPlayer()){
-                UserPlayer player = (UserPlayer)user;
-
-                if(player.getLastBlockLocation().isPresent()){
-                    if(player.getLastBlockLocation().get().getPosition().distance(player.getPlayer().get().getLocation().getPosition()) < 1) {
-                        continue;
-                    }
-                } else {
-                    player.setLastBlockLocation(player.getPlayer().get().getLocation());
-                    continue;
-                }
-
-                //Get a connecting path of locations from where they were to where they are
-                List<Location> traveled = LocationUtils.getConnectingLine(player.getLastBlockLocation().get(), player.getPlayer().get().getLocation());
-
-                if(traveled.size() > 1){
-                    Optional<Area> temp = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(traveled.get(0));
-                    Optional<Area> temp2 = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(traveled.get(traveled.size() - 1));
-                    if(temp.isPresent()){
-                        //the player started inside the area
-                        if(!temp2.isPresent()){
-                            //the player ended outside the area
-                            user.leaveArea();
-                        }
-                        //else they're still inside and nothing to do
-                    } else {
-                        //started outside the area
-                        if(temp2.isPresent()){
-                            //ended inside the area
-                            user.enterArea(temp2.get());
-                        }
-                        //else they're still outside the area
-                    }
-                }
-                player.setLastBlockLocation(player.getPlayer().get().getLocation());
-            }
-        }
     }
 }

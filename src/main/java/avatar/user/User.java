@@ -7,9 +7,7 @@ import avatar.user.stats.IStatsPreset;
 import avatar.user.stats.Stats;
 import avatar.user.stats.presets.DefaultBenderPreset;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.Entity;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -21,6 +19,7 @@ public class User {
     private Stats stats;
     private Area presentArea;
     private EntityCombatLogger combatLogger;
+    private Long lastRun = System.currentTimeMillis();
 
     public User(UUID user){
         this(user, new DefaultBenderPreset());
@@ -40,11 +39,8 @@ public class User {
      * Cleans up all loose ends this might have, if the user was just directly removed
      */
     public void cleanUp(){
-        Optional<Entity> entity = getEntity();
-        if(!getEntity().isPresent())
-            return;
-
         leaveArea();
+        Avatar.INSTANCE.getUserManager().remove(this);
     }
 
     public boolean isPlayer(){return Sponge.getServer().getPlayer(user) != null;}
@@ -87,11 +83,15 @@ public class User {
         return user;
     }
 
-    public Optional<Entity> getEntity(){
-        return Sponge.getGame().getServer().getWorld(user).get().getEntity(user);
-    }
-
     public EntityCombatLogger getCombatLogger() {
         return combatLogger;
+    }
+
+    public void tick() {
+        //combat logger
+        if((System.currentTimeMillis() - lastRun)/1000 >= 1) {
+                getCombatLogger().tickInCombat();
+            lastRun = System.currentTimeMillis();
+        }
     }
 }

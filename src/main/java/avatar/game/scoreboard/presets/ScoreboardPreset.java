@@ -10,7 +10,7 @@ public class ScoreboardPreset {
 
     protected static Text BLANK_LINE = Text.of(" ");
 
-    private List<Text> scores;
+    private List<Text> scores = new ArrayList<>();
     private UserPlayer owner;
     private List<Text> oldSnapshot = new ArrayList<>();
     /*

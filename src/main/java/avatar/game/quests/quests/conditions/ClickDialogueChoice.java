@@ -29,7 +29,9 @@ public class ClickDialogueChoice extends Condition implements EventListener<Dial
 
     @Override
     public void handle(DialogueEvent.ChoiceClicked choiceClicked) throws Exception {
-        if(choiceClicked.getUserPlayer().getPlayer().equals(this.getPlayer()) && choiceClicked.getChoiceID() == this.choiceID){
+        if(choiceClicked.getUserPlayer().getPlayer().get()
+                == this.getPlayer() &&
+                choiceClicked.getChoiceID().equals(this.choiceID)){
             valid = true;
         }
     }

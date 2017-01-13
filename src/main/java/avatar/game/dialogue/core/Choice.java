@@ -46,6 +46,7 @@ public class Choice implements Consumer<CommandSource>{
         this.sentence = Text.of(choice.getSentence());
         this.player = player;
         this.conditions = condition;
+        this.id = choice.getId();
 
         if(hover.isPresent()){
             sentence = Text.builder().append(Text.of(TextColors.GREEN, TextStyles.BOLD, AltCodes.ARROW_RIGHT.getSign() + " "), sentence)

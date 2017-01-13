@@ -2,11 +2,13 @@ package avatar.user;
 
 import avatar.Avatar;
 import avatar.events.custom.DialogueEvent;
+import avatar.game.areas.Area;
 import avatar.game.dialogue.core.containers.Dialogue;
 import avatar.game.quests.menus.QuestMenu;
 import avatar.game.quests.quests.Quest;
 import avatar.game.scoreboard.Scoreboard;
 import avatar.user.stats.IStatsPreset;
+import avatar.utilities.misc.LocationUtils;
 import avatar.utilities.particles.ParticleUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -44,7 +46,72 @@ public class UserPlayer extends User {
         //questMenu = new QuestMenu(this);
 
         account = new Account(this);
+    }
+
+    public void init(){
         scoreboard = new Scoreboard(this);
+
+        Optional<Area> area = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(getPlayer().get().getLocation());
+        if(area.isPresent())
+            enterArea(area.get());
+    }
+
+    @Override
+    public void enterArea(Area area){
+        super.enterArea(area);
+
+        scoreboard.updateScoreboard();
+    }
+
+    @Override
+    public void leaveArea(){
+        super.leaveArea();
+    }
+    
+    @Override
+    public void tick(){
+        super.tick();
+
+        //area checks
+        Player player = getPlayer().get();
+        boolean doWork = true;
+        if(getLastBlockLocation().isPresent()){
+            if(getLastBlockLocation().get().getPosition().distance(player.getLocation().getPosition()) < 1) {
+                doWork = false;
+            }
+        } else {
+            setLastBlockLocation(getPlayer().get().getLocation());
+            doWork = false;
+        }
+
+        if(doWork) {
+            //Get a connecting path of locations from where they were to where they are
+            List<Location> traveled = LocationUtils.getConnectingLine(getLastBlockLocation().get(), player.getLocation());
+
+            if (traveled.size() > 1) {
+                Optional<Area> temp = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(traveled.get(0));
+                Optional<Area> temp2 = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(traveled.get(traveled.size() - 1));
+                if (temp.isPresent()) {
+                    //the player started inside the area
+                    if (!temp2.isPresent()) {
+                        //the player ended outside the area
+                        leaveArea();
+                    }
+                    //else they're still inside and nothing to do
+                } else {
+                    //started outside the area
+                    if (temp2.isPresent()) {
+                        //ended inside the area
+                        enterArea(temp2.get());
+                    }
+                    //else they're still outside the area
+                }
+            }
+            setLastBlockLocation(player.getLocation());
+        }
+
+        //scoreboard update
+        //scoreboard.updateScoreboard();
     }
 
     @Override

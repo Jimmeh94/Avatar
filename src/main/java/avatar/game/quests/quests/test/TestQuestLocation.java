@@ -5,6 +5,7 @@ import avatar.game.quests.quests.Quest;
 import avatar.game.quests.quests.builders.CheckpointBuilder;
 import avatar.game.quests.quests.builders.QuestBuilder;
 import avatar.game.quests.quests.conditions.BoundRadius;
+import avatar.game.quests.quests.conditions.ClickDialogueChoice;
 import avatar.game.quests.quests.conditions.ReachLocation;
 import avatar.game.quests.quests.conditions.TimeLimit;
 import org.spongepowered.api.Sponge;
@@ -31,6 +32,10 @@ public class TestQuestLocation {
                 .targetLocation(use2)
                 .condition(new BoundRadius(10.0, use))
                 .condition(new ReachLocation(use2, 1.5))
+                .buildCheckpoint();
+        checkpointBuilder.description("Talk to Old Man")
+                .targetLocation(use2)
+                .condition(new ClickDialogueChoice("test.with"))
                 .buildCheckpoint();
 
         Quest quest = questBuilder.name("Test").description("This is a test quest").level(1).setID("test").checkpoints().itemType(ItemTypes.PAPER).reward(new TestReward()).build();
