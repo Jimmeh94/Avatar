@@ -11,7 +11,9 @@ public enum AreaReferences {
 
     //Children of GLOBAL
     TEST(new Area.AreaCircle(new Location(Sponge.getServer().getWorlds().toArray(new World[]{})[0], 50, 50, 50), 10, 256), Text.of("Test Area")),
-    GLOBAL(null, Text.of("Global Wilderness"), AreaReferences.TEST);
+    TEST2(new Area.AreaRectangle(new Location(Sponge.getServer().getWorlds().toArray(new World[]{})[0], 75, 50, 75),
+            new Location(Sponge.getServer().getWorlds().toArray(new World[]{})[0], 100, 50, 100), 256), Text.of("Test 2")),
+    GLOBAL(null, Text.of("Global Wilderness"), TEST, TEST2);
     //--------------------
 
     private Area.AreaShape shape;

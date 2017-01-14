@@ -43,7 +43,7 @@ public class TestDialogue {
                         .addSentence(Text.of("I lost some candy in my van... ;)")))
                 .addDialogue(displayableBuilder
                         .setChoiceWheel(true)
-                        .addChoice(Text.of("Sure, I loooooove candy"), Text.of("Get quest"), "sure", dialogueBuilder.getStringID(), new DisplayDialogue("testYes"))
+                        .addChoice(Text.of("Sure, I loooooove candy"), Text.of("Get quest"), "sure", dialogueBuilder.getStringID(), new GiveQuest("test"))
                         .addChoice(Text.of("Stranger danger!"), null, "danger", dialogueBuilder.getStringID(), new DisplayDialogue("testNo")))
                 .build();
     }

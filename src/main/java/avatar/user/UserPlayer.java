@@ -190,4 +190,13 @@ public class UserPlayer extends User {
     public void setCurrentDialogue(Dialogue currentDialogue) {
         this.currentDialogue = currentDialogue;
     }
+
+    public boolean hasQuest(Quest quest) {
+        for(Quest quest1: quests){
+            if(quest1.getID().equalsIgnoreCase(quest.getID())){
+                return true;
+            }
+        }
+        return false;
+    }
 }

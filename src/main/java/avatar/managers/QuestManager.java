@@ -21,7 +21,7 @@ public class QuestManager extends Manager<Quest> {
                 quest = q;
             }
         }
-        if(quest != null){
+        if(quest != null && !playerInfo.hasQuest(quest)){
             playerInfo.getQuests().add(new Quest(quest, playerInfo));
             Messager.sendTitleAndSubTitle(playerInfo.getPlayer().get(), quest.getTitle(), quest.getDescription());
         }

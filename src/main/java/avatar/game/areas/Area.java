@@ -155,6 +155,10 @@ public class Area {
         return give;
     }
 
+    public AreaShape getShape() {
+        return shape;
+    }
+
     public static abstract class AreaShape {
         private Location center;
         protected double height, radius;
@@ -176,6 +180,10 @@ public class Area {
         public double getRadius() {
             return radius;
         }
+
+        public boolean isYWithinBounds(double y){
+            return center.getY() <= y && y <= (center.getY() + height);
+        }
     }
 
     public static class AreaCircle extends AreaShape{
@@ -189,7 +197,8 @@ public class Area {
 
         private Location first, second;
         public AreaRectangle(Location firstCorner, Location secondCorner, double height) {
-            super(LocationUtils.getMidPointLocation(firstCorner, secondCorner), height, (firstCorner.getPosition().distance(secondCorner.getPosition())) / 2);
+            super(LocationUtils.getMidPointLocation(firstCorner, secondCorner), height,
+                    (firstCorner.getPosition().distance(LocationUtils.getMidPointLocation(firstCorner, secondCorner).getPosition())));
 
             this.first = firstCorner;
             this.second = secondCorner;

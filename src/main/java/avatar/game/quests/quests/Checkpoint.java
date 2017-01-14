@@ -1,5 +1,6 @@
 package avatar.game.quests.quests;
 
+import avatar.game.quests.quests.conditions.ReachArea;
 import avatar.utilities.text.Messager;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.format.TextColors;
@@ -106,5 +107,16 @@ public class Checkpoint {
         this.player = player;
         for(Condition condition: conditions)
             condition.setPlayer(player);
+    }
+
+    public int getTrackerDistance() {
+        int distance = (int) getTargetLocation().get().getPosition().distance(player.getLocation().getPosition());
+
+        for(Condition condition: conditions){
+            if(condition instanceof ReachArea){
+                return ((ReachArea)condition).getTrackerDistance(distance);
+            }
+        }
+        return distance;
     }
 }

@@ -4,7 +4,9 @@ import avatar.events.custom.AreaEvent;
 import avatar.game.areas.Area;
 import avatar.game.quests.quests.Condition;
 import avatar.managers.ListenerManager;
+import com.flowpowered.math.vector.Vector3d;
 import org.spongepowered.api.event.EventListener;
+import org.spongepowered.api.world.Location;
 
 public class ReachArea extends Condition implements EventListener<AreaEvent.Enter> {
 
@@ -13,7 +15,6 @@ public class ReachArea extends Condition implements EventListener<AreaEvent.Ente
      */
 
     private Area targetArea;
-    private double completionRadius = 1.5;
 
     public ReachArea(Area area) {
         this.targetArea = area;
@@ -42,5 +43,16 @@ public class ReachArea extends Condition implements EventListener<AreaEvent.Ente
                 }
             }
         }
+    }
+
+    public int getTrackerDistance(int distance) {
+        if(targetArea.getShape().isYWithinBounds(getPlayer().getLocation().getY())){
+            Location use = targetArea.getCenter();
+            use.setPosition(new Vector3d(use.getX(), getPlayer().getLocation().getY(), use.getZ()));
+            distance = (int) use.getPosition().distance(getPlayer().getLocation().getPosition());
+        }
+
+        distance -= targetArea.getShape().getRadius();
+        return distance;
     }
 }

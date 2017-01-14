@@ -1,15 +1,18 @@
 package avatar.game.quests.quests.test;
 
 import avatar.Avatar;
+import avatar.game.areas.Area;
+import avatar.game.areas.AreaReferences;
 import avatar.game.quests.quests.Quest;
+import avatar.game.quests.quests.Reward;
 import avatar.game.quests.quests.builders.CheckpointBuilder;
 import avatar.game.quests.quests.builders.QuestBuilder;
-import avatar.game.quests.quests.conditions.BoundRadius;
-import avatar.game.quests.quests.conditions.ClickDialogueChoice;
-import avatar.game.quests.quests.conditions.ReachLocation;
-import avatar.game.quests.quests.conditions.TimeLimit;
+import avatar.game.quests.quests.conditions.*;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -38,9 +41,28 @@ public class TestQuestLocation {
                 .condition(new ClickDialogueChoice("test.with"))
                 .buildCheckpoint();
 
+        Area test2 = Avatar.INSTANCE.getAreaManager().getAreaByReference(AreaReferences.TEST2).get();
+        checkpointBuilder.description("Reach Test2")
+                .targetLocation(test2.getCenter())
+                .condition(new ReachArea(test2))
+                .buildCheckpoint();
+
+
         Quest quest = questBuilder.name("Test").description("This is a test quest").level(1).setID("test").checkpoints().itemType(ItemTypes.PAPER).reward(new TestReward()).build();
         questBuilder.reset();
         return quest;
+    }
+
+    public static class TestReward implements Reward {
+        @Override
+        public Text getDescription() {
+            return Text.of("Hammer of Doom");
+        }
+
+        @Override
+        public void giveAward(Player player) {
+            player.getInventory().offer(ItemStack.of(ItemTypes.ACACIA_DOOR, 1));
+        }
     }
 
 }
