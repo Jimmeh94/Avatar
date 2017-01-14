@@ -1,7 +1,7 @@
 package avatar.managers;
 
-import avatar.user.Account;
-import avatar.user.UserPlayer;
+import avatar.game.user.Account;
+import avatar.game.user.UserPlayer;
 
 import java.util.Optional;
 

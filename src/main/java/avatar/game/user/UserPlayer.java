@@ -1,4 +1,4 @@
-package avatar.user;
+package avatar.game.user;
 
 import avatar.Avatar;
 import avatar.events.custom.DialogueEvent;
@@ -6,9 +6,8 @@ import avatar.game.areas.Area;
 import avatar.game.areas.AreaReferences;
 import avatar.game.dialogue.core.containers.Dialogue;
 import avatar.game.quests.PlayerQuestManager;
-import avatar.game.quests.quests.Quest;
 import avatar.game.scoreboard.Scoreboard;
-import avatar.user.stats.IStatsPreset;
+import avatar.game.user.stats.IStatsPreset;
 import avatar.utilities.misc.LocationUtils;
 import avatar.utilities.particles.ParticleUtils;
 import org.spongepowered.api.Sponge;

@@ -7,10 +7,11 @@ public class HelixEffect extends AbstractEffect {
 	private int spinner;
 	private int circleCoordinates;
 
-	public HelixEffect(EffectData effectData, double top, double heightStep, double radius) {
+	public HelixEffect(EffectData effectData, double top, double heightStep, double radius, int lines) {
 		super(effectData);
 
 		init(top, heightStep, radius);
+		setLines(lines);
 	}
 
 	private void init(double height, double heightStep, double radius) {
@@ -25,7 +26,6 @@ public class HelixEffect extends AbstractEffect {
 				double z = Math.sin(a) * radius;
 				coordinates[i][i2++] = new double[] { x, y, z };
 			}
-			i2 = 0;
 		}
 	}
 

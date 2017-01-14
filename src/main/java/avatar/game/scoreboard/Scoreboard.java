@@ -2,7 +2,7 @@ package avatar.game.scoreboard;
 
 import avatar.game.scoreboard.presets.DefaultPreset;
 import avatar.game.scoreboard.presets.ScoreboardPreset;
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.scoreboard.critieria.Criteria;
 import org.spongepowered.api.scoreboard.displayslot.DisplaySlots;

@@ -3,7 +3,7 @@ package avatar.managers;
 import avatar.Avatar;
 import avatar.game.dialogue.core.containers.Dialogue;
 import avatar.game.dialogue.core.test.TestDialogue;
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.Optional;

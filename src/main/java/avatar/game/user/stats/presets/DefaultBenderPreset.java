@@ -1,8 +1,8 @@
-package avatar.user.stats.presets;
+package avatar.game.user.stats.presets;
 
-import avatar.user.User;
-import avatar.user.stats.IStatsPreset;
-import avatar.user.stats.Stats;
+import avatar.game.user.User;
+import avatar.game.user.stats.IStatsPreset;
+import avatar.game.user.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.List;

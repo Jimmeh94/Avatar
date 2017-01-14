@@ -2,7 +2,7 @@ package avatar.game.quests.quests;
 
 import avatar.Avatar;
 import avatar.events.custom.QuestEvent;
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 import avatar.utilities.directional.PlayerDirection;
 import avatar.utilities.text.AltCodes;
 import avatar.utilities.text.Messager;
@@ -168,7 +168,6 @@ public class Quest {
     }
 
     public void toggleActive() {
-        System.out.println("toggled: " + active);
         if(active){
             active = false;
             setLore();

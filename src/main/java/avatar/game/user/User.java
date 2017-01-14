@@ -1,11 +1,11 @@
-package avatar.user;
+package avatar.game.user;
 
 import avatar.Avatar;
 import avatar.game.areas.Area;
 import avatar.game.combatlog.EntityCombatLogger;
-import avatar.user.stats.IStatsPreset;
-import avatar.user.stats.Stats;
-import avatar.user.stats.presets.DefaultBenderPreset;
+import avatar.game.user.stats.IStatsPreset;
+import avatar.game.user.stats.Stats;
+import avatar.game.user.stats.presets.DefaultBenderPreset;
 import org.spongepowered.api.Sponge;
 
 import java.util.UUID;

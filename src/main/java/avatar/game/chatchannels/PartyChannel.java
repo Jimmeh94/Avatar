@@ -1,6 +1,6 @@
 package avatar.game.chatchannels;
 
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.channel.MessageReceiver;
 import org.spongepowered.api.text.chat.ChatType;

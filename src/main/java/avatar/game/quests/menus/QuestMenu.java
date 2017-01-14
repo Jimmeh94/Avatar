@@ -2,7 +2,7 @@ package avatar.game.quests.menus;
 
 import avatar.Avatar;
 import avatar.game.quests.quests.Quest;
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;

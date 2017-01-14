@@ -3,7 +3,7 @@ package avatar.managers;
 import avatar.Avatar;
 import avatar.game.combatlog.EntityCombatLogger;
 import avatar.game.combatlog.entries.CombatEntry;
-import avatar.user.User;
+import avatar.game.user.User;
 
 import java.util.Optional;
 import java.util.UUID;

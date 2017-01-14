@@ -2,8 +2,8 @@ package avatar.game.areas;
 
 import avatar.events.custom.AreaEvent;
 import avatar.managers.ListenerManager;
-import avatar.user.User;
-import avatar.user.UserPlayer;
+import avatar.game.user.User;
+import avatar.game.user.UserPlayer;
 import avatar.utilities.misc.LocationUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.text.Text;

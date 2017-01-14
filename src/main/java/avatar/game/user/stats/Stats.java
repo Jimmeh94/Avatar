@@ -1,6 +1,6 @@
-package avatar.user.stats;
+package avatar.game.user.stats;
 
-import avatar.user.User;
+import avatar.game.user.User;
 
 import java.util.List;
 import java.util.Optional;

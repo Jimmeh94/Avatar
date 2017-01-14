@@ -33,12 +33,12 @@ public class ParticleEffectCommands implements CommandExecutor {
         String effect = args.<String>getOne("effect").get().toLowerCase();
         AbstractEffect abstractEffect = null;
         EffectData effectData = EffectData.builder()
-                .user(Avatar.INSTANCE.getUserManager().find(player.getUniqueId()).get())
+                .user(Avatar.INSTANCE.getUserManager().findUserPlayer(player).get())
                 .center(player.getLocation().copy().add(0, 1, 0))
-                .taskInfo(0L, 5L, 1200L)
-                .amount(100)
-                .offsets(0, 0, 0)
-                .particle(ParticleTypes.FLAME)
+                .taskInfo(0L, 8L, 200L)
+                .amount(5)
+                .offsets(0.25, 0.25, 0.25)
+                .particle(ParticleTypes.CLOUD)
                 .playParticles((data, target) -> ParticleUtils.PlayerBased.displayParticles(data))
                 .randomizeOffsets(false)
                 .build();
@@ -46,13 +46,13 @@ public class ParticleEffectCommands implements CommandExecutor {
         switch (effect){
             case "atom": abstractEffect = new AtomEffect(effectData, 1, 0.5, 0.0);
                 break;
-            case "helix": abstractEffect = new HelixEffect(effectData, 7.5, .75, 3.5);
+            case "helix": abstractEffect = new HelixEffect(effectData, 7.5, .25, 0.75, 15);
                 break;
             case "line": abstractEffect = new LineEffect(effectData, player.getLocation().copy().add(5, 0, 5));
                 break;
             case "sphere": abstractEffect = new SphereEffect(effectData, 5.0);
                 break;
-            case "tornado": abstractEffect = new TornadoEffect(effectData, 10, 1, 6.5);
+            case "tornado": abstractEffect = new TornadoEffect(effectData, 10, 0.5, 6.5, 50);
                 break;
             case "test": abstractEffect = new TestEffect(effectData);
         }

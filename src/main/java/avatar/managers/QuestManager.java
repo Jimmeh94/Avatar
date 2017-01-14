@@ -3,7 +3,7 @@ package avatar.managers;
 import avatar.Avatar;
 import avatar.game.quests.quests.Quest;
 import avatar.game.quests.quests.test.TestQuestLocation;
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 
 public class QuestManager extends Manager<Quest> {
 

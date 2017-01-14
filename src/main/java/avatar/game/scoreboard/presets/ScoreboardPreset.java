@@ -1,6 +1,6 @@
 package avatar.game.scoreboard.presets;
 
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 import org.spongepowered.api.text.Text;
 
 import java.util.ArrayList;

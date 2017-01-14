@@ -2,8 +2,8 @@ package avatar.utilities.particles;
 
 import avatar.Avatar;
 import avatar.game.areas.Area;
-import avatar.user.User;
-import avatar.user.UserPlayer;
+import avatar.game.user.User;
+import avatar.game.user.UserPlayer;
 import avatar.utilities.misc.LocationUtils;
 import avatar.utilities.particles.effects.EffectData;
 import com.flowpowered.math.vector.Vector3d;
@@ -44,13 +44,11 @@ public class ParticleUtils {
                 builder.quantity((int) (amount * factor)).type(particleType);
 
                 if (randomizeOffset) {
-                    builder.offset(new Vector3d(location.getX() + xOffset * LocationUtils.getRandomNegOrPos(),
-                            location.getY() + yOffset * LocationUtils.getRandomNegOrPos(),
-                            location.getZ() + zOffset * LocationUtils.getRandomNegOrPos()));
+                    builder.offset(new Vector3d(xOffset * LocationUtils.getRandomNegOrPos(),
+                            yOffset * LocationUtils.getRandomNegOrPos(),
+                            zOffset * LocationUtils.getRandomNegOrPos()));
                 } else {
-                    builder.offset(new Vector3d(location.getX() + xOffset,
-                            location.getY() + yOffset,
-                            location.getZ() + zOffset));
+                    builder.offset(new Vector3d(xOffset, yOffset, zOffset));
                 }
 
                 if (particleOptions != null) {

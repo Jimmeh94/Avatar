@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 public class Avatar {
 
     //TODO fix how the quest checkpoints reset
-    //TODO fix particles
 
     public static Avatar INSTANCE;
 

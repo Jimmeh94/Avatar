@@ -1,7 +1,7 @@
 package avatar.managers;
 
-import avatar.user.User;
-import avatar.user.UserPlayer;
+import avatar.game.user.User;
+import avatar.game.user.UserPlayer;
 import org.spongepowered.api.entity.Entity;
 
 import java.util.ArrayList;

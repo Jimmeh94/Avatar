@@ -2,7 +2,7 @@ package avatar.game.quests;
 
 import avatar.game.quests.menus.QuestMenu;
 import avatar.game.quests.quests.Quest;
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 import avatar.utilities.text.Messager;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;

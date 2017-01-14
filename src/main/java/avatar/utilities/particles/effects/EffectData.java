@@ -1,7 +1,8 @@
 package avatar.utilities.particles.effects;
 
 import avatar.game.areas.Area;
-import avatar.user.User;
+import avatar.game.user.User;
+import avatar.game.user.UserPlayer;
 import com.flowpowered.math.vector.Vector3d;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleOption;
@@ -20,7 +21,7 @@ public class EffectData {
     }
 
     private Location center, displayAt;
-    private User owner;
+    private UserPlayer owner;
     private int amount = 10;
     protected ParticleType particle = ParticleTypes.FLAME;
     private double xOffset = 0, yOffset = 0, zOffset = 0;
@@ -207,7 +208,7 @@ public class EffectData {
 
     public static class EffectDataBuilder{
         private Location center;
-        private User owner;
+        private UserPlayer owner;
         private long delay, interval, cancel; //cancel is currently how many ticks, not how many intervals have passed
         private int amount = 10;
         protected ParticleType particle = ParticleTypes.FLAME;
@@ -259,7 +260,7 @@ public class EffectData {
             return this;
         }
 
-        public EffectDataBuilder user(User owner){
+        public EffectDataBuilder user(UserPlayer owner){
             this.owner = owner;
             return this;
         }

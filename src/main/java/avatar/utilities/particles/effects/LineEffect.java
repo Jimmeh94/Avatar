@@ -1,6 +1,7 @@
 package avatar.utilities.particles.effects;
 
 import avatar.utilities.misc.LocationUtils;
+import com.flowpowered.math.vector.Vector3d;
 import org.spongepowered.api.world.Location;
 
 import java.util.List;
@@ -23,22 +24,18 @@ public class LineEffect extends AbstractEffect {
 	
 	@Override
 	public void play() {
-		for(int i = 0; i <= display; i++){
+		/*for(int i = 0; i <= display; i++){
 			effectData.setDisplayAt(draw.get(i));
 			playParticle();
 		}
 		if(display < draw.size() - 1)
-			display++;
-		else {
-			for(Location location: draw){
-				System.out.println(location.toString());
-			}
-		}
-		/*Vector3d v = target.getPosition().sub(effectData.getLocation().getPosition());
+			display++;*/
+		Vector3d v = target.getPosition().sub(effectData.getCenter().getPosition());
 		for (double i = 0; i < v.length(); i += 0.5) {
-			Location loc = effectData.getLocation().copy().add(v.clone().normalize().mul(i));
-			playParticle(loc);
-		}*/
+			Location loc = effectData.getCenter().copy().add(v.clone().normalize().mul(i));
+			effectData.setDisplayAt(loc);
+			playParticle();
+		}
 	}
 
 }

@@ -6,11 +6,12 @@ public class TornadoEffect extends AbstractEffect {
 	private int spinner;
 	private int lines;
 
-	public TornadoEffect(EffectData effectData, double height, double heightStep, double maxRadius) {
+	public TornadoEffect(EffectData effectData, double height, double heightStep, double maxRadius, int lines) {
 		super(effectData);
 
 		spinner = 0;
 		init(height, heightStep, maxRadius);
+		setLines(lines);
 	}
 
 	private void init(double height, double heightStep, double maxRadius) {

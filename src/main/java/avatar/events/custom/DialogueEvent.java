@@ -1,7 +1,7 @@
 package avatar.events.custom;
 
 import avatar.game.dialogue.core.containers.Dialogue;
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 import org.spongepowered.api.event.cause.Cause;
 
 public abstract class DialogueEvent extends CustomEvent {

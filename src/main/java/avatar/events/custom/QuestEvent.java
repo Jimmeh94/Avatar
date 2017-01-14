@@ -2,7 +2,7 @@ package avatar.events.custom;
 
 import avatar.game.quests.quests.Checkpoint;
 import avatar.game.quests.quests.Quest;
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 import org.spongepowered.api.event.cause.Cause;
 
 public class QuestEvent extends CustomEvent {

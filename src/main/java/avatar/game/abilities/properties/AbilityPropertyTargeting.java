@@ -3,7 +3,7 @@ package avatar.game.abilities.properties;
 import avatar.events.custom.AbilityEvent;
 import avatar.game.abilities.Ability;
 import avatar.managers.ListenerManager;
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 import org.spongepowered.api.event.EventListener;
 
 /**

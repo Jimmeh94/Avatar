@@ -2,7 +2,7 @@ package avatar.game.dialogue.core;
 
 import avatar.Avatar;
 import avatar.events.custom.DialogueEvent;
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 import avatar.utilities.text.AltCodes;
 import avatar.utilities.text.Messager;
 import org.spongepowered.api.Sponge;

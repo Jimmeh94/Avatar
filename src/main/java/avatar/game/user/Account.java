@@ -1,4 +1,4 @@
-package avatar.user;
+package avatar.game.user;
 
 import avatar.utilities.text.AltCodes;
 import org.spongepowered.api.service.economy.transaction.ResultType;

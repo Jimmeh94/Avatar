@@ -2,7 +2,7 @@ package avatar.events.custom;
 
 import avatar.Avatar;
 import avatar.game.areas.Area;
-import avatar.user.User;
+import avatar.game.user.User;
 import org.spongepowered.api.event.cause.Cause;
 
 public abstract class AreaEvent extends CustomEvent {

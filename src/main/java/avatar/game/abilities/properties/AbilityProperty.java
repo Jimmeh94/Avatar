@@ -2,8 +2,8 @@ package avatar.game.abilities.properties;
 
 import avatar.game.abilities.Ability;
 import avatar.managers.ListenerManager;
-import avatar.user.User;
-import avatar.user.UserPlayer;
+import avatar.game.user.User;
+import avatar.game.user.UserPlayer;
 import org.spongepowered.api.event.EventListener;
 
 /**

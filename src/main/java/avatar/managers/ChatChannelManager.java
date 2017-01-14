@@ -1,7 +1,7 @@
 package avatar.managers;
 
 import avatar.game.chatchannels.ChatChannel;
-import avatar.user.UserPlayer;
+import avatar.game.user.UserPlayer;
 import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.Optional;
