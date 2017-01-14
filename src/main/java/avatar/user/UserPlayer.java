@@ -5,7 +5,7 @@ import avatar.events.custom.DialogueEvent;
 import avatar.game.areas.Area;
 import avatar.game.areas.AreaReferences;
 import avatar.game.dialogue.core.containers.Dialogue;
-import avatar.game.quests.menus.QuestMenu;
+import avatar.game.quests.PlayerQuestManager;
 import avatar.game.quests.quests.Quest;
 import avatar.game.scoreboard.Scoreboard;
 import avatar.user.stats.IStatsPreset;
@@ -14,10 +14,8 @@ import avatar.utilities.particles.ParticleUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.world.Location;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,8 +25,7 @@ public class UserPlayer extends User {
     private ParticleUtils.ParticleModifier particleModifier = ParticleUtils.ParticleModifier.NORMAL;
     private Optional<Location> lastBlockLocation = Optional.empty();
 
-    private List<Quest> quests = new ArrayList<>();
-    private QuestMenu questMenu;
+    private PlayerQuestManager questManager;
 
     private Dialogue currentDialogue;
     private Account account;
@@ -38,6 +35,7 @@ public class UserPlayer extends User {
         super(user);
 
         account = new Account(this);
+        questManager = new PlayerQuestManager(this);
     }
 
     public UserPlayer(UUID user, IStatsPreset preset){
@@ -47,6 +45,7 @@ public class UserPlayer extends User {
         //questMenu = new QuestMenu(this);
 
         account = new Account(this);
+        questManager = new PlayerQuestManager(this);
     }
 
     public void init(){
@@ -93,7 +92,6 @@ public class UserPlayer extends User {
         if(doWork) {
             //Get a connecting path of locations from where they were to where they are
             List<Location> traveled = LocationUtils.getConnectingLine(getLastBlockLocation().get(), player.getLocation());
-
             if (traveled.size() > 1) {
                 //Where they started
                 Optional<Area> temp = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(traveled.get(0));
@@ -105,25 +103,12 @@ public class UserPlayer extends User {
                         enterArea(temp2.get());
                     }
                 }
-
-                /*if (temp.isPresent()) {
-                    //the player started inside the area
-                    if (!temp2.isPresent()) {
-                        //the player ended outside the area
-                        leaveArea();
-                    }
-                    //else they're still inside and nothing to do
-                } else {
-                    //started outside the area
-                    if (temp2.isPresent()) {
-                        //ended inside the area
-                        enterArea(temp2.get());
-                    }
-                    //else they're still outside the area
-                }*/
             }
             setLastBlockLocation(player.getLocation());
         }
+
+        //Quest updating
+        getQuestManager().tick();
 
         //scoreboard update
         scoreboard.updateScoreboard();
@@ -134,15 +119,6 @@ public class UserPlayer extends User {
         super.cleanUp();
     }
 
-    public void displayQuestMenu(){
-        getPlayer().get().openInventory(questMenu.getPage(0), Cause.builder().named(NamedCause.of("Server Action", this)).build());
-    }
-
-    /*
-     * For testing purposes
-     */
-    public void generateQuestMenu(){questMenu = new QuestMenu(this);}
-
     public void resetDialogue() {
         currentDialogue = null;
     }
@@ -151,6 +127,10 @@ public class UserPlayer extends User {
         currentDialogue.displayNext();
 
         Sponge.getEventManager().post(new DialogueEvent.Displayed(Cause.source(Avatar.INSTANCE.getPluginContainer()).build(), this));
+    }
+
+    public void updateScoreboard() {
+        scoreboard.updateScoreboard();
     }
 
     //--- Getters ---
@@ -165,16 +145,16 @@ public class UserPlayer extends User {
         return lastBlockLocation;
     }
 
-    public QuestMenu getQuestMenu() {return questMenu;}
-
-    public List<Quest> getQuests(){return quests;}
-
     public Dialogue getCurrentDialogue() {
         return currentDialogue;
     }
 
     public Account getAccount() {
         return account;
+    }
+
+    public PlayerQuestManager getQuestManager() {
+        return questManager;
     }
 
     //--- Setters ---
@@ -191,12 +171,4 @@ public class UserPlayer extends User {
         this.currentDialogue = currentDialogue;
     }
 
-    public boolean hasQuest(Quest quest) {
-        for(Quest quest1: quests){
-            if(quest1.getID().equalsIgnoreCase(quest.getID())){
-                return true;
-            }
-        }
-        return false;
-    }
 }

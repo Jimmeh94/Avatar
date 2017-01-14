@@ -15,6 +15,6 @@ public class GiveQuest extends DialogueAction {
     @Override
     public void doWork(Player player) {
         Avatar.INSTANCE.getQuestManager().giveQuest(Avatar.INSTANCE.getUserManager().findUserPlayer(player).get(), questID);
-        Avatar.INSTANCE.getQuestManager().setActiveQuest(Avatar.INSTANCE.getUserManager().findUserPlayer(player).get(), "test");
+        Avatar.INSTANCE.getQuestManager().setActiveQuest(Avatar.INSTANCE.getUserManager().findUserPlayer(player).get(), questID);
     }
 }

@@ -34,7 +34,9 @@ public class QuestCommands implements CommandExecutor {
         if(action.equalsIgnoreCase("start")){
             a.getQuestManager().giveQuest(a.getUserManager().findUserPlayer(player).get(), id);
             a.getQuestManager().setActiveQuest(a.getUserManager().findUserPlayer(player).get(), id);
-            a.getUserManager().findUserPlayer(player).get().generateQuestMenu();
+            //a.getUserManager().findUserPlayer(player).get().generateQuestMenu();
+        } else if(action.equalsIgnoreCase("menu")){
+            a.getUserManager().findUserPlayer(player).get().getQuestManager().displayQuestMenu();
         }
         return CommandResult.success();
     }

@@ -4,6 +4,8 @@ import avatar.game.abilities.Ability;
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.cause.Cause;
 
+import java.util.List;
+
 public class AbilityEvent extends CustomEvent implements Cancellable {
 
     private final Ability ability;
@@ -52,8 +54,16 @@ public class AbilityEvent extends CustomEvent implements Cancellable {
     }
 
     public static class Hit extends AbilityEvent{
-        public Hit(Ability ability, Cause cause) {
+        private List<Ability> collidedAbilities;
+
+        public Hit(Ability ability, Cause cause, List<Ability> collidedAbilities) {
             super(ability, cause);
+
+            this.collidedAbilities = collidedAbilities;
+        }
+
+        public List<Ability> getCollidedAbilities() {
+            return collidedAbilities;
         }
     }
 

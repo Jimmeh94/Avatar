@@ -5,6 +5,7 @@ public enum Element {
     AIR,
     EARTH,
     FIRE,
-    WATER
+    WATER,
+    WEAPON
 
 }

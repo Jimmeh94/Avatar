@@ -51,8 +51,6 @@ public class Checkpoint {
      * Just called whenever the checkpoint is initiated/reset. Gives them an idea of what to do
      */
     public void start(){
-        if(getDescription().isPresent())
-            Messager.sendMessage(player, getDescription().get(), TextColors.GRAY);
         for(Condition condition: conditions){
             condition.setStartingInfo();
         }

@@ -42,9 +42,8 @@ public class AbilityPropertyCost extends AbilityProperty implements EventListene
         if(user.getStats().hasStat(costType)){
             if(user.getStats().getStat(costType).get().canAfford(cost)){
                 user.getStats().getStat(costType).get().subtract(cost);
-            }
-        }
-        requirementCheck.setCancelled(true);
+            } else requirementCheck.setCancelled(true);
+        } else requirementCheck.setCancelled(true);
     }
 
     @Override

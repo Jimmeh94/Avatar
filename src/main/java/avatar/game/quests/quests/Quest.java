@@ -4,6 +4,7 @@ import avatar.Avatar;
 import avatar.events.custom.QuestEvent;
 import avatar.user.UserPlayer;
 import avatar.utilities.directional.PlayerDirection;
+import avatar.utilities.text.AltCodes;
 import avatar.utilities.text.Messager;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -29,6 +30,7 @@ public class Quest {
     String id;
     private boolean active = false;
     private List<Checkpoint> checkpoints;
+    private int currentCheckpoint = 0;
     private ItemStack itemRepresentation;
     private Reward reward;
 
@@ -39,7 +41,7 @@ public class Quest {
      */
     public Quest(String title, String description, int lvl, String id, List<Checkpoint> checkpoints, ItemType itemType, Reward reward){
         this.title = Text.of(TextColors.GOLD, title);
-        this.description = Text.of(TextColors.GRAY, description);
+        this.description = Text.of(TextColors.WHITE, description);
         recommendedLvl = lvl;
         this.id = id;
         this.checkpoints = checkpoints;
@@ -62,7 +64,7 @@ public class Quest {
         id = quest.getID();
         checkpoints = new ArrayList<>(quest.getCheckpoints());
         this.itemRepresentation = quest.getItemRepresentation().copy();
-        setLore(false);
+        setLore();
         for(Checkpoint c: checkpoints){
             c.setPlayer(owner.get().getPlayer().get());
         }
@@ -71,14 +73,22 @@ public class Quest {
 
     /**
      * This is for the item representation
-     * @param active
      */
-    public void setLore(boolean active){
+    public void setLore(){
         List<Text> temp = new ArrayList<>();
-        temp.add(Text.of(description));
+        temp.add(Text.of(TextStyles.ITALIC, description));
+        temp.add(Text.of(" "));
+        temp.add(Text.of(TextColors.GRAY, "Objectives:"));
+        temp.add(Text.of(" "));
+        for(Checkpoint checkpoint: checkpoints){
+            if(currentCheckpoint > checkpoints.indexOf(checkpoint)){
+                temp.add(Text.of(TextColors.GREEN, AltCodes.FILLED_CIRCLE.getSign() + " " + checkpoint.getDescription().get()));
+            } else temp.add(Text.of(TextColors.GRAY, AltCodes.FILLED_CIRCLE.getSign() + " " + checkpoint.getDescription().get()));
+            temp.add(Text.of(" "));
+        }
         if(active){
             temp.add(0, Text.of(" "));
-            temp.add(1, Text.of(TextColors.GREEN, TextStyles.BOLD, "Active"));
+            temp.add(1, Text.of(TextColors.GREEN, "Active"));
             temp.add(2, Text.of(" "));
         }
         itemRepresentation.offer(Keys.ITEM_LORE, temp);
@@ -93,37 +103,36 @@ public class Quest {
      * Update quest tracker
      */
     public boolean tick(){
-        if(checkpoints.size() > 0){
-            if(checkpoints.get(0).isComplete()){
-                if(checkpoints.size() > 1)
-                    checkpoints.get(0).printCompletionMsg();
+        if (checkpoints.get(currentCheckpoint).isComplete()) {
+            checkpoints.get(currentCheckpoint).printCompletionMsg();
 
-                Sponge.getEventManager().post(new QuestEvent.CheckpointComplete(Avatar.INSTANCE.getDefaultCause(), owner.get(), this, checkpoints.get(0)));
+            Sponge.getEventManager().post(new QuestEvent.CheckpointComplete(Avatar.INSTANCE.getDefaultCause(), owner.get(), this, checkpoints.get(currentCheckpoint)));
 
-                checkpoints.get(0).deactivate();
-                checkpoints.remove(0);
+            checkpoints.get(currentCheckpoint).deactivate();
+            setLore();
+            currentCheckpoint++;
 
-                if(checkpoints.size() > 0){
-                    checkpoints.get(0).start();
-                } else {
-                    completeQuest();
-                    return true;
-                }
+            if (currentCheckpoint <= checkpoints.size() - 1) {
+                checkpoints.get(currentCheckpoint).start();
+            } else {
+                completeQuest();
+                setLore();
+                return true;
             }
-            //update tracker
-            //get distance from player to target, get arrow direction, send message
-            if(checkpoints.get(0).getTargetLocation().isPresent()) {
-                int distance = getTrackerDistance();
-                Messager.sendActionBarMessage(owner.get().getPlayer().get(), Text.builder().append(Text.of(TextColors.GRAY, checkpoints.get(0).getDescription().get() + " "))
-                        .append(Text.of(TextColors.GOLD, String.valueOf(distance) + " "))
-                        .append(PlayerDirection.getDesiredDirection(owner.get().getPlayer().get(), checkpoints.get(0).getTargetLocation().get())).build());
-            }
+        }
+        //update tracker
+        //get distance from player to target, get arrow direction, send message
+        if (checkpoints.get(currentCheckpoint).getTargetLocation().isPresent()) {
+            int distance = getTrackerDistance();
+            Messager.sendActionBarMessage(owner.get().getPlayer().get(), Text.builder().append(Text.of(TextColors.GRAY, checkpoints.get(currentCheckpoint).getDescription().get() + " "))
+                    .append(Text.of(TextColors.GOLD, String.valueOf(distance) + " "))
+                    .append(PlayerDirection.getDesiredDirection(owner.get().getPlayer().get(), checkpoints.get(currentCheckpoint).getTargetLocation().get())).build());
         }
         return false;
     }
 
     protected int getTrackerDistance(){
-        return checkpoints.get(0).getTrackerDistance();
+        return checkpoints.get(currentCheckpoint).getTrackerDistance();
     }
 
     public Reward getReward() {
@@ -136,6 +145,8 @@ public class Quest {
             reward.giveAward(owner.get().getPlayer().get());
 
         Sponge.getEventManager().post(new QuestEvent.Complete(Avatar.INSTANCE.getDefaultCause(), owner.get(), this));
+
+        active = false;
     }
 
     public String getID(){return id;}
@@ -157,20 +168,22 @@ public class Quest {
     }
 
     public void toggleActive() {
+        System.out.println("toggled: " + active);
         if(active){
             active = false;
-            setLore(false);
+            setLore();
 
             for(Checkpoint checkpoint: checkpoints){
                 checkpoint.deactivate();
             }
         } else {
             active = true;
-            checkpoints.get(0).start();
+            setLore();
+            checkpoints.get(currentCheckpoint).start();
+            Messager.sendTitleAndSubTitle(owner.get().getPlayer().get(), getTitle(), getDescription());
 
             Sponge.getEventManager().post(new QuestEvent.Start(Avatar.INSTANCE.getDefaultCause(), owner.get(), this));
         }
-        setLore(true);
     }
 
     public List<Checkpoint> getCheckpoints() {

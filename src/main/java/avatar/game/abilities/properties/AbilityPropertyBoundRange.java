@@ -8,11 +8,11 @@ import org.spongepowered.api.event.EventListener;
 /**
  * How far the ability can travel
  */
-public class AbilityPropertyRange extends AbilityProperty implements EventListener<AbilityEvent.UpdateTick>{
+public class AbilityPropertyBoundRange extends AbilityProperty implements EventListener<AbilityEvent.UpdateTick>{
 
     private double range;
 
-    public AbilityPropertyRange(String displayName, Ability ability, double range) {
+    public AbilityPropertyBoundRange(String displayName, Ability ability, double range) {
         super(displayName, ability);
     }
 

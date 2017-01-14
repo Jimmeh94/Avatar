@@ -6,6 +6,7 @@ import avatar.game.abilities.Ability;
 import avatar.managers.ListenerManager;
 import avatar.user.User;
 import avatar.user.UserPlayer;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.Order;
 
@@ -34,6 +35,10 @@ public class AbilityPropertyCollisionLogic extends AbilityProperty implements Ev
         }
 
         //check for nearby entities next
+
+        if(collidedAbilities.size() > 0){
+            Sponge.getEventManager().post(new AbilityEvent.Hit(ability, ListenerManager.getDefaultCause(), collidedAbilities));
+        }
     }
 
     @Override

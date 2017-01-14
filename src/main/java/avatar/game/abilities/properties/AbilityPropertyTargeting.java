@@ -32,6 +32,23 @@ public abstract class AbilityPropertyTargeting extends AbilityProperty implement
         return filter;
     }
 
+    public static class Location extends AbilityPropertyTargeting{
+
+        public Location(String displayName, Ability ability) {
+            super(displayName, ability);
+        }
+
+        @Override
+        public void printFailMessage(UserPlayer user) {
+
+        }
+
+        @Override
+        public void handle(AbilityEvent.PreFire preFire) throws Exception {
+
+        }
+    }
+
     public static class Self extends AbilityPropertyTargeting{
 
         public Self(String displayName, Ability ability) {
