@@ -5,9 +5,9 @@ import avatar.commands.DialogueCommands;
 import avatar.commands.QuestCommands;
 import avatar.commands.test.AreaCommands;
 import avatar.commands.test.ParticleEffectCommands;
-import avatar.events.Chat;
-import avatar.events.InventoryClick;
-import avatar.events.PlayerConnection;
+import avatar.events.ChatEvents;
+import avatar.events.InventoryEvents;
+import avatar.events.PlayerConnectionEvents;
 import avatar.game.dialogue.core.DialogueBuilder;
 import avatar.game.quests.quests.builders.QuestBuilder;
 import avatar.managers.*;
@@ -40,6 +40,7 @@ public class Avatar {
     private AbilityManager abilityManager;
     private ChatChannelManager chatChannelManager;
     private EconomyManager economyManager;
+    private ConfirmationMenuManager confirmationMenuManager;
 
     //--- Runnables ---
     private GameTimer gameTimer;
@@ -69,6 +70,7 @@ public class Avatar {
         areaManager = new AreaManager();
         abilityManager = new AbilityManager();
         economyManager = new EconomyManager();
+        confirmationMenuManager = new ConfirmationMenuManager();
 
         registerListeners();
         registerCommands();
@@ -95,9 +97,9 @@ public class Avatar {
     }
 
     private void registerListeners(){
-        Sponge.getEventManager().registerListeners(this, new PlayerConnection());
-        Sponge.getEventManager().registerListeners(this, new InventoryClick());
-        Sponge.getEventManager().registerListeners(this, new Chat());
+        Sponge.getEventManager().registerListeners(this, new PlayerConnectionEvents());
+        Sponge.getEventManager().registerListeners(this, new InventoryEvents());
+        Sponge.getEventManager().registerListeners(this, new ChatEvents());
     }
 
     public PluginContainer getPluginContainer(){return Sponge.getPluginManager().fromInstance(this).get();}
@@ -138,5 +140,9 @@ public class Avatar {
 
     public EconomyManager getEconomyManager() {
         return economyManager;
+    }
+
+    public ConfirmationMenuManager getConfirmationMenuManager() {
+        return confirmationMenuManager;
     }
 }

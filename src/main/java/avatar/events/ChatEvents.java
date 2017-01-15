@@ -9,7 +9,7 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.text.Text;
 
-public class Chat {
+public class ChatEvents {
 
     @Listener
     public void onChat(MessageChannelEvent.Chat event, @First Player player){

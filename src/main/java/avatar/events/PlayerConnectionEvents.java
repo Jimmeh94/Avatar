@@ -8,7 +8,7 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-public class PlayerConnection {
+public class PlayerConnectionEvents {
 
     @Listener
     public void onJoin(ClientConnectionEvent.Join event){

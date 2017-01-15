@@ -22,6 +22,8 @@ public class ConfirmationMenu {
         this.confirm = confirm;
         this.cancel = cancel;
         build(c, no, title);
+
+        Avatar.INSTANCE.getConfirmationMenuManager().add(this);
     }
 
     private void build(ItemStack yes, ItemStack no, Text title){
@@ -36,6 +38,10 @@ public class ConfirmationMenu {
 
     public void display(Player player){
         player.openInventory(inventory, Cause.of(NamedCause.of("Server Action", this)));
+    }
+
+    public Inventory getInventory(){
+        return inventory;
     }
 
     //make a data object that contains the callbacks
