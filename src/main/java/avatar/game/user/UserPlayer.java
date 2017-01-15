@@ -4,7 +4,8 @@ import avatar.Avatar;
 import avatar.events.custom.DialogueEvent;
 import avatar.game.areas.Area;
 import avatar.game.areas.AreaReferences;
-import avatar.game.dialogue.core.containers.Dialogue;
+import avatar.game.dialogue.core.Dialogue;
+import avatar.game.dialogue.core.DialogueReference;
 import avatar.game.quests.PlayerQuestManager;
 import avatar.game.scoreboard.Scoreboard;
 import avatar.game.user.stats.IStatsPreset;
@@ -60,6 +61,18 @@ public class UserPlayer extends User {
         super.enterArea(area);
 
         scoreboard.updateScoreboard();
+    }
+
+    public void giveDialogue(String id){
+        Optional<DialogueReference> reference = DialogueReference.getReference(id);
+        if(reference.isPresent()){
+            giveDialogue(reference.get());
+        }
+    }
+
+    public void giveDialogue(DialogueReference reference){
+        setCurrentDialogue(reference.getDialogue(getPlayer().get()));
+        startDialogue();
     }
     
     @Override
@@ -118,7 +131,7 @@ public class UserPlayer extends User {
         super.cleanUp();
     }
 
-    public void resetDialogue() {
+    public void removeDialogue() {
         currentDialogue = null;
     }
 
@@ -166,8 +179,9 @@ public class UserPlayer extends User {
         this.lastBlockLocation = Optional.of(lastBlockLocation);
     }
 
-    public void setCurrentDialogue(Dialogue currentDialogue) {
+    public UserPlayer setCurrentDialogue(Dialogue currentDialogue) {
         this.currentDialogue = currentDialogue;
+        return this;
     }
 
 }

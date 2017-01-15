@@ -1,4 +1,4 @@
-package avatar.game.dialogue.core;
+package avatar.game.dialogue.core.actions;
 
 import org.spongepowered.api.entity.living.player.Player;
 

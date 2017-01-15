@@ -1,6 +1,7 @@
 package avatar.commands;
 
 import avatar.Avatar;
+import avatar.game.quests.QuestReference;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -11,6 +12,8 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+
+import java.util.Optional;
 
 public class QuestCommands implements CommandExecutor {
 
@@ -32,9 +35,11 @@ public class QuestCommands implements CommandExecutor {
         Avatar a = Avatar.INSTANCE;
 
         if(action.equalsIgnoreCase("start")){
-            a.getQuestManager().giveQuest(a.getUserManager().findUserPlayer(player).get(), id);
-            a.getQuestManager().setActiveQuest(a.getUserManager().findUserPlayer(player).get(), id);
-            //a.getUserManager().findUserPlayer(player).get().generateQuestMenu();
+            Optional<QuestReference> reference = QuestReference.getReference(id);
+            if(reference.isPresent()){
+                a.getUserManager().findUserPlayer(player).get().getQuestManager().add(reference.get());
+                a.getUserManager().findUserPlayer(player).get().getQuestManager().setActiveQuest(reference.get());
+            }
         } else if(action.equalsIgnoreCase("menu")){
             a.getUserManager().findUserPlayer(player).get().getQuestManager().displayQuestMenu();
         }

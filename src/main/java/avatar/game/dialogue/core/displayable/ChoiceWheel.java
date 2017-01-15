@@ -1,11 +1,10 @@
-package avatar.game.dialogue.core.containers;
+package avatar.game.dialogue.core.displayable;
 
-import avatar.game.dialogue.core.Choice;
-import avatar.game.dialogue.core.Condition;
-import avatar.game.dialogue.core.Displayable;
+import avatar.game.dialogue.core.conditions.Condition;
 import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ChoiceWheel implements Displayable {
@@ -17,15 +16,16 @@ public class ChoiceWheel implements Displayable {
     private List<Choice> choices = new ArrayList<>();
     private List<Condition> conditions;
 
-    public ChoiceWheel(List<Choice> choices, List<Condition> condition){
-        this.choices = choices;
-        this.conditions = condition;
+    public ChoiceWheel(Choice... choices){
+        this.choices = Arrays.asList(choices);
     }
 
-    public ChoiceWheel(ChoiceWheel wheel, Player player){
-        for(Choice choice: wheel.getChoices()){
-            choices.add(new Choice(choice, player, wheel.getCondition()));
+    public ChoiceWheel addConditions(List<Condition> condition){
+        this.conditions = condition;
+        for(Choice choice: choices){
+            choice.setConditions(condition);
         }
+        return this;
     }
 
     public List<Condition> getCondition() {

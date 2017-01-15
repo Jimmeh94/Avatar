@@ -3,6 +3,7 @@ package avatar.game.quests.quests.builders;
 import avatar.game.quests.quests.Checkpoint;
 import avatar.game.quests.quests.Quest;
 import avatar.game.quests.quests.Reward;
+import avatar.game.user.UserPlayer;
 import org.spongepowered.api.item.ItemType;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class QuestBuilder {
     private String id;
     private ItemType itemType;
     private Reward reward;
+    private UserPlayer owner;
 
     public QuestBuilder reward(Reward reward){
         this.reward = reward;
@@ -59,7 +61,7 @@ public class QuestBuilder {
     }
 
     public Quest build(){
-        Quest quest = new Quest(title, description, lvl, id, new ArrayList<>(checkpoints), itemType, reward);
+        Quest quest = new Quest(title, description, lvl, id, new ArrayList<>(checkpoints), itemType, reward, owner);
         reset();
         return quest;
     }
@@ -73,5 +75,10 @@ public class QuestBuilder {
 
     public CheckpointBuilder getCheckpointBuilder() {
         return checkpointBuilder;
+    }
+
+    public QuestBuilder owner(UserPlayer userPlayer) {
+        owner = userPlayer;
+        return this;
     }
 }

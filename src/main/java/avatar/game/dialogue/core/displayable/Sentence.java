@@ -1,4 +1,4 @@
-package avatar.game.dialogue.core;
+package avatar.game.dialogue.core.displayable;
 
 import avatar.utilities.text.Messager;
 import org.spongepowered.api.entity.living.player.Player;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Sentence implements Displayable{
+public class Sentence implements Displayable {
     /*
      * This is text presented by the server/NPC to a player
      */

@@ -16,18 +16,15 @@ import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Quest {
-
-
 
     /*
      * General quest container.
      */
 
     private Text title, description;
-    private Optional<UserPlayer> owner = Optional.empty();
+    private UserPlayer owner;
     private int recommendedLvl = 0;
     String id;
     private boolean active = false;
@@ -36,12 +33,7 @@ public class Quest {
     private ItemStack itemRepresentation;
     private Reward reward;
 
-
-    /*
-     * All quests are loaded on server start up from a database and stored as "templates"
-     * That's what this constructor is for
-     */
-    public Quest(String title, String description, int lvl, String id, List<Checkpoint> checkpoints, ItemType itemType, Reward reward){
+    public Quest(String title, String description, int lvl, String id, List<Checkpoint> checkpoints, ItemType itemType, Reward reward, UserPlayer userPlayer){
         this.title = Text.of(TextColors.GOLD, title);
         this.description = Text.of(TextColors.WHITE, description);
         recommendedLvl = lvl;
@@ -51,27 +43,11 @@ public class Quest {
         itemRepresentation.offer(avatar.data.Keys.QUEST_ID, this.id);
         itemRepresentation.offer(Keys.DISPLAY_NAME, getTitle());
         this.reward = reward;
-    }
-
-    /*
-     * Use this constructor to give a quest to a player.
-     * We set the player here due to how we have the quest load structure set up
-     * Currently, quests are being loaded from a database, so once quests are loaded on server
-     * initialization, we don't pass in any "personal" info. The quests are stored as "templates"
-     * and we then pass personal info to these templates once the player needs a specific quest
-     */
-    public Quest(Quest quest, UserPlayer playerInfo){
-        title = quest.getTitle();
-        description = quest.getDescription();
-        owner = Optional.of(playerInfo);
-        id = quest.getID();
-        checkpoints = new ArrayList<>(quest.getCheckpoints());
-        this.itemRepresentation = quest.getItemRepresentation().copy();
         setLore();
+        this.owner = userPlayer;
         for(Checkpoint c: checkpoints){
-            c.setPlayer(owner.get().getPlayer().get());
+            c.setPlayer(owner.getPlayer().get());
         }
-        this.reward = quest.getReward();
     }
 
     /**
@@ -109,7 +85,7 @@ public class Quest {
         if (checkpoints.get(currentCheckpoint).isComplete()) {
             checkpoints.get(currentCheckpoint).printCompletionMsg();
 
-            Sponge.getEventManager().post(new QuestEvent.CheckpointComplete(Avatar.INSTANCE.getDefaultCause(), owner.get(), this, checkpoints.get(currentCheckpoint)));
+            Sponge.getEventManager().post(new QuestEvent.CheckpointComplete(Avatar.INSTANCE.getDefaultCause(), owner, this, checkpoints.get(currentCheckpoint)));
 
             checkpoints.get(currentCheckpoint).deactivate();
             setLore();
@@ -127,9 +103,9 @@ public class Quest {
         //get distance from player to target, get arrow direction, send message
         if (checkpoints.get(currentCheckpoint).getTargetLocation().isPresent()) {
             int distance = getTrackerDistance();
-            Messager.sendActionBarMessage(owner.get().getPlayer().get(), Text.builder().append(Text.of(TextColors.GRAY, checkpoints.get(currentCheckpoint).getDescription().get() + " "))
+            Messager.sendActionBarMessage(owner.getPlayer().get(), Text.builder().append(Text.of(TextColors.GRAY, checkpoints.get(currentCheckpoint).getDescription().get() + " "))
                     .append(Text.of(TextColors.GOLD, String.valueOf(distance) + " "))
-                    .append(PlayerDirection.getDesiredDirection(owner.get().getPlayer().get(), checkpoints.get(currentCheckpoint).getTargetLocation().get())).build());
+                    .append(PlayerDirection.getDesiredDirection(owner.getPlayer().get(), checkpoints.get(currentCheckpoint).getTargetLocation().get())).build());
         }
         return false;
     }
@@ -143,11 +119,11 @@ public class Quest {
     }
 
     private void completeQuest(){
-        Messager.sendTitleAndSubTitle(owner.get().getPlayer().get(), Text.of(TextColors.GOLD, getTitle()), Text.of(TextColors.GREEN, "Completed"));
+        Messager.sendTitleAndSubTitle(owner.getPlayer().get(), Text.of(TextColors.GOLD, getTitle()), Text.of(TextColors.GREEN, "Completed"));
         if(reward != null)
-            reward.giveAward(owner.get().getPlayer().get());
+            reward.giveAward(owner.getPlayer().get());
 
-        Sponge.getEventManager().post(new QuestEvent.Complete(Avatar.INSTANCE.getDefaultCause(), owner.get(), this));
+        Sponge.getEventManager().post(new QuestEvent.Complete(Avatar.INSTANCE.getDefaultCause(), owner, this));
 
         active = false;
     }
@@ -162,7 +138,7 @@ public class Quest {
         return description;
     }
 
-    public Optional<UserPlayer> getOwner() {
+    public UserPlayer getOwner() {
         return owner;
     }
 
@@ -182,9 +158,9 @@ public class Quest {
             active = true;
             setLore();
             checkpoints.get(currentCheckpoint).start();
-            Messager.sendTitleAndSubTitle(owner.get().getPlayer().get(), getTitle(), getDescription());
+            Messager.sendTitleAndSubTitle(owner.getPlayer().get(), getTitle(), getDescription());
 
-            Sponge.getEventManager().post(new QuestEvent.Start(Avatar.INSTANCE.getDefaultCause(), owner.get(), this));
+            Sponge.getEventManager().post(new QuestEvent.Start(Avatar.INSTANCE.getDefaultCause(), owner, this));
         }
     }
 

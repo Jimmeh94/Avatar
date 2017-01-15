@@ -6,7 +6,7 @@ import avatar.commands.test.AreaCommands;
 import avatar.commands.test.ParticleEffectCommands;
 import avatar.events.InventoryClick;
 import avatar.events.PlayerConnection;
-import avatar.game.dialogue.core.builders.DialogueBuilder;
+import avatar.game.dialogue.core.DialogueBuilder;
 import avatar.game.quests.quests.builders.QuestBuilder;
 import avatar.managers.*;
 import avatar.runnables.GameTimer;
@@ -35,8 +35,6 @@ public class Avatar {
     //--- managers ---
     private UserManager userManager;
     private AreaManager areaManager;
-    private QuestManager questManager;
-    private DialogueManager dialogueManager;
     private AbilityManager abilityManager;
     private ChatChannelManager chatChannelManager;
     private EconomyManager economyManager;
@@ -58,14 +56,14 @@ public class Avatar {
         INSTANCE = this;
 
         mongoUtils = new MongoUtils("", "", "");
+
+        registerData();
     }
 
     @Listener
     public void onServerStarting(GameStartingServerEvent event){
         userManager = new UserManager();
         areaManager = new AreaManager();
-        questManager = new QuestManager();
-        dialogueManager = new DialogueManager();
         abilityManager = new AbilityManager();
         chatChannelManager = new ChatChannelManager();
         economyManager = new EconomyManager();
@@ -73,14 +71,15 @@ public class Avatar {
         registerListeners();
         registerCommands();
         registerRunnables();
-
-        questManager.loadQuests();
-        dialogueManager.loadDialogue();
     }
 
     @Listener
     public void onServerStopping(GameStoppingEvent event){
 
+    }
+
+    private void registerData(){
+        //Sponge.getDataManager().register(QuestData.class, QuestData.Immutable.class, QuestData.Builder.class);
     }
 
     private void registerRunnables(){gameTimer = new GameTimer(5L);}
@@ -116,12 +115,6 @@ public class Avatar {
     }
 
     public QuestBuilder getQuestBuilder(){return questBuilder;}
-
-    public QuestManager getQuestManager() {
-        return questManager;
-    }
-
-    public DialogueManager getDialogueManager(){return dialogueManager;}
 
     public DialogueBuilder getDialogueBuilder(){return dialogueBuilder;}
 

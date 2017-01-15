@@ -1,7 +1,9 @@
-package avatar.game.dialogue.core;
+package avatar.game.dialogue.core.displayable;
 
 import avatar.Avatar;
 import avatar.events.custom.DialogueEvent;
+import avatar.game.dialogue.core.conditions.Condition;
+import avatar.game.dialogue.core.actions.DialogueAction;
 import avatar.game.user.UserPlayer;
 import avatar.utilities.text.AltCodes;
 import avatar.utilities.text.Messager;
@@ -14,6 +16,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -32,30 +35,23 @@ public class Choice implements Consumer<CommandSource>{
     private String id;
     private Optional<Text> hover = Optional.empty();
 
-    public Choice(Text text, Text hover, List<DialogueAction> action, String id){
+    public Choice(Text text, Text hover, String id, Player player, DialogueAction... action){
         this.sentence = text;
-        this.actions = action;
+        this.actions = Arrays.asList(action);
         if(hover != null){
             this.hover = Optional.of(hover);
         }
         this.id = id;
-    }
 
-    public Choice(Choice choice, Player player, List<Condition> condition){
-        this.actions = choice.getAction();
-        this.sentence = Text.of(choice.getSentence());
-        this.player = player;
-        this.conditions = condition;
-        this.id = choice.getId();
-        this.hover = choice.hover;
-
-        if(hover.isPresent()){
+        if(this.hover.isPresent()){
             sentence = Text.builder().append(Text.of(TextColors.GREEN, TextStyles.BOLD, AltCodes.ARROW_RIGHT.getSign() + " "), sentence)
-                    .onClick(TextActions.executeCallback(this)).onHover(TextActions.showText(hover.get())).build();
+                    .onClick(TextActions.executeCallback(this)).onHover(TextActions.showText(this.hover.get())).build();
         } else {
             sentence = Text.builder().append(Text.of(TextColors.GOLD, TextStyles.BOLD, AltCodes.ARROW_RIGHT.getSign() + " "), sentence)
                     .onClick(TextActions.executeCallback(this)).build();
         }
+
+        this.player = player;
     }
 
     public void display(Player player) {
@@ -74,13 +70,15 @@ public class Choice implements Consumer<CommandSource>{
     public void accept(CommandSource commandSource) {
         Optional<UserPlayer> temp = Avatar.INSTANCE.getUserManager().findUserPlayer(this.player);
         if(temp.isPresent() && temp.get().getCurrentDialogue() != null && temp.get().getCurrentDialogue().hasChoiceID(this.id)) {
-            for(Condition condition: conditions){
-                if(!condition.isValid(player)){
-                    condition.sendErrorMessage(player);
-                    return;
+            if(conditions != null){
+                for(Condition condition: conditions){
+                    if(!condition.isValid(player)){
+                        condition.sendErrorMessage(player);
+                        return;
+                    }
                 }
             }
-            Avatar.INSTANCE.getDialogueManager().removeDialogue(this.player);
+            Avatar.INSTANCE.getUserManager().findUserPlayer(player).get().removeDialogue();
 
             //if all conditions are valid, continue with action
             for (DialogueAction action : this.actions)
@@ -93,5 +91,9 @@ public class Choice implements Consumer<CommandSource>{
 
     public String getId() {
         return id;
+    }
+
+    public void setConditions(List<Condition> conditions) {
+        this.conditions = conditions;
     }
 }

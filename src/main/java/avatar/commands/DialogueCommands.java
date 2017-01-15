@@ -31,8 +31,7 @@ public class DialogueCommands implements CommandExecutor {
         Avatar a = Avatar.INSTANCE;
 
         if(action.equalsIgnoreCase("test")){
-            a.getDialogueManager().giveDialogue(player, action);
-            a.getUserManager().findUserPlayer(player).get().startDialogue();
+            a.getUserManager().findUserPlayer(player).get().giveDialogue(action);
         }
         return CommandResult.success();
     }

@@ -1,31 +1,15 @@
 package avatar.game.dialogue.core.actions;
 
 import avatar.Avatar;
-import avatar.game.dialogue.core.DialogueAction;
-import avatar.game.user.UserPlayer;
+import avatar.game.dialogue.core.Dialogue;
 import org.spongepowered.api.entity.living.player.Player;
 
-import java.util.Optional;
+public abstract class DisplayDialogue extends DialogueAction {
 
-public class DisplayDialogue extends DialogueAction {
-
-    /**
-     * Starts another dialogue sequence
-     * The ID is of the next desired dialogue
-     */
-
-    private String id;
-
-    public DisplayDialogue(String id){
-        this.id = id;
-    }
+    public abstract Dialogue buildToDisplay(Player player);
 
     @Override
     public void doWork(Player player) {
-        Optional<UserPlayer> temp = Avatar.INSTANCE.getUserManager().findUserPlayer(player);
-        if(temp.isPresent()){
-            Avatar.INSTANCE.getDialogueManager().giveDialogue(player, id);
-            temp.get().startDialogue();
-        }
+        Avatar.INSTANCE.getUserManager().findUserPlayer(player).get().setCurrentDialogue(buildToDisplay(player)).startDialogue();
     }
 }

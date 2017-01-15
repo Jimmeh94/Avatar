@@ -1,6 +1,5 @@
 package avatar.game.dialogue.core.conditions;
 
-import avatar.game.dialogue.core.Condition;
 import avatar.utilities.text.Messager;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;

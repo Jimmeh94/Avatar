@@ -1,6 +1,6 @@
 package avatar.events.custom;
 
-import avatar.game.dialogue.core.containers.Dialogue;
+import avatar.game.dialogue.core.Dialogue;
 import avatar.game.user.UserPlayer;
 import org.spongepowered.api.event.cause.Cause;
 

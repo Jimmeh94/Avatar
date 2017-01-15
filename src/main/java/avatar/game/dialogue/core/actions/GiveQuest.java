@@ -1,20 +1,19 @@
 package avatar.game.dialogue.core.actions;
 
 import avatar.Avatar;
-import avatar.game.dialogue.core.DialogueAction;
+import avatar.game.quests.QuestReference;
 import org.spongepowered.api.entity.living.player.Player;
 
 public class GiveQuest extends DialogueAction {
 
-    public String questID;
+    public QuestReference questID;
 
-    public GiveQuest(String id){
+    public GiveQuest(QuestReference id){
         this.questID = id;
     }
 
     @Override
     public void doWork(Player player) {
-        Avatar.INSTANCE.getQuestManager().giveQuest(Avatar.INSTANCE.getUserManager().findUserPlayer(player).get(), questID);
-        Avatar.INSTANCE.getQuestManager().setActiveQuest(Avatar.INSTANCE.getUserManager().findUserPlayer(player).get(), questID);
+        Avatar.INSTANCE.getUserManager().findUserPlayer(player).get().getQuestManager().add(questID);
     }
 }
