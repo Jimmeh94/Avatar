@@ -48,7 +48,7 @@ public class ParticleEffectCommands implements CommandExecutor {
                 break;
             case "helix": abstractEffect = new HelixEffect(effectData, 7.5, .25, 0.75, 15);
                 break;
-            case "line": abstractEffect = new LineEffect(effectData, player.getLocation().copy().add(5, 0, 5));
+            case "line": abstractEffect = new LineEffect(effectData, player.getLocation().copy().add(5, 1, 5));
                 break;
             case "sphere": abstractEffect = new SphereEffect(effectData, 5.0);
                 break;

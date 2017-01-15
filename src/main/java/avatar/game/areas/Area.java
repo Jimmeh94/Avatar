@@ -25,6 +25,7 @@ public class Area {
     private List<User> members = new ArrayList<>();
     private AreaReferences reference;
     private List<Area> children = new ArrayList<>();
+    private List<Instance> instances = new ArrayList<>();
 
     public Area(AreaReferences reference){
         this.shape = reference.getShape();

@@ -20,6 +20,8 @@ import java.util.Optional;
 
 public class Quest {
 
+
+
     /*
      * General quest container.
      */
@@ -46,6 +48,7 @@ public class Quest {
         this.id = id;
         this.checkpoints = checkpoints;
         this.itemRepresentation = ItemStack.builder().itemType(itemType).build();
+        itemRepresentation.offer(avatar.data.Keys.QUEST_ID, this.id);
         itemRepresentation.offer(Keys.DISPLAY_NAME, getTitle());
         this.reward = reward;
     }
@@ -81,7 +84,7 @@ public class Quest {
         temp.add(Text.of(TextColors.GRAY, "Objectives:"));
         temp.add(Text.of(" "));
         for(Checkpoint checkpoint: checkpoints){
-            if(currentCheckpoint > checkpoints.indexOf(checkpoint)){
+            if(checkpoint.isCompleted()){
                 temp.add(Text.of(TextColors.GREEN, AltCodes.FILLED_CIRCLE.getSign() + " " + checkpoint.getDescription().get()));
             } else temp.add(Text.of(TextColors.GRAY, AltCodes.FILLED_CIRCLE.getSign() + " " + checkpoint.getDescription().get()));
             temp.add(Text.of(" "));

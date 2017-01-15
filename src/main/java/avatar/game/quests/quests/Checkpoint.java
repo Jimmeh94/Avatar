@@ -20,6 +20,11 @@ public class Checkpoint {
     private Optional<Location> targetLocation = Optional.empty();
     private Optional<String> description = Optional.empty();
     private List<Condition> conditions;
+    private boolean complete = false;
+
+    public boolean isCompleted(){
+        return this.complete;
+    }
 
     public void deactivate(){
         for(Condition condition: conditions){
@@ -67,7 +72,10 @@ public class Checkpoint {
      * Quest timer will check this function, making sure all conditions and inherited class checks are complete
      */
     public boolean isComplete(){
-        return conditionsMet();
+        if(conditionsMet()){
+            this.complete = true;
+        }
+        return complete;
     }
 
     /*

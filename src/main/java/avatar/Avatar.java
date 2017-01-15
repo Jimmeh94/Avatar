@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 public class Avatar {
 
     //TODO fix how the quest checkpoints reset
+    //TODO fix quest inventory click
+    //TODO work on instances for areas
 
     public static Avatar INSTANCE;
 
