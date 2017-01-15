@@ -15,8 +15,7 @@ public class PlayerConnection {
         event.setMessageCancelled(true);
         event.getTargetEntity().setLocation(new Location(Sponge.getServer().getWorlds().toArray(new World[]{})[0], 50, 50, 50));
 
-        new UserPlayer(event.getTargetEntity().getUniqueId());
-        Avatar.INSTANCE.getUserManager().findUserPlayer(event.getTargetEntity()).get().init();
+        new UserPlayer(event.getTargetEntity().getUniqueId()).init();
 
         /*a.getQuestManager().giveQuest(a.getUserManager().findUserPlayer(event.getTargetEntity()).get(), "test");
         a.getQuestManager().setActiveQuest(a.getUserManager().findUserPlayer(event.getTargetEntity()).get(), "test");

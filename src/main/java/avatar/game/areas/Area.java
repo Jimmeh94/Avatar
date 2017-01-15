@@ -1,6 +1,7 @@
 package avatar.game.areas;
 
 import avatar.events.custom.AreaEvent;
+import avatar.game.chat.channel.ChatChannel;
 import avatar.managers.ListenerManager;
 import avatar.game.user.User;
 import avatar.game.user.UserPlayer;
@@ -26,10 +27,12 @@ public class Area {
     private AreaReferences reference;
     private List<Area> children = new ArrayList<>();
     private List<Instance> instances = new ArrayList<>();
+    private ChatChannel chatChannel;
 
     public Area(AreaReferences reference){
         this.shape = reference.getShape();
         this.displayName = reference.getDisplayName();
+        this.chatChannel = reference.getChatChannel();
         this.reference = reference;
 
         for(AreaReferences r: reference.getChildren()){
@@ -119,6 +122,10 @@ public class Area {
             AreaEvent event = new AreaEvent.Exit(targetEntity, targetEntity.getPresentArea(), ListenerManager.getDefaultCause());
             Sponge.getEventManager().post(event);
         }
+    }
+
+    public ChatChannel getChatChannel() {
+        return chatChannel;
     }
 
     public Text getDisplayName() {

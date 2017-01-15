@@ -1,16 +1,22 @@
 package avatar.managers;
 
-import avatar.game.chatchannels.ChatChannel;
+import avatar.game.chat.channel.ChatChannel;
 import avatar.game.user.UserPlayer;
-import org.spongepowered.api.entity.living.player.Player;
+import avatar.utilities.text.Messager;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Optional;
 
 public class ChatChannelManager extends Manager<ChatChannel> {
 
-    public Optional<ChatChannel> findChannel(String key){
+    public boolean isKeyAvailable(String key){
+        return !findChannel(key).isPresent();
+    }
+
+    private Optional<ChatChannel> findChannel(String key){
         for(ChatChannel chatChannel: objects){
-            if(chatChannel.getKey().equals(key)){
+            if(chatChannel.getKey().equalsIgnoreCase(key)){
                 return Optional.of(chatChannel);
             }
         }
@@ -18,21 +24,17 @@ public class ChatChannelManager extends Manager<ChatChannel> {
     }
 
     public void setToDefault(UserPlayer userPlayer){
-        Optional<Player> player = userPlayer.getPlayer();
-        if(player.isPresent()){
-            player.get().setMessageChannel(null);
-        }
+        userPlayer.setChatChannel(ChatChannel.GLOBAL);
     }
 
-    public boolean setChannel(UserPlayer userPlayer, String key){
+    public void setChannel(UserPlayer userPlayer, String key){
         Optional<ChatChannel> channel = findChannel(key);
 
-        if(channel.isPresent()){
-            userPlayer.getPlayer().get().setMessageChannel(channel.get());
-            return true;
+        if(channel.isPresent() && channel.get() != userPlayer.getChatChannel()){
+            userPlayer.setChatChannel(channel.get());
+            Messager.sendMessage(userPlayer.getPlayer().get(), Text.of("Moved to chat channel: " + channel.get().getKey()));
         } else {
-            setToDefault(userPlayer);
-            return false;
+            Messager.sendMessage(userPlayer.getPlayer().get(), Text.of(TextColors.RED, "The channel doesn't exist or you are already in it: " + key));
         }
     }
 

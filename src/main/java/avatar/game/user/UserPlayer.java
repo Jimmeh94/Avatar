@@ -4,6 +4,8 @@ import avatar.Avatar;
 import avatar.events.custom.DialogueEvent;
 import avatar.game.areas.Area;
 import avatar.game.areas.AreaReferences;
+import avatar.game.chat.ChatColorTemplate;
+import avatar.game.chat.channel.ChatChannel;
 import avatar.game.dialogue.core.Dialogue;
 import avatar.game.dialogue.core.DialogueReference;
 import avatar.game.quests.PlayerQuestManager;
@@ -30,25 +32,23 @@ public class UserPlayer extends User {
     private Dialogue currentDialogue;
     private Account account;
     private Scoreboard scoreboard;
+    private Title title;
+    private ChatColorTemplate chatColorTemplate = ChatColorTemplate.GRAY;
+    private ChatChannel chatChannel;
 
     public UserPlayer(UUID user) {
         super(user);
-
-        account = new Account(this);
-        questManager = new PlayerQuestManager(this);
     }
 
     public UserPlayer(UUID user, IStatsPreset preset){
         super(user, preset);
-
-        //TODO populate quests
-        //questMenu = new QuestMenu(this);
-
-        account = new Account(this);
-        questManager = new PlayerQuestManager(this);
     }
 
     public void init(){
+        title = Title.TEST;
+        account = new Account(this);
+        questManager = new PlayerQuestManager(this);
+        setChatChannel(ChatChannel.GLOBAL);
         scoreboard = new Scoreboard(this);
 
         Optional<Area> area = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(getPlayer().get().getLocation());
@@ -169,6 +169,18 @@ public class UserPlayer extends User {
         return questManager;
     }
 
+    public ChatColorTemplate getChatColorTemplate() {
+        return chatColorTemplate;
+    }
+
+    public ChatChannel getChatChannel() {
+        return chatChannel;
+    }
+
+    public Title getTitle() {
+        return title;
+    }
+
     //--- Setters ---
 
     public void setParticleModifier(ParticleUtils.ParticleModifier particleModifier) {
@@ -184,4 +196,18 @@ public class UserPlayer extends User {
         return this;
     }
 
+    public void setTitle(Title title) {
+        this.title = title;
+    }
+
+    public void setChatChannel(ChatChannel chatChannel) {
+        if(this.chatChannel != null)
+            this.chatChannel.removeMember(this);
+        this.chatChannel = chatChannel;
+        this.chatChannel.addMember(this);
+    }
+
+    public void setChatColorTemplate(ChatColorTemplate chatColorTemplate) {
+        this.chatColorTemplate = chatColorTemplate;
+    }
 }

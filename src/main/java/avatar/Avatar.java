@@ -1,9 +1,11 @@
 package avatar;
 
+import avatar.commands.ChatCommands;
 import avatar.commands.DialogueCommands;
 import avatar.commands.QuestCommands;
 import avatar.commands.test.AreaCommands;
 import avatar.commands.test.ParticleEffectCommands;
+import avatar.events.Chat;
 import avatar.events.InventoryClick;
 import avatar.events.PlayerConnection;
 import avatar.game.dialogue.core.DialogueBuilder;
@@ -63,9 +65,9 @@ public class Avatar {
     @Listener
     public void onServerStarting(GameStartingServerEvent event){
         userManager = new UserManager();
+        chatChannelManager = new ChatChannelManager();
         areaManager = new AreaManager();
         abilityManager = new AbilityManager();
-        chatChannelManager = new ChatChannelManager();
         economyManager = new EconomyManager();
 
         registerListeners();
@@ -89,11 +91,13 @@ public class Avatar {
         new AreaCommands();
         new DialogueCommands();
         new QuestCommands();
+        new ChatCommands();
     }
 
     private void registerListeners(){
         Sponge.getEventManager().registerListeners(this, new PlayerConnection());
         Sponge.getEventManager().registerListeners(this, new InventoryClick());
+        Sponge.getEventManager().registerListeners(this, new Chat());
     }
 
     public PluginContainer getPluginContainer(){return Sponge.getPluginManager().fromInstance(this).get();}

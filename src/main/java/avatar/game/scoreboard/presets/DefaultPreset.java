@@ -41,6 +41,8 @@ public class DefaultPreset extends ScoreboardPreset {
         strings.add(Text.of("Gold: " + owner.getAccount().getBalance()));
         strings.add(Text.of(TextColors.RED, TextColors.BLACK));
         strings.add(Text.of("Element: Fire"));
+        strings.add(Text.of(TextColors.RED, TextColors.GREEN));
+        strings.add(Text.of("Chat: " + owner.getChatChannel().getKey()));
 
         setScores(strings);
     }
