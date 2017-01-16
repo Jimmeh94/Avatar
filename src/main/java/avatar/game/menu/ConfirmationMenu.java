@@ -1,7 +1,7 @@
 package avatar.game.menu;
 
 import avatar.Avatar;
-import avatar.utilities.misc.Callback;
+import avatar.util.misc.Callback;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;

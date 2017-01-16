@@ -1,7 +1,7 @@
 package avatar.data.tags;
 
 import avatar.data.Keys;
-import avatar.utilities.misc.Callback;
+import avatar.util.misc.Callback;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;

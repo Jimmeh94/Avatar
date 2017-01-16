@@ -9,7 +9,7 @@ import avatar.game.dialogue.core.actions.GiveQuest;
 import avatar.game.dialogue.core.DialogueBuilder;
 import avatar.game.dialogue.core.displayable.ChoiceWheel;
 import avatar.game.dialogue.core.Dialogue;
-import avatar.game.quests.QuestReference;
+import avatar.game.quest.QuestReference;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 

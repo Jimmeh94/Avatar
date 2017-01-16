@@ -1,12 +1,13 @@
 package avatar.game.dialogue.core.displayable;
 
-import avatar.utilities.text.Messager;
+import avatar.util.text.Messager;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class Sentence implements Displayable {
     /*
@@ -26,7 +27,7 @@ public class Sentence implements Displayable {
     @Override
     public void display(Player player) {
         for(Text text: sentences) {
-                Messager.sendMessage(player, text);
+                Messager.sendMessage(player, text, Optional.<Messager.Prefix>empty());
         }
     }
 

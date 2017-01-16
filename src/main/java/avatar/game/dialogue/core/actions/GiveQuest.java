@@ -1,7 +1,7 @@
 package avatar.game.dialogue.core.actions;
 
 import avatar.Avatar;
-import avatar.game.quests.QuestReference;
+import avatar.game.quest.QuestReference;
 import org.spongepowered.api.entity.living.player.Player;
 
 public class GiveQuest extends DialogueAction {

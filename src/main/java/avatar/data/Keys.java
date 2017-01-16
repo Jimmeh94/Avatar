@@ -1,6 +1,6 @@
 package avatar.data;
 
-import avatar.utilities.misc.Callback;
+import avatar.util.misc.Callback;
 import com.google.common.reflect.TypeToken;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Key;

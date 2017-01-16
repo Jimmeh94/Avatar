@@ -1,18 +1,18 @@
 package avatar.game.user;
 
 import avatar.Avatar;
-import avatar.events.custom.DialogueEvent;
-import avatar.game.areas.Area;
-import avatar.game.areas.AreaReferences;
+import avatar.event.custom.DialogueEvent;
+import avatar.game.area.Area;
+import avatar.game.area.AreaReferences;
 import avatar.game.chat.ChatColorTemplate;
 import avatar.game.chat.channel.ChatChannel;
 import avatar.game.dialogue.core.Dialogue;
 import avatar.game.dialogue.core.DialogueReference;
-import avatar.game.quests.PlayerQuestManager;
+import avatar.game.quest.PlayerQuestManager;
 import avatar.game.scoreboard.Scoreboard;
 import avatar.game.user.stats.IStatsPreset;
-import avatar.utilities.misc.LocationUtils;
-import avatar.utilities.particles.ParticleUtils;
+import avatar.util.misc.LocationUtils;
+import avatar.util.particles.ParticleUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;

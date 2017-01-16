@@ -1,17 +1,19 @@
 package avatar.game.user;
 
 import avatar.Avatar;
-import avatar.game.areas.Area;
+import avatar.game.area.Area;
 import avatar.game.combatlog.EntityCombatLogger;
 import avatar.game.user.stats.IStatsPreset;
 import avatar.game.user.stats.Stats;
 import avatar.game.user.stats.presets.DefaultBenderPreset;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.Entity;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Base class for any entity that will need stats or abilities
+ * Base class for any entity that will need stats or ability
  */
 public class User {
 
@@ -85,6 +87,10 @@ public class User {
 
     public EntityCombatLogger getCombatLogger() {
         return combatLogger;
+    }
+
+    public Optional<Entity> getEntity(){
+        return Sponge.getServer().getWorld(getUUID()).get().getEntity(getUUID());
     }
 
     public void tick() {

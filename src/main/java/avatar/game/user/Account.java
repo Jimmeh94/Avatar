@@ -1,6 +1,6 @@
 package avatar.game.user;
 
-import avatar.utilities.text.AltCodes;
+import avatar.util.text.AltCodes;
 import org.spongepowered.api.service.economy.transaction.ResultType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;

@@ -1,0 +1,16 @@
+package avatar.game.quest;
+
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+
+public interface Reward {
+
+    /*
+     * Quest rewards
+     */
+
+    Text getDescription();
+
+    void giveAward(Player player);
+
+}

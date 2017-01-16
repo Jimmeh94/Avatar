@@ -1,12 +1,12 @@
 package avatar.game.dialogue.core.displayable;
 
 import avatar.Avatar;
-import avatar.events.custom.DialogueEvent;
+import avatar.event.custom.DialogueEvent;
 import avatar.game.dialogue.core.conditions.Condition;
 import avatar.game.dialogue.core.actions.DialogueAction;
 import avatar.game.user.UserPlayer;
-import avatar.utilities.text.AltCodes;
-import avatar.utilities.text.Messager;
+import avatar.util.text.AltCodes;
+import avatar.util.text.Messager;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
@@ -55,7 +55,7 @@ public class Choice implements Consumer<CommandSource>{
     }
 
     public void display(Player player) {
-        Messager.sendMessage(player, sentence);
+        Messager.sendMessage(player, sentence, Optional.<Messager.Prefix>empty());
     }
 
     public List<DialogueAction> getAction() {
@@ -80,7 +80,7 @@ public class Choice implements Consumer<CommandSource>{
             }
             Avatar.INSTANCE.getUserManager().findUserPlayer(player).get().removeDialogue();
 
-            //if all conditions are valid, continue with action
+            //if all condition are valid, continue with action
             for (DialogueAction action : this.actions)
                 action.doWork(player);
 

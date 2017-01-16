@@ -1,11 +1,12 @@
 package avatar.game.dialogue.core.conditions;
 
-import avatar.utilities.text.Messager;
+import avatar.util.text.Messager;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.world.Location;
+
+import java.util.Optional;
 
 public class RangeBound implements Condition {
 
@@ -32,6 +33,6 @@ public class RangeBound implements Condition {
 
     @Override
     public void sendErrorMessage(Player player) {
-        Messager.sendMessage(player, Text.of(TextColors.RED, TextStyles.BOLD, "Too far away from the source to perform that action!"));
+        Messager.sendMessage(player, Text.of(TextColors.GRAY, "Too far away from the source to perform that action!"), Optional.of(Messager.Prefix.ERROR));
     }
 }

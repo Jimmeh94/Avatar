@@ -1,18 +1,18 @@
 package avatar;
 
-import avatar.commands.ChatCommands;
-import avatar.commands.DialogueCommands;
-import avatar.commands.QuestCommands;
-import avatar.commands.test.AreaCommands;
-import avatar.commands.test.ParticleEffectCommands;
-import avatar.events.ChatEvents;
-import avatar.events.InventoryEvents;
-import avatar.events.PlayerConnectionEvents;
+import avatar.command.ChatCommands;
+import avatar.command.DialogueCommands;
+import avatar.command.QuestCommands;
+import avatar.command.test.AreaCommands;
+import avatar.command.test.ParticleEffectCommands;
+import avatar.event.ChatEvents;
+import avatar.event.InventoryEvents;
+import avatar.event.PlayerConnectionEvents;
 import avatar.game.dialogue.core.DialogueBuilder;
-import avatar.game.quests.quests.builders.QuestBuilder;
-import avatar.managers.*;
-import avatar.runnables.GameTimer;
-import avatar.utilities.database.MongoUtils;
+import avatar.game.quest.builder.QuestBuilder;
+import avatar.manager.*;
+import avatar.runnable.GameTimer;
+import avatar.util.database.MongoUtils;
 import com.google.inject.Inject;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
@@ -30,11 +30,11 @@ public class Avatar {
 
     //TODO fix how the quest checkpoints reset
     //TODO fix quest inventory click
-    //TODO work on instances for areas
+    //TODO work on instances for area
 
     public static Avatar INSTANCE;
 
-    //--- managers ---
+    //--- manager ---
     private UserManager userManager;
     private AreaManager areaManager;
     private AbilityManager abilityManager;
