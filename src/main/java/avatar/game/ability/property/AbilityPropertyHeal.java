@@ -33,9 +33,7 @@ public abstract class AbilityPropertyHeal extends AbilityProperty{
 
         @Override
         public void handle(AbilityEvent.PostFire postFire) throws Exception {
-            if(!postFire.isCancelled()){
-                //heal target
-            }
+            //heal target
         }
 
         @Override

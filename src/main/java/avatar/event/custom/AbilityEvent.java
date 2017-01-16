@@ -29,7 +29,7 @@ public class AbilityEvent extends CustomEvent{
 
         @Override
         public boolean isCancelled() {
-            return false;
+            return this.cancelled;
         }
 
         @Override
@@ -50,7 +50,7 @@ public class AbilityEvent extends CustomEvent{
         }
     }
 
-    public static class Hit extends AbilityEvent{
+    public static class Hit extends AbilityEvent implements Cancellable{
         private List<Ability> collidedAbilities;
 
         public Hit(Ability ability, Cause cause, List<Ability> collidedAbilities) {
@@ -61,6 +61,16 @@ public class AbilityEvent extends CustomEvent{
 
         public List<Ability> getCollidedAbilities() {
             return collidedAbilities;
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return this.cancelled;
+        }
+
+        @Override
+        public void setCancelled(boolean b) {
+            this.cancelled = b;
         }
     }
 
@@ -83,7 +93,7 @@ public class AbilityEvent extends CustomEvent{
 
         @Override
         public boolean isCancelled() {
-            return false;
+            return this.cancelled;
         }
 
         @Override

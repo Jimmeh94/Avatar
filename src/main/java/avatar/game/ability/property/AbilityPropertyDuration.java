@@ -27,8 +27,6 @@ public class AbilityPropertyDuration extends AbilityProperty implements EventLis
 
     @Override
     public void handle(AbilityEvent.UpdateTick updateTick) throws Exception {
-        if(!updateTick.isCancelled()){
 
-        }
     }
 }
