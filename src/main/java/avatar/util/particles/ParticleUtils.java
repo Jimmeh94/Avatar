@@ -2,17 +2,15 @@ package avatar.util.particles;
 
 import avatar.Avatar;
 import avatar.game.area.Area;
-import avatar.game.user.User;
+import avatar.game.area.Instance;
 import avatar.game.user.UserPlayer;
 import avatar.util.misc.LocationUtils;
 import avatar.util.particles.effects.EffectData;
 import com.flowpowered.math.vector.Vector3d;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOption;
-import org.spongepowered.api.effect.particle.ParticleType;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.world.Location;
 
 import java.util.*;
 
@@ -25,86 +23,61 @@ public class ParticleUtils {
         }
 
         public static void displayParticles(EffectData effectData, Collection<Player> players){
-            displayParticles(players, effectData.getParticle(), effectData.getAmount(), effectData.getDisplayAt(), effectData.getxOffset(), effectData.getyOffset(), effectData.getzOffset(),
-                    effectData.isRandomizeOffsets(), effectData.getParticleOptions(), effectData.getVelocity());
-        }
+            Optional<Instance> instance = Optional.empty();
+            Optional<Area> area = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(effectData.getOwner().getEntity().get().getLocation());
+            Optional<Area> temp;
 
-        public static void displayParticles(Collection<Player> players, ParticleType particleType, int amount, Location location, double xOffset, double yOffset, double zOffset, boolean randomizeOffset, List<ParticleOption> particleOptions, Vector3d velocity) {
-            double factor = 1.0;
+            if(area.isPresent()){
+                if(area.get().isInstanced(effectData.getOwner())){
+                    instance = area.get().getInstance(effectData.getOwner());
+                }
+            }
+
             for (Player player : players) {
-                Optional<User> user = Avatar.INSTANCE.getUserManager().find(player.getUniqueId());
-                if(user.isPresent()){
-                    if(user.get().isPlayer()){
-                        factor = ((UserPlayer)user.get()).getParticleModifier().factor;
+                Optional<UserPlayer> user = Avatar.INSTANCE.getUserManager().findUserPlayer(player);
+                if(!user.isPresent()){
+                    continue;
+                }
+
+                if(instance.isPresent()){
+                    temp = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(user.get().getPlayer().get().getLocation());
+                    if(temp.isPresent()){
+                        if(temp.get().isInstanced(user.get())){
+                           if(temp.get().getInstance(user.get()).get() != instance.get()) {
+                               continue;
+                           }
+                        } else continue;
                     }
                 }
 
-                ParticleEffect.Builder builder = ParticleEffect.builder();
-
-                builder.quantity((int) (amount * factor)).type(particleType);
-
-                if (randomizeOffset) {
-                    builder.offset(new Vector3d(xOffset * LocationUtils.getRandomNegOrPos(),
-                            yOffset * LocationUtils.getRandomNegOrPos(),
-                            zOffset * LocationUtils.getRandomNegOrPos()));
-                } else {
-                    builder.offset(new Vector3d(xOffset, yOffset, zOffset));
-                }
-
-                if (particleOptions != null) {
-                    for (ParticleOption option : particleOptions) {
-                        builder.option(option, option.getValueType());
-                    }
-                }
-
-                if (velocity != null) {
-                    builder.velocity(velocity);
-                }
-
-                player.spawnParticles(builder.build(), location.getPosition());
+                display(effectData, user.get());
             }
         }
     }
 
     public static class AreaBased{
         public static void displayParticles(EffectData effectData) {
-            displayParticles(effectData.getDisplayArea(), effectData.getParticle(), effectData.getAmount(), effectData.getDisplayAt(),
-                    effectData.getxOffset(), effectData.getyOffset(), effectData.getzOffset(), effectData.isRandomizeOffsets(),
-                    effectData.getParticleOptions(), effectData.getVelocity());
-        }
+            Optional<Instance> instance = Optional.empty();
+            Optional<Area> area = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(effectData.getOwner().getEntity().get().getLocation());
+            Optional<Area> temp;
 
-        public static void displayParticles(Area area, ParticleType particleType, int amount, Location location, double xOffset, double yOffset, double zOffset, boolean randomizeOffset, List<ParticleOption> particleOptions, Vector3d velocity) {
-            for (UserPlayer player : area.getPlayersFromMembers()) {
-                Optional<Player> p = player.getPlayer();
-                if(!p.isPresent()){
-                    continue;
-                }
+            if(area.get().isInstanced(effectData.getOwner())){
+                instance = area.get().getInstance(effectData.getOwner());
+            }
 
-                ParticleEffect.Builder builder = ParticleEffect.builder();
-
-                builder.quantity((int) (amount * player.getParticleModifier().getFactor())).type(particleType);
-
-                if (randomizeOffset) {
-                    builder.offset(new Vector3d(location.getX() + xOffset * LocationUtils.getRandomNegOrPos(),
-                            location.getY() + yOffset * LocationUtils.getRandomNegOrPos(),
-                            location.getZ() + zOffset * LocationUtils.getRandomNegOrPos()));
-                } else {
-                    builder.offset(new Vector3d(location.getX() + xOffset,
-                            location.getY() + yOffset,
-                            location.getZ() + zOffset));
-                }
-
-                if (particleOptions != null) {
-                    for (ParticleOption option : particleOptions) {
-                        builder.option(option, option.getValueType());
+            for (UserPlayer player : effectData.getDisplayArea().getPlayersFromMembers()) {
+                if(instance.isPresent()){
+                    temp = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(player.getPlayer().get().getLocation());
+                    if(temp.isPresent()){
+                        if(temp.get().isInstanced(player)){
+                            if(temp.get().getInstance(player).get() != instance.get()) {
+                                continue;
+                            }
+                        } else continue;
                     }
                 }
 
-                if (velocity != null) {
-                    builder.velocity(velocity);
-                }
-
-                p.get().spawnParticles(builder.build(), location.getPosition());
+                display(effectData, player);
             }
         }
     }
@@ -112,23 +85,17 @@ public class ParticleUtils {
     public static class LocationBased{
 
         public static void displayParticles(EffectData effectData) {
-            displayParticles(effectData.getParticle(), effectData.getAmount(), effectData.getDisplayAt(), effectData.getDisplayRadius(),
-                    effectData.getxOffset(), effectData.getyOffset(), effectData.getzOffset(), effectData.isRandomizeOffsets(),
-                    effectData.getParticleOptions(), effectData.getVelocity());
-        }
-
-        public static void displayParticles(ParticleType particleType, int amount, Location location, double radius, double xOffset, double yOffset, double zOffset, boolean randomizeOffset, List<ParticleOption> particleOptions, Vector3d velocity) {
             List<Entity> entities = new ArrayList<>();
             Entity origin = null;
 
             //find nearest entity
-            for(Entity entity: location.getExtent().getEntities()){
-                if(entity.getLocation().getPosition().distance(location.getPosition()) > radius)
+            for(Entity entity: effectData.getDisplayAt().getExtent().getEntities()){
+                if(entity.getLocation().getPosition().distance(effectData.getDisplayAt().getPosition()) > effectData.getDisplayRadius())
                     continue;
                 if(origin == null){
                     origin = entity;
                 } else {
-                    if(origin.getLocation().getPosition().distance(location.getPosition()) > entity.getLocation().getPosition().distance(location.getPosition())){
+                    if(origin.getLocation().getPosition().distance(effectData.getDisplayAt().getPosition()) > entity.getLocation().getPosition().distance(effectData.getDisplayAt().getPosition())){
                         origin = entity;
                     }
                 }
@@ -138,7 +105,15 @@ public class ParticleUtils {
             if(origin == null){
                 return;
             } else {
-                entities.addAll(origin.getNearbyEntities(radius));
+                entities.addAll(origin.getNearbyEntities(effectData.getDisplayRadius()));
+            }
+
+            Optional<Instance> instance = Optional.empty();
+            Optional<Area> area = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(effectData.getOwner().getEntity().get().getLocation());
+            Optional<Area> temp;
+
+            if(area.get().isInstanced(effectData.getOwner())){
+                instance = area.get().getInstance(effectData.getOwner());
             }
 
             for (Entity entity: entities) {
@@ -146,40 +121,49 @@ public class ParticleUtils {
                     continue;
                 }
 
-                UserPlayer player = (UserPlayer) Avatar.INSTANCE.getUserManager().find(entity.getUniqueId()).get();
-
-                Optional<Player> p = player.getPlayer();
-                if(!p.isPresent()){
-                    continue;
-                }
-
-                ParticleEffect.Builder builder = ParticleEffect.builder();
-
-                builder.quantity((int) (amount * player.getParticleModifier().getFactor())).type(particleType);
-
-                if (randomizeOffset) {
-                    builder.offset(new Vector3d(location.getX() + xOffset * LocationUtils.getRandomNegOrPos(),
-                            location.getY() + yOffset * LocationUtils.getRandomNegOrPos(),
-                            location.getZ() + zOffset * LocationUtils.getRandomNegOrPos()));
-                } else {
-                    builder.offset(new Vector3d(location.getX() + xOffset,
-                            location.getY() + yOffset,
-                            location.getZ() + zOffset));
-                }
-
-                if (particleOptions != null) {
-                    for (ParticleOption option : particleOptions) {
-                        builder.option(option, option.getValueType());
+                UserPlayer player = Avatar.INSTANCE.getUserManager().findUserPlayer(entity).get();
+                if(instance.isPresent()){
+                    temp = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(player.getPlayer().get().getLocation());
+                    if(temp.isPresent()){
+                        if(temp.get().isInstanced(player)){
+                            if(temp.get().getInstance(player).get() != instance.get()) {
+                                continue;
+                            }
+                        } else continue;
                     }
                 }
 
-                if (velocity != null) {
-                    builder.velocity(velocity);
-                }
-
-                p.get().spawnParticles(builder.build(), location.getPosition());
+                display(effectData, player);
             }
         }
+    }
+
+    private static void display(EffectData effectData, UserPlayer userPlayer){
+        double factor = userPlayer.getParticleModifier().factor;
+
+        ParticleEffect.Builder builder = ParticleEffect.builder();
+
+        builder.quantity((int) (effectData.getAmount() * factor)).type(effectData.getParticle());
+
+        if (effectData.isRandomizeOffsets()) {
+            builder.offset(new Vector3d(effectData.getxOffset() * LocationUtils.getRandomNegOrPos(),
+                    effectData.getyOffset() * LocationUtils.getRandomNegOrPos(),
+                    effectData.getzOffset() * LocationUtils.getRandomNegOrPos()));
+        } else {
+            builder.offset(new Vector3d(effectData.getxOffset(), effectData.getyOffset(), effectData.getzOffset()));
+        }
+
+        if (effectData.getParticleOptions() != null) {
+            for (ParticleOption option : effectData.getParticleOptions()) {
+                builder.option(option, option.getValueType());
+            }
+        }
+
+        if (effectData.getVelocity() != null) {
+            builder.velocity(effectData.getVelocity());
+        }
+
+        userPlayer.getPlayer().get().spawnParticles(builder.build(), effectData.getDisplayAt().getPosition());
     }
 
     /**

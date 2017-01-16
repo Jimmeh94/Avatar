@@ -90,7 +90,7 @@ public class QuestData extends AbstractSingleData<String, QuestData, QuestData.I
     public static class Builder extends AbstractDataBuilder<QuestData> implements DataManipulatorBuilder<QuestData, Immutable> {
 
 
-        protected Builder(Class<QuestData> requiredClass, int supportedVersion) {
+        public Builder(Class<QuestData> requiredClass, int supportedVersion) {
             super(requiredClass, supportedVersion);
         }
 

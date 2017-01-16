@@ -1,6 +1,7 @@
 package avatar.game.area;
 
 import avatar.event.custom.AreaEvent;
+import avatar.game.ability.Ability;
 import avatar.game.chat.channel.ChatChannel;
 import avatar.manager.ListenerManager;
 import avatar.game.user.User;
@@ -38,6 +39,43 @@ public class Area {
         for(AreaReferences r: reference.getChildren()){
             children.add(new Area(r));
         }
+    }
+
+    public void addInstance(User user){
+        instances.add(new Instance());
+        instances.get(instances.size() - 1).addUser(user);
+    }
+
+    public boolean isInstanced(User user){
+        for(Instance instance: instances){
+            if(instance.hasUser(user))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isInstanced(Ability ability){
+        for(Instance instance: instances){
+            if(instance.hasAbility(ability))
+                return true;
+        }
+        return false;
+    }
+
+    public Optional<Instance> getInstance(User user){
+        for(Instance instance: instances){
+            if(instance.hasUser(user))
+                return Optional.of(instance);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Instance> getInstance(Ability ability){
+        for(Instance instance: instances){
+            if(instance.hasAbility(ability))
+                return Optional.of(instance);
+        }
+        return Optional.empty();
     }
 
     public boolean hasChild(AreaReferences reference){

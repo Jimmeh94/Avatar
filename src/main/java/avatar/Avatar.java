@@ -5,6 +5,7 @@ import avatar.command.DialogueCommands;
 import avatar.command.QuestCommands;
 import avatar.command.test.AreaCommands;
 import avatar.command.test.ParticleEffectCommands;
+import avatar.data.tags.QuestData;
 import avatar.event.ChatEvents;
 import avatar.event.InventoryEvents;
 import avatar.event.PlayerConnectionEvents;
@@ -83,7 +84,7 @@ public class Avatar {
     }
 
     private void registerData(){
-        //Sponge.getDataManager().register(QuestData.class, QuestData.Immutable.class, QuestData.Builder.class);
+        Sponge.getDataManager().register(QuestData.class, QuestData.Immutable.class, new QuestData.Builder(QuestData.class, 1));
     }
 
     private void registerRunnables(){gameTimer = new GameTimer(5L);}
