@@ -1,11 +1,13 @@
 package avatar.game.ability;
 
 import avatar.Avatar;
+import avatar.event.custom.AbilityEvent;
 import avatar.game.user.User;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.scheduler.Task;
 
-public abstract class AbilityRunnable extends Ability implements Runnable {
+public abstract class AbilityRunnable extends Ability implements Runnable, EventListener<AbilityEvent.Cancelled> {
 
     private long period, delay;
     /**
@@ -32,12 +34,23 @@ public abstract class AbilityRunnable extends Ability implements Runnable {
     public void run(){
         if(cycleLifetimeExpired()){
             this.stop();
+            return;
         }
+
+        AbilityEvent.UpdateTick event = new AbilityEvent.UpdateTick(this, Avatar.INSTANCE.getDefaultCause());
+        Sponge.getEventManager().post(event);
+
+        this.setLocationInfo();
     }
 
     protected void start(){
         Task.Builder taskBuilder = Sponge.getScheduler().createTaskBuilder();
         task = taskBuilder.delayTicks(delay).intervalTicks(period).execute(this).submit(Avatar.INSTANCE);
+    }
+
+    @Override
+    public void handle(AbilityEvent.Cancelled event) throws Exception {
+        Sponge.getEventManager().post(new AbilityEvent.Cancelled(this, Avatar.INSTANCE.getDefaultCause()));
     }
 
     protected void stop(){

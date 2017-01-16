@@ -28,8 +28,7 @@ public class AbilityPropertyBoundRange extends AbilityProperty implements EventL
 
     @Override
     public void handle(AbilityEvent.UpdateTick updateTick) throws Exception {
-        if(!updateTick.isCancelled()){
-            //if user's current location .distance from ability.firedFrom > range cancel
-        }
+        //if user's current location .distance from ability.firedFrom > range cancel
+
     }
 }

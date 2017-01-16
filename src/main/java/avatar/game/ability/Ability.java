@@ -89,17 +89,6 @@ public abstract class Ability {
         }
     }
 
-    public void updateTick(){
-        //update chunk position after movement
-
-        AbilityEvent.UpdateTick event = new AbilityEvent.UpdateTick(this, Avatar.INSTANCE.getDefaultCause());
-        Sponge.getEventManager().post(event);
-
-        if(!event.isCancelled()){ //update
-            setLocationInfo();
-        }
-    }
-
     protected void setLocationInfo(){
         this.locationChunk = LocationUtils.chunkPositionFromWorldPosition(this.center.getPosition());
     }

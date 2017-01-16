@@ -6,10 +6,10 @@ import org.spongepowered.api.event.cause.Cause;
 
 import java.util.List;
 
-public class AbilityEvent extends CustomEvent implements Cancellable {
+public class AbilityEvent extends CustomEvent{
 
     private final Ability ability;
-    private boolean cancelled = false;
+    protected boolean cancelled = false;
 
     public AbilityEvent(Ability ability, Cause cause){
         super(cause);
@@ -18,23 +18,23 @@ public class AbilityEvent extends CustomEvent implements Cancellable {
         this.cause = cause;
     }
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean b) {
-        this.cancelled = b;
-    }
-
     public Ability getAbility() {
         return ability;
     }
 
-    public static class PreFire extends AbilityEvent{
+    public static class PreFire extends AbilityEvent implements Cancellable {
         public PreFire(Ability ability, Cause cause) {
             super(ability, cause);
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return false;
+        }
+
+        @Override
+        public void setCancelled(boolean b) {
+            this.cancelled = b;
         }
     }
 
@@ -42,9 +42,6 @@ public class AbilityEvent extends CustomEvent implements Cancellable {
         public PostFire(Ability ability, Cause cause) {
             super(ability, cause);
         }
-
-        @Override
-        public boolean isCancelled(){return false;}
     }
 
     public static class PreHit extends AbilityEvent{
@@ -71,9 +68,6 @@ public class AbilityEvent extends CustomEvent implements Cancellable {
         public PostHit(Ability ability, Cause cause) {
             super(ability, cause);
         }
-
-        @Override
-        public boolean isCancelled(){return false;}
     }
 
     public static class UpdateTick extends AbilityEvent{
@@ -82,8 +76,27 @@ public class AbilityEvent extends CustomEvent implements Cancellable {
         }
     }
 
-    public static class RequirementCheck extends AbilityEvent{
+    public static class RequirementCheck extends AbilityEvent implements Cancellable {
         public RequirementCheck(Ability ability, Cause cause) {
+            super(ability, cause);
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return false;
+        }
+
+        @Override
+        public void setCancelled(boolean b) {
+            this.cancelled = b;
+        }
+    }
+
+    /**
+     * This is for cancelling the ability during an update tick, not cancelled on a requirement check or pre-fire
+     */
+    public static class Cancelled extends AbilityEvent{
+        public Cancelled(Ability ability, Cause cause) {
             super(ability, cause);
         }
     }

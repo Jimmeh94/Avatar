@@ -91,7 +91,7 @@ public class ConfirmationButtonData extends AbstractSingleData<Callback, Confirm
     public static class Builder extends AbstractDataBuilder<ConfirmationButtonData> implements DataManipulatorBuilder<ConfirmationButtonData, Immutable> {
 
 
-        protected Builder(Class<ConfirmationButtonData> requiredClass, int supportedVersion) {
+        public Builder(Class<ConfirmationButtonData> requiredClass, int supportedVersion) {
             super(requiredClass, supportedVersion);
         }
 
