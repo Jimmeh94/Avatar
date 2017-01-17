@@ -22,11 +22,11 @@ public abstract class Ability {
 
     /**
      * An ability should be created once the player tries to fire it. No need to store these otherwise.
-     * In exnteded ability, probably want to override setLocationInfo() as well as initiateAbility
+     * In extended ability classes, probably want to override setLocationInfo() as well as initiateAbility
      */
 
     private User owner;
-    private Location center, firedFrom;
+    private Location center, firedFrom, oldCenter;
     private AABB hitbox;
     private Element element;
     private Text displayName;
@@ -35,12 +35,26 @@ public abstract class Ability {
     private Vector3i locationChunk; //current chunk location
 
     protected abstract void initiateAbility();
+    protected abstract void adjustCenter();
 
-    public Ability(User owner){
+    public Ability(User owner, double x, double y, double z){
         this.owner = owner;
+
+        //set location information
+        Optional<Entity> optional = owner.getEntity();
+        if(optional.isPresent()){
+            this.firedFrom = optional.get().getLocation();
+            this.center = this.firedFrom.copy();
+
+            Location temp = center.copy();
+            this.hitbox = new AABB(temp.getX() - x/2, temp.getY() - y/2, temp.getZ() - z/2,
+                                    temp.getX() + x/2, temp.getY() + y/2, temp.getZ() + z/2);
+            this.locationChunk = center.getChunkPosition();
+            fire();
+        }
     }
 
-    public void fire(){
+    private void fire(){
         AbilityEvent.RequirementCheck check = new AbilityEvent.RequirementCheck(this, Avatar.INSTANCE.getDefaultCause());
         Sponge.getEventManager().post(check);
 
@@ -49,16 +63,6 @@ public abstract class Ability {
             Sponge.getEventManager().post(event);
 
             if(!event.isCancelled()){
-                //set location information
-                Optional<Entity> optional = owner.getEntity();
-                if(optional.isPresent()){
-                    this.firedFrom = optional.get().getLocation();
-                    this.center = this.firedFrom.copy();
-                    this.locationChunk = LocationUtils.chunkPositionFromWorldPosition(this.center.getPosition());
-                } else {
-                    return;
-                }
-
                 //initiate ability
                 initiateAbility();
 
@@ -90,7 +94,11 @@ public abstract class Ability {
     }
 
     protected void setLocationInfo(){
-        this.locationChunk = LocationUtils.chunkPositionFromWorldPosition(this.center.getPosition());
+        //adjust center
+        this.oldCenter = center.copy();
+        adjustCenter();
+        this.locationChunk = center.getChunkPosition();
+        this.hitbox = hitbox.offset(LocationUtils.getOffsetBetween(oldCenter, center));
     }
 
     public User getOwner() {

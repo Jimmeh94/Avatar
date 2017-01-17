@@ -10,6 +10,20 @@ import java.util.Random;
 
 public class LocationUtils {
 
+    public static Vector3d getOffsetBetween(Location start, Location end){
+        double deltaX, deltaY, deltaZ;
+        deltaX = Math.max(start.getX(), end.getX()) - Math.min(start.getX(), end.getX());
+        deltaX = Math.max(start.getX(), end.getX()) == start.getX() ? deltaX *-1 : deltaX * 1;
+
+        deltaY = Math.max(start.getY(), end.getY()) - Math.min(start.getY(), end.getY());
+        deltaY = Math.max(start.getY(), end.getY()) == start.getY() ? deltaY *-1 : deltaY * 1;
+
+        deltaZ = Math.max(start.getZ(), end.getZ()) - Math.min(start.getZ(), end.getZ());
+        deltaZ = Math.max(start.getZ(), end.getZ()) == start.getX() ? deltaZ *-1 : deltaZ * 1;
+
+        return new Vector3d(deltaX, deltaY, deltaZ);
+    }
+
     public static double getDistance(double a, double b){
         return Math.abs(a - b);
     }
@@ -32,15 +46,6 @@ public class LocationUtils {
 
     public static long chunkPositionToLong(Vector3i position) {
         return (0xFFFFFFFFL & position.getX()) << 32 + (0xFFFFFFFFL & position.getZ());
-    }
-
-    public static Vector3i chunkPositionFromWorldPosition(Vector3d position) {
-        //return Vector3i.from((int) position.getX() >> 4, 0, (int) position.getZ() >> 4);
-        return chunkPositionFromWorldPosition((int)position.getX(), (int)position.getZ());
-    }
-
-    public static Vector3i chunkPositionFromWorldPosition(Vector3i position){
-        return chunkPositionFromWorldPosition(position.getX(), position.getZ());
     }
 
     public static Vector3i chunkPositionFromWorldPosition(int x, int z){
