@@ -9,7 +9,7 @@ import java.util.Optional;
 public class AreaManager extends Manager<Area> {
 
     public AreaManager(){
-        //load all parent area
+        //load all parent areas
 
         add(new Area(AreaReferences.GLOBAL));
     }

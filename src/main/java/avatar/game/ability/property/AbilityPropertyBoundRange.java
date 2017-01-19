@@ -1,34 +1,29 @@
 package avatar.game.ability.property;
 
 import avatar.game.ability.Ability;
-import avatar.event.custom.AbilityEvent;
-import avatar.game.user.UserPlayer;
-import org.spongepowered.api.event.EventListener;
+import avatar.game.ability.AbilityStage;
+import org.spongepowered.api.text.Text;
 
 /**
  * How far the ability can travel
  */
-public class AbilityPropertyBoundRange extends AbilityProperty implements EventListener<AbilityEvent.UpdateTick>{
+public class AbilityPropertyBoundRange extends AbilityProperty{
 
     private double range;
 
     public AbilityPropertyBoundRange(String displayName, Ability ability, double range) {
-        super(displayName, ability);
+        super(displayName, ability, AbilityStage.UPDATE);
+
+        this.range = range;
     }
 
     @Override
-    public void printFailMessage(UserPlayer user) {
-
+    public boolean validate() {
+        return ability.getCenter().getPosition().distance(ability.getFiredFrom().getPosition()) < range;
     }
 
     @Override
-    protected void register() {
-
-    }
-
-    @Override
-    public void handle(AbilityEvent.UpdateTick updateTick) throws Exception {
-        //if user's current location .distance from ability.firedFrom > range cancel
-
+    public Text getFailMessage() {
+        return null;
     }
 }

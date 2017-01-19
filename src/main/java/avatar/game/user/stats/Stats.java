@@ -155,6 +155,9 @@ public class Stats {
          * Restores this stat back to its pre-altered state
          */
         public void restoreMemory(){
+            if(memory == null)
+                return;
+
             this.max = memory.restore();
             memory = null;
 

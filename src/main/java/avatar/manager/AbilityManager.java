@@ -13,7 +13,7 @@ public class AbilityManager extends Manager<Ability> {
         for(Ability a: objects){
             if(a == ability)
                 continue;
-            else if(a.getLocationChunk() == ability.getLocationChunk()){
+            else if(a.getLocationChunk().equals(ability.getLocationChunk())){
                 give.add(a);
             }
         }

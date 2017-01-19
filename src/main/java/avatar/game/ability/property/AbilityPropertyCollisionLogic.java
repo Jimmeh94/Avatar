@@ -1,33 +1,39 @@
 package avatar.game.ability.property;
 
-import avatar.Avatar;
 import avatar.event.custom.AbilityEvent;
 import avatar.game.ability.Ability;
-import avatar.manager.ListenerManager;
+import avatar.game.ability.AbilityStage;
 import avatar.game.user.User;
-import avatar.game.user.UserPlayer;
+import avatar.manager.ListenerManager;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.event.EventListener;
-import org.spongepowered.api.event.Order;
+import org.spongepowered.api.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AbilityPropertyCollisionLogic extends AbilityProperty implements EventListener<AbilityEvent.UpdateTick>{
+public class AbilityPropertyCollisionLogic extends AbilityProperty{
 
     private List<Ability> collidedAbilities = new ArrayList<>();
     private List<User> collidedUsers = new ArrayList<>();
 
     public AbilityPropertyCollisionLogic(String displayName, Ability ability) {
-        super(displayName, ability);
+        super(displayName, ability, AbilityStage.UPDATE);
+    }
+
+    public List<User> getCollidedUsers() {
+        return collidedUsers;
+    }
+
+    public List<Ability> getCollidedAbilities() {
+        return collidedAbilities;
     }
 
     @Override
-    public void handle(AbilityEvent.UpdateTick updateTick) throws Exception {
+    public boolean validate() {
         collidedAbilities.clear();
         collidedUsers.clear();
 
-        List<Ability> nearby = Avatar.INSTANCE.getAbilityManager().getNearbyAbilitiesInChunk(ability);
+        List<Ability> nearby = ability.getArea().getAbilityManager().getNearbyAbilitiesInChunk(ability);
         for(Ability ability: nearby){
             if(this.ability.getHitbox().intersects(ability.getHitbox())){
                 collidedAbilities.add(ability);
@@ -37,25 +43,18 @@ public class AbilityPropertyCollisionLogic extends AbilityProperty implements Ev
         //check for nearby entities next
 
         if(collidedAbilities.size() > 0){
-            Sponge.getEventManager().post(new AbilityEvent.Hit(ability, ListenerManager.getDefaultCause(), collidedAbilities));
+            Sponge.getEventManager().post(new AbilityEvent.Hit.Ability(ability, ListenerManager.getDefaultCause(), collidedAbilities));
         }
+
+        if(collidedUsers.size() > 0){
+            Sponge.getEventManager().post(new AbilityEvent.Hit.User(ability, ListenerManager.getDefaultCause(), collidedUsers));
+        }
+
+        return true;
     }
 
     @Override
-    protected void register() {
-        ListenerManager.register(AbilityEvent.UpdateTick.class, Order.FIRST, this);
-    }
-
-    @Override
-    public void printFailMessage(UserPlayer user) {
-
-    }
-
-    public List<User> getCollidedUsers() {
-        return collidedUsers;
-    }
-
-    public List<Ability> getCollidedAbilities() {
-        return collidedAbilities;
+    public Text getFailMessage() {
+        return null;
     }
 }

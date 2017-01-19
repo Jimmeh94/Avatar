@@ -3,9 +3,10 @@ package avatar.game.area;
 import avatar.event.custom.AreaEvent;
 import avatar.game.ability.Ability;
 import avatar.game.chat.channel.ChatChannel;
-import avatar.manager.ListenerManager;
 import avatar.game.user.User;
 import avatar.game.user.UserPlayer;
+import avatar.manager.AbilityManager;
+import avatar.manager.ListenerManager;
 import avatar.util.misc.LocationUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.text.Text;
@@ -29,16 +30,22 @@ public class Area {
     private List<Area> children = new ArrayList<>();
     private List<Instance> instances = new ArrayList<>();
     private ChatChannel chatChannel;
+    private AbilityManager abilityManager;
 
     public Area(AreaReferences reference){
         this.shape = reference.getShape();
         this.displayName = reference.getDisplayName();
         this.chatChannel = reference.getChatChannel();
         this.reference = reference;
+        abilityManager = new AbilityManager();
 
         for(AreaReferences r: reference.getChildren()){
             children.add(new Area(r));
         }
+    }
+
+    public AbilityManager getAbilityManager() {
+        return abilityManager;
     }
 
     public void addInstance(User user){
@@ -84,6 +91,25 @@ public class Area {
                 return true;
         }
         return false;
+    }
+
+    public boolean hasChildThatContains(Location location){
+        for(Area area: children){
+            if(area.contains(location))
+                return true;
+        }
+        return false;
+    }
+
+    public Optional<Area> getChildThatContains(Location location){
+        if(!this.contains(location))
+            return Optional.empty();
+        for(Area area: children){
+            if(area.contains(location)){
+                return area.getChildThatContains(location);
+            }
+        }
+        return Optional.of(this);
     }
 
     public Optional<Area> getChild(AreaReferences reference){

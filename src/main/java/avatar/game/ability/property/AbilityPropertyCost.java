@@ -1,32 +1,24 @@
 package avatar.game.ability.property;
 
-import avatar.event.custom.AbilityEvent;
 import avatar.game.ability.Ability;
-import avatar.manager.ListenerManager;
+import avatar.game.ability.AbilityStage;
 import avatar.game.user.User;
-import avatar.game.user.UserPlayer;
 import avatar.game.user.stats.Stats;
-import org.spongepowered.api.event.EventListener;
-import org.spongepowered.api.event.Order;
+import org.spongepowered.api.text.Text;
 
 /**
  * The cost to use this ability
  */
-public class AbilityPropertyCost extends AbilityProperty implements EventListener<AbilityEvent.RequirementCheck>{
+public class AbilityPropertyCost extends AbilityProperty{
 
     private int cost;
     private Stats.StatType costType;
 
     public AbilityPropertyCost(String displayName, Ability ability, int cost, Stats.StatType type) {
-        super(displayName, ability);
+        super(displayName, ability, AbilityStage.REQUIREMENT_CHECK);
 
         this.cost = cost;
         this.costType = type;
-    }
-
-    @Override
-    protected void register() {
-        ListenerManager.register(AbilityEvent.RequirementCheck.class, Order.FIRST, this);
     }
 
     public void refund(){
@@ -37,17 +29,19 @@ public class AbilityPropertyCost extends AbilityProperty implements EventListene
     }
 
     @Override
-    public void handle(AbilityEvent.RequirementCheck requirementCheck) throws Exception {
+    public boolean validate() {
         User user = this.ability.getOwner();
         if(user.getStats().hasStat(costType)){
             if(user.getStats().getStat(costType).get().canAfford(cost)){
                 user.getStats().getStat(costType).get().subtract(cost);
-            } else requirementCheck.setCancelled(true);
-        } else requirementCheck.setCancelled(true);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    public void printFailMessage(UserPlayer user) {
-
+    public Text getFailMessage() {
+        return null;
     }
 }

@@ -39,7 +39,6 @@ public class Avatar {
     //--- manager ---
     private UserManager userManager;
     private AreaManager areaManager;
-    private AbilityManager abilityManager;
     private ChatChannelManager chatChannelManager;
     private EconomyManager economyManager;
     private ConfirmationMenuManager confirmationMenuManager;
@@ -70,7 +69,6 @@ public class Avatar {
         userManager = new UserManager();
         chatChannelManager = new ChatChannelManager();
         areaManager = new AreaManager();
-        abilityManager = new AbilityManager();
         economyManager = new EconomyManager();
         confirmationMenuManager = new ConfirmationMenuManager();
 
@@ -126,10 +124,6 @@ public class Avatar {
     public QuestBuilder getQuestBuilder(){return questBuilder;}
 
     public DialogueBuilder getDialogueBuilder(){return dialogueBuilder;}
-
-    public AbilityManager getAbilityManager() {
-        return abilityManager;
-    }
 
     public int getCombatInterval() {
         return combatInterval;

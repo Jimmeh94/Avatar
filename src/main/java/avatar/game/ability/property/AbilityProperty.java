@@ -1,10 +1,9 @@
 package avatar.game.ability.property;
 
 import avatar.game.ability.Ability;
-import avatar.manager.ListenerManager;
+import avatar.game.ability.AbilityStage;
 import avatar.game.user.User;
-import avatar.game.user.UserPlayer;
-import org.spongepowered.api.event.EventListener;
+import org.spongepowered.api.text.Text;
 
 /**
  * For things like energy/chi cost,
@@ -14,13 +13,15 @@ public abstract class AbilityProperty{
     private String displayName;
     private User owner;
     protected Ability ability;
+    private AbilityStage checkWhen;
 
-    public AbilityProperty(String displayName, Ability ability){
+    public abstract boolean validate();
+
+    public AbilityProperty(String displayName, Ability ability, AbilityStage checkWhen){
         this.displayName = displayName;
         this.ability = ability;
         this.owner = ability.getOwner();
-
-        register();
+        this.checkWhen = checkWhen;
     }
 
     public String getDisplayName() {
@@ -38,19 +39,11 @@ public abstract class AbilityProperty{
     /**
      * Prints to the user why the action was unsuccessful, i.e. didn't have enough energy
      */
-    public abstract void printFailMessage(UserPlayer user);
+    public abstract Text getFailMessage();
 
-    /**
-     * Registers the class as a listener
-     */
-    protected abstract void register();
 
-    /**
-     * Unregisters the class as a listener
-     */
-    public void unregister(){
-        if(this instanceof EventListener)
-            ListenerManager.unregister((EventListener) this);
+    public boolean checkNow(AbilityStage stage) {
+        return stage == checkWhen;
     }
 
 }
