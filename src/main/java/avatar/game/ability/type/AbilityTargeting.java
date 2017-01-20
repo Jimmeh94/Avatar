@@ -4,6 +4,7 @@ import avatar.Avatar;
 import avatar.game.ability.AbilityStage;
 import avatar.game.ability.property.AbilityProperty;
 import avatar.game.ability.property.AbilityPropertyBoundRange;
+import avatar.game.ability.property.AbilityPropertyCollisionLogic;
 import avatar.game.user.User;
 import avatar.util.misc.LocationUtils;
 import avatar.util.particles.effects.EffectData;
@@ -81,6 +82,36 @@ public abstract class AbilityTargeting extends Ability implements Runnable{
                 if(!property.validate()){
                     this.cancel(property.getFailMessage());
                 }
+            }
+        }
+    }
+
+
+
+    protected void setLocationInfo(){
+        this.oldCenter = center.copy();
+        this.center = adjustCenter();
+        if(this.center == null)
+            return;
+
+        this.locationChunk = center.getChunkPosition();
+
+        if(getProperty(AbilityPropertyCollisionLogic.SquareCollisionLogic.class).isPresent()){
+            ((AbilityPropertyCollisionLogic.SquareCollisionLogic)getProperty(AbilityPropertyCollisionLogic.SquareCollisionLogic.class).get()).offset(oldCenter, center);
+        }
+
+        if(!this.area.contains(this.center)){
+            if(this.area != null){
+                area.getAbilityManager().remove(this);
+                if(area.isInstanced(this)){
+                    area.getInstance(this).get().removeAbility(this);
+                }
+            }
+
+            this.area = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(this.center).get();
+            this.area.getAbilityManager().add(this);
+            if (area.isInstanced(owner)) {
+                area.getInstance(owner).get().addAbility(this);
             }
         }
     }

@@ -6,12 +6,10 @@ import avatar.game.ability.property.AbilityProperty;
 import avatar.game.area.Area;
 import avatar.game.user.User;
 import avatar.game.user.UserPlayer;
-import avatar.util.misc.LocationUtils;
 import avatar.util.text.Messager;
 import com.flowpowered.math.vector.Vector3i;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.util.AABB;
 import org.spongepowered.api.world.Location;
 
 import java.util.ArrayList;
@@ -25,14 +23,15 @@ public abstract class Ability{
      * In extended ability classes, probably want to override setLocationInfo() as well as initiateAbility
      */
 
-    private User owner;
-    private Location center, firedFrom, oldCenter;
-    private AABB hitbox;
+    protected User owner;
+    protected Location center;
+    private Location firedFrom;
+    protected Location oldCenter;
     private Element element;
     protected List<AbilityProperty> properties;
-    private Vector3i locationChunk; //current chunk location
+    protected Vector3i locationChunk; //current chunk location
     protected AbilityStage stage;
-    private Area area;
+    protected Area area;
 
     /**
      * To move the ability
@@ -49,10 +48,6 @@ public abstract class Ability{
         if(optional.isPresent()){
             this.firedFrom = optional.get().getLocation().add(0, 1, 0);
             this.center = this.firedFrom.copy();
-
-            Location temp = center.copy();
-            this.hitbox = new AABB(temp.getX() - x/2, temp.getY() - y/2, temp.getZ() - z/2,
-                                    temp.getX() + x/2, temp.getY() + y/2, temp.getZ() + z/2);
             this.locationChunk = center.getChunkPosition();
             this.area = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(this.center).get();
             this.area.getAbilityManager().add(this);
@@ -63,7 +58,7 @@ public abstract class Ability{
         }
     }
 
-    protected Optional<AbilityProperty> getProperty(Class<? extends AbilityProperty> clazz){
+    public Optional<AbilityProperty> getProperty(Class<? extends AbilityProperty> clazz){
         for(AbilityProperty property: properties){
             if(property.getClass().getCanonicalName().equals(clazz.getCanonicalName())){
                 return Optional.of(property);
@@ -102,31 +97,6 @@ public abstract class Ability{
         }
     }
 
-    protected void setLocationInfo(){
-        this.oldCenter = center.copy();
-        this.center = adjustCenter();
-        if(this.center == null)
-            return;
-
-        this.locationChunk = center.getChunkPosition();
-        this.hitbox = hitbox.offset(LocationUtils.getOffsetBetween(oldCenter, center));
-
-        if(!this.area.contains(this.center)){
-            if(this.area != null){
-                area.getAbilityManager().remove(this);
-                if(area.isInstanced(this)){
-                    area.getInstance(this).get().removeAbility(this);
-                }
-            }
-
-            this.area = Avatar.INSTANCE.getAreaManager().getAreaByContainedLocation(this.center).get();
-            this.area.getAbilityManager().add(this);
-            if (area.isInstanced(owner)) {
-                area.getInstance(owner).get().addAbility(this);
-            }
-        }
-    }
-
     public User getOwner() {
         return owner;
     }
@@ -137,10 +107,6 @@ public abstract class Ability{
 
     public Location getCenter() {
         return center;
-    }
-
-    public AABB getHitbox() {
-        return hitbox;
     }
 
     public Element getElement() {
