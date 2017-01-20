@@ -1,6 +1,6 @@
 package avatar.game.ability.type;
 
-import avatar.game.ability.property.AbilityPropertyBoundRange;
+import avatar.game.ability.AbilityStage;
 import avatar.game.user.User;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.world.Location;
@@ -9,8 +9,8 @@ public abstract class AbilityTargetingEntity extends AbilityTargeting {
 
     private Entity targetEntity;
 
-    public AbilityTargetingEntity(User owner, double x, double y, double z, AbilityPropertyBoundRange range, double speed, Entity targetEntity) {
-        super(owner, x, y, z, range, speed);
+    public AbilityTargetingEntity(User owner, double x, double y, double z, double speed, long interval, Entity targetEntity) {
+        super(owner, x, y, z, speed, interval);
 
         this.targetEntity = targetEntity;
         this.setTarget(targetEntity.getLocation().add(0, 1, 0));
@@ -21,14 +21,18 @@ public abstract class AbilityTargetingEntity extends AbilityTargeting {
     }
 
     @Override
-    public boolean update(){
-        if(super.update()){
-            if(entityValid() && getRangeProperty().validate()){
+    public void run(){
+        super.run();
+
+        if(this.stage != AbilityStage.FINISH){
+            if(entityValid()){
                 setTarget(targetEntity.getLocation());
-                return true;
+                display();
+                return;
+            } else {
+                this.cancel(null);
             }
         }
-        return false;
     }
 
     @Override

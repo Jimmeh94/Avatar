@@ -38,6 +38,7 @@ public class EffectData {
 
     private EffectData(EffectDataBuilder builder){
         this.center = builder.center;
+        this.displayAt = builder.center.copy();
         this.owner = builder.owner;
         this.amount = builder.amount;
         this.particle = builder.particle;
@@ -67,21 +68,6 @@ public class EffectData {
 
     public EffectData setCenter(Location center) {
         this.center = center;
-        return this;
-    }
-
-    public EffectData setDelay(long delay) {
-        this.delay = delay;
-        return this;
-    }
-
-    public EffectData setInterval(long interval) {
-        this.interval = interval;
-        return this;
-    }
-
-    public EffectData setCancel(long cancel) {
-        this.cancel = cancel;
         return this;
     }
 

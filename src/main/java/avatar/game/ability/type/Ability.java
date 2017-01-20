@@ -3,7 +3,6 @@ package avatar.game.ability.type;
 import avatar.Avatar;
 import avatar.game.ability.AbilityStage;
 import avatar.game.ability.property.AbilityProperty;
-import avatar.game.ability.property.AbilityPropertyBoundRange;
 import avatar.game.area.Area;
 import avatar.game.user.User;
 import avatar.game.user.UserPlayer;
@@ -15,6 +14,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.AABB;
 import org.spongepowered.api.world.Location;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,20 +29,20 @@ public abstract class Ability{
     private Location center, firedFrom, oldCenter;
     private AABB hitbox;
     private Element element;
-    private List<AbilityProperty> properties;
+    protected List<AbilityProperty> properties;
     private Vector3i locationChunk; //current chunk location
-    private AbilityStage stage;
+    protected AbilityStage stage;
     private Area area;
 
     /**
      * To move the ability
      */
     protected abstract Location adjustCenter();
-    protected abstract List<AbilityProperty> loadProperties(AbilityPropertyBoundRange range);
+    protected abstract void loadProperties(List<AbilityProperty> properties);
 
-    public Ability(User owner, double x, double y, double z, AbilityPropertyBoundRange range){
+    public Ability(User owner, double x, double y, double z){
         this.owner = owner;
-        this.properties = loadProperties(range);
+        loadProperties(properties = new ArrayList<>());
 
         //set location information
         Optional<Entity> optional = owner.getEntity();
@@ -63,16 +63,16 @@ public abstract class Ability{
         }
     }
 
-    protected AbilityPropertyBoundRange getRangeProperty(){
+    protected Optional<AbilityProperty> getProperty(Class<? extends AbilityProperty> clazz){
         for(AbilityProperty property: properties){
-            if(property instanceof AbilityPropertyBoundRange){
-                return ((AbilityPropertyBoundRange)property);
+            if(property.getClass().getCanonicalName().equals(clazz.getCanonicalName())){
+                return Optional.of(property);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
-    private void fire(){
+    protected void fire(){
         //checks
         for (AbilityStage abilityStage : AbilityStage.firingSequence()) {
             stage = abilityStage;
@@ -95,17 +95,11 @@ public abstract class Ability{
         stage = AbilityStage.UPDATE;
     }
 
-    public boolean update(){
-        setLocationInfo();
-        for(AbilityProperty property: properties){
-            if(property.checkNow(stage)){
-                if(!property.validate()){
-                    this.cancel(property.getFailMessage());
-                    return false;
-                }
-            }
+
+    protected void addProperty(AbilityProperty property) {
+        if(!getProperty(property.getClass()).isPresent()){
+            properties.add(property);
         }
-        return true;
     }
 
     protected void setLocationInfo(){

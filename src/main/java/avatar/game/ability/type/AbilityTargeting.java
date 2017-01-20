@@ -1,12 +1,24 @@
 package avatar.game.ability.type;
 
+import avatar.Avatar;
+import avatar.game.ability.AbilityStage;
+import avatar.game.ability.property.AbilityProperty;
 import avatar.game.ability.property.AbilityPropertyBoundRange;
 import avatar.game.user.User;
 import avatar.util.misc.LocationUtils;
+import avatar.util.particles.effects.EffectData;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.effect.particle.ParticleTypes;
+import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-public abstract class AbilityTargeting extends Ability{
+/**
+ * Use this if the ability needs to move somewhere.
+ * Self casting/instant ability should just extend Ability
+ */
+public abstract class AbilityTargeting extends Ability implements Runnable{
 
     private Location target;
     /**
@@ -14,14 +26,63 @@ public abstract class AbilityTargeting extends Ability{
      * example: 1.0 speed would be to advance the ability by 1 block each update
      */
     private double speed;
+    private Task task;
+    private Long interval;
+    protected EffectData effectData;
 
     protected abstract Location setInitialTarget();
+    protected abstract void display();
 
-    public AbilityTargeting(User owner, double x, double y, double z, AbilityPropertyBoundRange range, double speed) {
-        super(owner, x, y, z, range);
+    public AbilityTargeting(User owner, double x, double y, double z, double speed, long interval) {
+        super(owner, x, y, z);
+
+        this.interval = interval;
+
+        if(!getProperty(AbilityPropertyBoundRange.class).isPresent()){
+            addProperty(new AbilityPropertyBoundRange(null, this, AbilityPropertyBoundRange.INFINITE));
+        }
 
         this.speed = speed;
         this.target = setInitialTarget();
+
+        effectData = EffectData.builder().amount(50).center(getCenter()).particle(ParticleTypes.FLAME).build();
+    }
+
+    @Override
+    protected void fire(){
+        super.fire();
+
+        if(this.stage != AbilityStage.FINISH){
+            Task.Builder taskBuilder = Sponge.getScheduler().createTaskBuilder();
+            task = taskBuilder.intervalTicks(interval).execute(this).submit(Avatar.INSTANCE);
+        }
+    }
+
+    @Override
+    public void cancel(Text cause){
+        super.cancel(cause);
+
+        task.cancel();
+    }
+
+    @Override
+    public void run(){
+        //set the location and check if at target
+        //check on properties for UPDATE
+        //if any of those !validate, stop the ability
+        setLocationInfo();
+        effectData.setDisplayAt(getCenter());
+        if(this.getCenter().getPosition().distance(this.getTarget().getPosition()) <= 0.5){
+            this.cancel(null);
+        }
+
+        for(AbilityProperty property: properties){
+            if(property.checkNow(stage)){
+                if(!property.validate()){
+                    this.cancel(property.getFailMessage());
+                }
+            }
+        }
     }
 
     public Location getTarget() {
