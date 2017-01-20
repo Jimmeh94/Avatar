@@ -10,16 +10,46 @@ import java.util.Random;
 
 public class LocationUtils {
 
+    public static Location getNextLocation(Location start, Location end, double scale){
+        if(start == null || end == null)
+            return null;
+
+        int deltaX, deltaY, deltaZ;
+
+        if(start.getX() > end.getX()){
+            deltaX = -1;
+        } else if(start.getX() < end.getX()){
+            deltaX = 1;
+        } else deltaX = 0;
+
+        if(start.getY() > end.getY()){
+            deltaY = -1;
+        } else if(start.getY() < end.getY()){
+            deltaY = 1;
+        } else deltaY = 0;
+
+        if(start.getZ() > end.getZ()){
+            deltaZ = -1;
+        } else if(start.getZ() < end.getZ()){
+            deltaZ = 1;
+        } else deltaZ = 0;
+
+        return new Location(start.getExtent(), deltaX * scale, deltaY * scale, deltaZ * scale);
+    }
+
     public static Vector3d getOffsetBetween(Location start, Location end){
         double deltaX, deltaY, deltaZ;
         deltaX = Math.max(start.getX(), end.getX()) - Math.min(start.getX(), end.getX());
-        deltaX = Math.max(start.getX(), end.getX()) == start.getX() ? deltaX *-1 : deltaX * 1;
+        if(deltaX > 0)
+            deltaX = Math.max(start.getX(), end.getX()) == start.getX() ? deltaX *-1 : deltaX * 1;
 
         deltaY = Math.max(start.getY(), end.getY()) - Math.min(start.getY(), end.getY());
-        deltaY = Math.max(start.getY(), end.getY()) == start.getY() ? deltaY *-1 : deltaY * 1;
+        if(deltaY > 0)
+            deltaY = Math.max(start.getY(), end.getY()) == start.getY() ? deltaY *-1 : deltaY * 1;
 
         deltaZ = Math.max(start.getZ(), end.getZ()) - Math.min(start.getZ(), end.getZ());
-        deltaZ = Math.max(start.getZ(), end.getZ()) == start.getX() ? deltaZ *-1 : deltaZ * 1;
+        if(deltaZ > 0)
+            deltaZ = Math.max(start.getZ(), end.getZ()) == start.getX() ? deltaZ *-1 : deltaZ * 1;
 
         return new Vector3d(deltaX, deltaY, deltaZ);
     }

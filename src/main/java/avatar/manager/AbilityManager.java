@@ -1,6 +1,6 @@
 package avatar.manager;
 
-import avatar.game.ability.Ability;
+import avatar.game.ability.type.Ability;
 
 import java.util.ArrayList;
 import java.util.List;

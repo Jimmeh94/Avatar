@@ -1,7 +1,7 @@
 package avatar.game.quest.condition;
 
 import avatar.event.custom.AbilityEvent;
-import avatar.game.ability.Ability;
+import avatar.game.ability.type.Ability;
 import avatar.manager.ListenerManager;
 import org.spongepowered.api.event.EventListener;
 

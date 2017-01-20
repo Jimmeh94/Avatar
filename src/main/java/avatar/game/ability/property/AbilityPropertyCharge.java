@@ -2,7 +2,7 @@ package avatar.game.ability.property;
 
 import avatar.Avatar;
 import avatar.event.custom.AbilityEvent;
-import avatar.game.ability.Ability;
+import avatar.game.ability.type.Ability;
 import avatar.game.ability.AbilityStage;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;

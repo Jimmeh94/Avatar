@@ -1,6 +1,6 @@
 package avatar.game.ability.property;
 
-import avatar.game.ability.Ability;
+import avatar.game.ability.type.Ability;
 import avatar.game.ability.AbilityStage;
 import avatar.game.user.stats.Stats;
 import org.spongepowered.api.text.Text;
@@ -9,8 +9,8 @@ public abstract class AbilityPropertyStat extends AbilityProperty{
 
     protected Stats.StatType type;
 
-    public AbilityPropertyStat(String displayName, Ability ability, Stats.StatType type) {
-        super(displayName, ability, AbilityStage.HIT);
+    public AbilityPropertyStat(String displayName, Ability ability, Stats.StatType type, AbilityStage stage) {
+        super(displayName, ability, stage);
 
         this.type = type;
     }
@@ -20,15 +20,17 @@ public abstract class AbilityPropertyStat extends AbilityProperty{
 
         private double adjust;
 
-        public Adjust(String displayName, Ability ability, Stats.StatType type, double amount) {
-            super(displayName, ability, type);
+        public Adjust(String displayName, Ability ability, Stats.StatType type, double amount, AbilityStage stage) {
+            super(displayName, ability, type, stage);
 
             this.adjust = amount;
         }
 
         @Override
         public boolean validate() {
-            return false;
+            if(ability.getOwner().getStats().getStat(type).isPresent())
+                ability.getOwner().getStats().getStat(type).get().alter(adjust);
+            return true;
         }
 
         @Override
@@ -40,8 +42,8 @@ public abstract class AbilityPropertyStat extends AbilityProperty{
     //*** Restore ***
     public static class Restore extends AbilityPropertyStat{
 
-        public Restore(String displayName, Ability ability, Stats.StatType type) {
-            super(displayName, ability, type);
+        public Restore(String displayName, Ability ability, Stats.StatType type, AbilityStage stage) {
+            super(displayName, ability, type, stage);
         }
 
         @Override

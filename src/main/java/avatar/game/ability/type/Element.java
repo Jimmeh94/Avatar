@@ -1,4 +1,4 @@
-package avatar.game.ability;
+package avatar.game.ability.type;
 
 public enum Element {
 

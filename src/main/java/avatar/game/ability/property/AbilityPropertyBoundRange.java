@@ -1,6 +1,6 @@
 package avatar.game.ability.property;
 
-import avatar.game.ability.Ability;
+import avatar.game.ability.type.Ability;
 import avatar.game.ability.AbilityStage;
 import org.spongepowered.api.text.Text;
 
@@ -9,21 +9,35 @@ import org.spongepowered.api.text.Text;
  */
 public class AbilityPropertyBoundRange extends AbilityProperty{
 
+    public static final int INFINITE = -1;
+
     private double range;
 
     public AbilityPropertyBoundRange(String displayName, Ability ability, double range) {
-        super(displayName, ability, AbilityStage.UPDATE);
+        this(displayName, ability, range, AbilityStage.UPDATE);
+    }
+
+    public AbilityPropertyBoundRange(String displayName, Ability ability, double range, AbilityStage stage){
+        super(displayName, ability, stage);
 
         this.range = range;
     }
 
+    protected boolean inRange(){
+        return range == INFINITE || ability.getCenter().getPosition().distance(ability.getFiredFrom().getPosition()) < range;
+    }
+
     @Override
     public boolean validate() {
-        return ability.getCenter().getPosition().distance(ability.getFiredFrom().getPosition()) < range;
+        return inRange();
     }
 
     @Override
     public Text getFailMessage() {
         return null;
+    }
+
+    public double getRange() {
+        return range;
     }
 }

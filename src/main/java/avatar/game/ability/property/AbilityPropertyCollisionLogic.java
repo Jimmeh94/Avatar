@@ -1,7 +1,7 @@
 package avatar.game.ability.property;
 
 import avatar.event.custom.AbilityEvent;
-import avatar.game.ability.Ability;
+import avatar.game.ability.type.Ability;
 import avatar.game.ability.AbilityStage;
 import avatar.game.user.User;
 import avatar.manager.ListenerManager;

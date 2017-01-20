@@ -1,7 +1,9 @@
-package avatar.game.ability;
+package avatar.game.ability.type;
 
 import avatar.Avatar;
+import avatar.game.ability.AbilityStage;
 import avatar.game.ability.property.AbilityProperty;
+import avatar.game.ability.property.AbilityPropertyBoundRange;
 import avatar.game.area.Area;
 import avatar.game.user.User;
 import avatar.game.user.UserPlayer;
@@ -35,17 +37,17 @@ public abstract class Ability{
     /**
      * To move the ability
      */
-    protected abstract void adjustCenter();
-    protected abstract List<AbilityProperty> loadProperties();
+    protected abstract Location adjustCenter();
+    protected abstract List<AbilityProperty> loadProperties(AbilityPropertyBoundRange range);
 
-    public Ability(User owner, double x, double y, double z){
+    public Ability(User owner, double x, double y, double z, AbilityPropertyBoundRange range){
         this.owner = owner;
-        this.properties = loadProperties();
+        this.properties = loadProperties(range);
 
         //set location information
         Optional<Entity> optional = owner.getEntity();
         if(optional.isPresent()){
-            this.firedFrom = optional.get().getLocation();
+            this.firedFrom = optional.get().getLocation().add(0, 1, 0);
             this.center = this.firedFrom.copy();
 
             Location temp = center.copy();
@@ -61,13 +63,22 @@ public abstract class Ability{
         }
     }
 
+    protected AbilityPropertyBoundRange getRangeProperty(){
+        for(AbilityProperty property: properties){
+            if(property instanceof AbilityPropertyBoundRange){
+                return ((AbilityPropertyBoundRange)property);
+            }
+        }
+        return null;
+    }
+
     private void fire(){
         //checks
-        for(AbilityStage abilityStage: AbilityStage.firingSequence()){
+        for (AbilityStage abilityStage : AbilityStage.firingSequence()) {
             stage = abilityStage;
-            for(AbilityProperty property: properties){
-                if(property.checkNow(stage)){
-                    if(!property.validate()){
+            for (AbilityProperty property : properties) {
+                if (property.checkNow(stage)) {
+                    if (!property.validate()) {
                         this.cancel(property.getFailMessage());
                         return;
                     }
@@ -80,10 +91,12 @@ public abstract class Ability{
         /*if(owner.isPlayer()){
             ((UserPlayer)owner).updateScoreboard();
         }*/
+
+        stage = AbilityStage.UPDATE;
     }
 
     public boolean update(){
-        stage = AbilityStage.UPDATE;
+        setLocationInfo();
         for(AbilityProperty property: properties){
             if(property.checkNow(stage)){
                 if(!property.validate()){
@@ -92,13 +105,15 @@ public abstract class Ability{
                 }
             }
         }
-        setLocationInfo();
         return true;
     }
 
     protected void setLocationInfo(){
         this.oldCenter = center.copy();
-        adjustCenter();
+        this.center = adjustCenter();
+        if(this.center == null)
+            return;
+
         this.locationChunk = center.getChunkPosition();
         this.hitbox = hitbox.offset(LocationUtils.getOffsetBetween(oldCenter, center));
 
@@ -168,5 +183,9 @@ public abstract class Ability{
                 area.getInstance(this).get().removeAbility(this);
             }
         }
+    }
+
+    public List<AbilityProperty> getProperties() {
+        return properties;
     }
 }

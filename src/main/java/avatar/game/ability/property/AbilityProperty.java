@@ -1,6 +1,6 @@
 package avatar.game.ability.property;
 
-import avatar.game.ability.Ability;
+import avatar.game.ability.type.Ability;
 import avatar.game.ability.AbilityStage;
 import avatar.game.user.User;
 import org.spongepowered.api.text.Text;
@@ -13,7 +13,7 @@ public abstract class AbilityProperty{
     private String displayName;
     private User owner;
     protected Ability ability;
-    private AbilityStage checkWhen;
+    protected AbilityStage checkWhen;
 
     public abstract boolean validate();
 

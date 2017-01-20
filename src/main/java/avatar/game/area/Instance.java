@@ -1,6 +1,6 @@
 package avatar.game.area;
 
-import avatar.game.ability.Ability;
+import avatar.game.ability.type.Ability;
 import avatar.game.user.User;
 
 import java.util.ArrayList;

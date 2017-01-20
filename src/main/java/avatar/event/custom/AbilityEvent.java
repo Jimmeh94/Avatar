@@ -1,6 +1,6 @@
 package avatar.event.custom;
 
-import avatar.game.ability.Ability;
+import avatar.game.ability.type.Ability;
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.cause.Cause;
 
@@ -63,7 +63,7 @@ public class AbilityEvent extends CustomEvent{
 
     public static abstract class Hit extends AbilityEvent implements Cancellable{
 
-        public Hit(avatar.game.ability.Ability ability, Cause cause) {
+        public Hit(avatar.game.ability.type.Ability ability, Cause cause) {
             super(ability, cause);
         }
 
@@ -78,15 +78,15 @@ public class AbilityEvent extends CustomEvent{
         }
 
         public static class Ability extends Hit{
-            private List<avatar.game.ability.Ability> abilities;
+            private List<avatar.game.ability.type.Ability> abilities;
 
-            public Ability(avatar.game.ability.Ability ability, Cause cause, List<avatar.game.ability.Ability> collidedAbilities) {
+            public Ability(avatar.game.ability.type.Ability ability, Cause cause, List<avatar.game.ability.type.Ability> collidedAbilities) {
                 super(ability, cause);
 
                 this.abilities = collidedAbilities;
             }
 
-            public List<avatar.game.ability.Ability> getAbilities() {
+            public List<avatar.game.ability.type.Ability> getAbilities() {
                 return abilities;
             }
         }
@@ -94,7 +94,7 @@ public class AbilityEvent extends CustomEvent{
         public static class User extends Hit{
             private List<avatar.game.user.User> users;
 
-            public User(avatar.game.ability.Ability ability, Cause cause, List<avatar.game.user.User> users) {
+            public User(avatar.game.ability.type.Ability ability, Cause cause, List<avatar.game.user.User> users) {
                 super(ability, cause);
 
                 this.users = users;

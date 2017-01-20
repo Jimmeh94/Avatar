@@ -1,7 +1,7 @@
 package avatar.game.area;
 
 import avatar.event.custom.AreaEvent;
-import avatar.game.ability.Ability;
+import avatar.game.ability.type.Ability;
 import avatar.game.chat.channel.ChatChannel;
 import avatar.game.user.User;
 import avatar.game.user.UserPlayer;
