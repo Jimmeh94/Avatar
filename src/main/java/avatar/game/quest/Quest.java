@@ -3,7 +3,7 @@ package avatar.game.quest;
 import avatar.Avatar;
 import avatar.event.custom.QuestEvent;
 import avatar.game.user.UserPlayer;
-import avatar.util.directional.PlayerDirection;
+import avatar.util.misc.PlayerDirection;
 import avatar.util.text.AltCodes;
 import avatar.util.text.Messager;
 import org.spongepowered.api.Sponge;

@@ -10,6 +10,7 @@ import java.util.Random;
 
 public class LocationUtils {
 
+    //the next step towards a certain target, adjusted by a scale
     public static Location getNextLocation(Location start, Location end, double scale){
         if(start == null || end == null)
             return null;
@@ -138,10 +139,7 @@ public class LocationUtils {
             double t = i * (Math.PI / 180);
             double x = radius * Math.cos(t) + copy.getX();
             double z = radius * Math.sin(t) + copy.getZ();
-            Location add = new Location(copy.getExtent(),
-                    x,
-                    copy.getBlockY(),
-                    z);
+            Location add = new Location(copy.getExtent(), x,copy.getBlockY(), z);
             if(!includeDuplicates && check(add, threshold)){
                 threshold.add(add);
             }

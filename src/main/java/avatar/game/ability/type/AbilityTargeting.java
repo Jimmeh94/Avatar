@@ -122,7 +122,14 @@ public abstract class AbilityTargeting extends Ability implements Runnable{
 
     @Override
     protected Location adjustCenter(){
-        return LocationUtils.getNextLocation(getCenter(), target, speed);
+        Location step = LocationUtils.getNextLocation(getCenter(), target, speed);
+
+        if(getProperty(AbilityPropertyCollisionLogic.DomeCollisionLogic.class).isPresent()){
+            ((AbilityPropertyCollisionLogic.DomeCollisionLogic)getProperty(AbilityPropertyCollisionLogic.DomeCollisionLogic.class)
+                    .get()).adjustSurface(LocationUtils.getOffsetBetween(center, step));
+        }
+
+        return step;
     }
 
     public void setTarget(Location<World> target) {

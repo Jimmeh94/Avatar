@@ -1,4 +1,4 @@
-package avatar.util.directional;
+package avatar.util.misc;
 
 
 import avatar.util.text.AltCodes;

@@ -20,8 +20,6 @@ public abstract class AbilityPropertyCollisionLogic extends AbilityProperty{
     protected List<Ability> collidedAbilities = new ArrayList<>();
     protected List<User> collidedUsers = new ArrayList<>();
 
-    protected abstract boolean collides(Ability ability);
-
     public AbilityPropertyCollisionLogic(String displayName, Ability ability) {
         super(displayName, ability, AbilityStage.UPDATE);
     }
@@ -34,7 +32,10 @@ public abstract class AbilityPropertyCollisionLogic extends AbilityProperty{
         return collidedAbilities;
     }
 
-    /* Shape */
+    protected abstract boolean collides(Ability ability);
+
+    /* Shapes */
+    //*** Dome ***
     public static class DomeCollisionLogic extends AbilityPropertyCollisionLogic{
 
         public enum DomeDirection{
@@ -48,12 +49,25 @@ public abstract class AbilityPropertyCollisionLogic extends AbilityProperty{
 
         protected double radius;
         protected DomeDirection domeDirection;
+        protected List<Location> flatSurface;
 
         public DomeCollisionLogic(String displayName, Ability ability, double radius, DomeDirection direction) {
             super(displayName, ability);
 
             this.radius = radius;
             this.domeDirection = direction;
+
+            double copy = new Double(radius);
+            while(copy > 0){
+                flatSurface.addAll(LocationUtils.getCircleOutline(ability.getCenter(), copy, false));
+                copy--;
+            }
+        }
+
+        public void adjustSurface(Vector3d vector3d){
+            for(Location location: flatSurface){
+                location.add(vector3d);
+            }
         }
 
         protected double getExtendedY(){
@@ -64,34 +78,73 @@ public abstract class AbilityPropertyCollisionLogic extends AbilityProperty{
         protected boolean collides(Ability ability) {
             if(ability.getProperty(SquareCollisionLogic.class).isPresent()){
                 SquareCollisionLogic logic = (SquareCollisionLogic) ability.getProperty(SquareCollisionLogic.class).get();
-                if(domeDirection == DomeDirection.UP){
-                    if(ability.getCenter().getY() >= this.ability.getCenter().getY() && ability.getCenter().getY() <= getExtendedY()){
-                        return ability.getCenter().getPosition().distance(this.ability.getCenter().getPosition()) <= radius;
-                    }
-                } else if(domeDirection == DomeDirection.DOWN){
-                    if(ability.getCenter().getY() <= this.ability.getCenter().getY() && ability.getCenter().getY() >= getExtendedY()){
-                        return ability.getCenter().getPosition().distance(this.ability.getCenter().getPosition()) <= radius;
+
+                for(Vector3d vector3d: logic.getBoxLocations()){
+                    if(domeDirection == DomeDirection.UP){
+                        if(vector3d.getFloorY() < this.ability.getCenter().getBlockY())
+                            continue;
+                        else {
+                            if(this.ability.getCenter().getPosition().distance(vector3d) <= radius)
+                                return true;
+                        }
+                    } else if(domeDirection == DomeDirection.DOWN){
+                        if(vector3d.getFloorY() > this.ability.getCenter().getBlockY())
+                            continue;
+                        else {
+                            if(this.ability.getCenter().getPosition().distance(vector3d) <= radius)
+                                return true;
+                        }
                     }
                 }
-
+                return false;
             } else if(ability.getProperty(SphereCollisionLogic.class).isPresent()){
                 SphereCollisionLogic logic = (SphereCollisionLogic) ability.getProperty(SphereCollisionLogic.class).get();
-                if(domeDirection == DomeDirection.UP){
-                    if(ability.getCenter().getY() >= this.ability.getCenter().getY() && ability.getCenter().getY() <= getExtendedY()){
-                        if(LocationUtils.getConnectingLine(this.ability.getCenter(), ability.getCenter()).size() <= this.radius + logic.radius){
-                            return true;
-                        }
-                    }
-                } else if(domeDirection == DomeDirection.DOWN){
-                    if(ability.getCenter().getY() <= this.ability.getCenter().getY() && ability.getCenter().getY() >= getExtendedY()){
-                        if(LocationUtils.getConnectingLine(this.ability.getCenter(), ability.getCenter()).size() <= this.radius + logic.radius){
-                            return true;
-                        }
-                    }
-                }
+                double full = logic.radius + radius;
+                //Full is the absolute furthest away they can be
 
+                if(ability.getCenter().getPosition().distance(this.ability.getCenter().getPosition()) <= full) {
+                    if (domeDirection == DomeDirection.UP) {
+                        //Meaning the dome's radius won't extend down
+                        if (ability.getCenter().getBlockY() < this.ability.getCenter().getBlockY()) {
+                            //this means the sphere is below the dome, meaning it can only be the sphere's radius away
+                            for(Location location: flatSurface){
+                                if(ability.getCenter().getPosition().distance(location.getPosition()) <= logic.radius){
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+                        return true;
+                    } else if (domeDirection == DomeDirection.DOWN) {
+                        if (ability.getCenter().getBlockY() > this.ability.getCenter().getBlockY()) {
+                            for(Location location: flatSurface){
+                                if(ability.getCenter().getPosition().distance(location.getPosition()) <= logic.radius){
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+                        return true;
+                    }
+                } else return false;
             } else if(ability.getProperty(DomeCollisionLogic.class).isPresent()){
                 DomeCollisionLogic logic = (DomeCollisionLogic) ability.getProperty(DomeCollisionLogic.class).get();
+                double full = logic.radius + radius;
+
+                if(domeDirection != logic.domeDirection){
+                    //facing each other (opposite directions)
+                    if(ability.getCenter().getPosition().distance(this.ability.getCenter().getPosition()) <= full){
+                        return true;
+                    } else return false;
+                }
+
+                //We know they are facing the same direction
+                for(Location location: logic.flatSurface){
+                    if(location.getPosition().distance(this.ability.getCenter().getPosition()) <= radius){
+                        return true;
+                    }
+                }
+                return false;
             }
             return false;
         }
@@ -188,7 +241,35 @@ public abstract class AbilityPropertyCollisionLogic extends AbilityProperty{
                 }
 
             } else if(ability.getProperty(DomeCollisionLogic.class).isPresent()){
+                DomeCollisionLogic logic = (DomeCollisionLogic) ability.getProperty(DomeCollisionLogic.class).get();
+                double full = logic.radius + radius;
+                //Full is the absolute furthest away they can be
 
+                if(ability.getCenter().getPosition().distance(this.ability.getCenter().getPosition()) <= full) {
+                    if (logic.domeDirection == DomeCollisionLogic.DomeDirection.UP) {
+                        //Meaning the dome's radius won't extend down
+                        if (this.ability.getCenter().getBlockY() < ability.getCenter().getBlockY()) {
+                            //this means the sphere is below the dome, meaning it can only be the sphere's radius away
+                            for(Location location: logic.flatSurface){
+                                if(ability.getCenter().getPosition().distance(location.getPosition()) <= logic.radius){
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+                        return true;
+                    } else if (logic.domeDirection == DomeCollisionLogic.DomeDirection.DOWN) {
+                        if (this.ability.getCenter().getBlockY() > ability.getCenter().getBlockY()) {
+                            for(Location location: logic.flatSurface){
+                                if(ability.getCenter().getPosition().distance(location.getPosition()) <= logic.radius){
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+                        return true;
+                    }
+                } else return false;
             }
             return false;
         }
@@ -268,13 +349,31 @@ public abstract class AbilityPropertyCollisionLogic extends AbilityProperty{
             } else if(ability.getProperty(SphereCollisionLogic.class).isPresent()){
                 SphereCollisionLogic logic = (SphereCollisionLogic) ability.getProperty(SphereCollisionLogic.class).get();
                 for(Vector3d vector3d: getBoxLocations()){
-                    if(vector3d.distance(this.ability.getCenter().getPosition()) <= logic.radius){
+                    if(vector3d.distance(ability.getCenter().getPosition()) <= logic.radius){
                         return true;
                     }
                 }
-
             } else if(ability.getProperty(DomeCollisionLogic.class).isPresent()){
+                DomeCollisionLogic logic = (DomeCollisionLogic) ability.getProperty(DomeCollisionLogic.class).get();
 
+                for(Vector3d vector3d: getBoxLocations()){
+                    if(logic.domeDirection == DomeCollisionLogic.DomeDirection.UP){
+                        if(vector3d.getFloorY() < ability.getCenter().getBlockY())
+                            continue;
+                        else {
+                            if(ability.getCenter().getPosition().distance(vector3d) <= logic.radius)
+                                return true;
+                        }
+                    } else if(logic.domeDirection == DomeCollisionLogic.DomeDirection.DOWN){
+                        if(vector3d.getFloorY() > ability.getCenter().getBlockY())
+                            continue;
+                        else {
+                            if(ability.getCenter().getPosition().distance(vector3d) <= logic.radius)
+                                return true;
+                        }
+                    }
+                }
+                return false;
             }
             return false;
         }
