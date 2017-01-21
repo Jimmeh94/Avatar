@@ -76,8 +76,8 @@ public abstract class AbilityPropertyCollisionLogic extends AbilityProperty{
 
         @Override
         protected boolean collides(Ability ability) {
-            if(ability.getProperty(SquareCollisionLogic.class).isPresent()){
-                SquareCollisionLogic logic = (SquareCollisionLogic) ability.getProperty(SquareCollisionLogic.class).get();
+            if(ability.getProperty(CubeCollisionLogic.class).isPresent()){
+                CubeCollisionLogic logic = (CubeCollisionLogic) ability.getProperty(CubeCollisionLogic.class).get();
 
                 for(Vector3d vector3d: logic.getBoxLocations()){
                     if(domeDirection == DomeDirection.UP){
@@ -226,8 +226,8 @@ public abstract class AbilityPropertyCollisionLogic extends AbilityProperty{
 
         @Override
         protected boolean collides(Ability ability) {
-            if(ability.getProperty(SquareCollisionLogic.class).isPresent()){
-                SquareCollisionLogic logic = (SquareCollisionLogic) ability.getProperty(SquareCollisionLogic.class).get();
+            if(ability.getProperty(CubeCollisionLogic.class).isPresent()){
+                CubeCollisionLogic logic = (CubeCollisionLogic) ability.getProperty(CubeCollisionLogic.class).get();
                 for(Vector3d vector3d: logic.getBoxLocations()){
                     if(vector3d.distance(this.ability.getCenter().getPosition()) <= radius){
                         return true;
@@ -281,11 +281,11 @@ public abstract class AbilityPropertyCollisionLogic extends AbilityProperty{
     }
 
     //*** Square ***
-    public static class SquareCollisionLogic extends AbilityPropertyCollisionLogic{
+    public static class CubeCollisionLogic extends AbilityPropertyCollisionLogic{
 
         private AABB hitbox;
 
-        public SquareCollisionLogic(String displayName, Ability ability, double x, double y, double z){
+        public CubeCollisionLogic(String displayName, Ability ability, double x, double y, double z){
             super(displayName, ability);
 
             Location temp = ability.getOwner().getEntity().get().getLocation().add(0, 1, 0);
@@ -341,8 +341,8 @@ public abstract class AbilityPropertyCollisionLogic extends AbilityProperty{
 
         @Override
         public boolean collides(Ability ability) {
-            if(ability.getProperty(SquareCollisionLogic.class).isPresent()){
-                SquareCollisionLogic logic = (SquareCollisionLogic) ability.getProperty(SquareCollisionLogic.class).get();
+            if(ability.getProperty(CubeCollisionLogic.class).isPresent()){
+                CubeCollisionLogic logic = (CubeCollisionLogic) ability.getProperty(CubeCollisionLogic.class).get();
                 if(this.hitbox.intersects(logic.hitbox)){
                     return true;
                 }

@@ -1,13 +1,16 @@
 package avatar.game.ability.type;
 
 import avatar.Avatar;
+import avatar.event.custom.AbilityEvent;
 import avatar.game.ability.AbilityStage;
 import avatar.game.ability.property.AbilityProperty;
 import avatar.game.area.Area;
 import avatar.game.user.User;
 import avatar.game.user.UserPlayer;
+import avatar.manager.ListenerManager;
 import avatar.util.text.Messager;
 import com.flowpowered.math.vector.Vector3i;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
@@ -88,6 +91,8 @@ public abstract class Ability{
         }*/
 
         stage = AbilityStage.UPDATE;
+
+        Sponge.getEventManager().post(new AbilityEvent.PostFire(this, ListenerManager.getDefaultCause()));
     }
 
 

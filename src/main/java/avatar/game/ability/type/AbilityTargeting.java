@@ -96,8 +96,8 @@ public abstract class AbilityTargeting extends Ability implements Runnable{
 
         this.locationChunk = center.getChunkPosition();
 
-        if(getProperty(AbilityPropertyCollisionLogic.SquareCollisionLogic.class).isPresent()){
-            ((AbilityPropertyCollisionLogic.SquareCollisionLogic)getProperty(AbilityPropertyCollisionLogic.SquareCollisionLogic.class).get()).offset(oldCenter, center);
+        if(getProperty(AbilityPropertyCollisionLogic.CubeCollisionLogic.class).isPresent()){
+            ((AbilityPropertyCollisionLogic.CubeCollisionLogic)getProperty(AbilityPropertyCollisionLogic.CubeCollisionLogic.class).get()).offset(oldCenter, center);
         }
 
         if(!this.area.contains(this.center)){

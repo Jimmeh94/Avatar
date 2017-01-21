@@ -7,9 +7,9 @@ import org.spongepowered.api.event.EventListener;
 
 public class FireAbility extends Condition implements EventListener<AbilityEvent.PostFire> {
 
-    private Ability ability;
+    private Class<? extends Ability> ability;
 
-    public FireAbility(Ability ability) {
+    public FireAbility(Class<? extends Ability> ability) {
         this.ability = ability;
     }
 
@@ -28,7 +28,7 @@ public class FireAbility extends Condition implements EventListener<AbilityEvent
 
     @Override
     public void handle(AbilityEvent.PostFire postFire) throws Exception {
-        if(postFire.getAbility().equals(ability)){
+        if(postFire.getAbility().getClass().getCanonicalName().equals(ability.getCanonicalName())){
             valid = true;
 
             unregisterListener();

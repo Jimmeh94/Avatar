@@ -1,10 +1,7 @@
 package avatar.game.ability.property;
 
-import avatar.Avatar;
-import avatar.event.custom.AbilityEvent;
-import avatar.game.ability.type.Ability;
 import avatar.game.ability.AbilityStage;
-import org.spongepowered.api.Sponge;
+import avatar.game.ability.type.Ability;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 
@@ -31,19 +28,6 @@ public class AbilityPropertyCharge extends AbilityProperty implements Runnable{
         countdown--;
         if(countdown == 0){
             charged = true;
-        }
-    }
-
-   // @Override
-    public void handle(AbilityEvent.RequirementCheck event) throws Exception {
-        if(event.getAbility() != ability)
-            return;
-        if(!charged){
-            if(task == null){
-                Task.Builder taskBuilder = Sponge.getScheduler().createTaskBuilder();
-                task = taskBuilder.delayTicks(0L).intervalTicks(20L).execute(this).submit(Avatar.INSTANCE);
-            }
-            event.setCancelled(true);
         }
     }
 
